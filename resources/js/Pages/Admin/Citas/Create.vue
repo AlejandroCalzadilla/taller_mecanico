@@ -104,6 +104,28 @@ const getNombreDia = (fecha) => {
     const fechaObj = new Date(fecha);
     return dias[fechaObj.getDay()];
 };
+
+const getEstadoBackgroundColor = (estado) => {
+    const colores = {
+        pendiente: 'var(--color-warning)',
+        confirmada: 'var(--color-info)',
+        en_proceso: 'var(--color-secondary)',
+        completada: 'var(--color-success)',
+        cancelada: 'var(--color-error)'
+    };
+    return colores[estado] || 'var(--color-neutral)';
+};
+
+const getEstadoRingColor = (estado) => {
+    const colores = {
+        pendiente: 'var(--color-warning)',
+        confirmada: 'var(--color-info)',
+        en_proceso: 'var(--color-secondary)',
+        completada: 'var(--color-success)',
+        cancelada: 'var(--color-error)'
+    };
+    return colores[estado] || 'var(--color-neutral)';
+};
 </script>
 
 <template>
@@ -113,11 +135,21 @@ const getNombreDia = (fecha) => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Programar Nueva Cita</h1>
-                    <p class="text-sm text-gray-600 mt-1">Agenda una nueva cita para un cliente y vehículo</p>
+                    <h1 class="text-2xl font-semibold"
+                        :style="{ color: 'var(--color-text)' }">Programar Nueva Cita</h1>
+                    <p class="text-sm mt-1"
+                        :style="{ color: 'var(--color-text-light)' }">Agenda una nueva cita para un cliente y vehículo</p>
                 </div>
                 <Link :href="route('admin.citas.index')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                    class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                    :style="{ 
+                        backgroundColor: 'var(--color-neutral)',
+                        color: 'var(--color-text)',
+                        ':hover': { 
+                            backgroundColor: 'var(--color-neutral-hover)',
+                            color: 'var(--color-text)'
+                        }
+                    }">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
@@ -129,9 +161,15 @@ const getNombreDia = (fecha) => {
         <div class="py-6">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
                 <!-- Formulario -->
-                <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Información de la Cita</h2>
+                <div class="shadow-sm rounded-lg border"
+                    :style="{ 
+                        backgroundColor: 'var(--color-base)',
+                        borderColor: 'var(--color-border)'
+                    }">
+                    <div class="px-6 py-4 border-b"
+                        :style="{ borderColor: 'var(--color-border)' }">
+                        <h2 class="text-lg font-semibold"
+                            :style="{ color: 'var(--color-text)' }">Información de la Cita</h2>
                     </div>
 
                     <form @submit.prevent="submit" class="p-6 space-y-8">
@@ -139,14 +177,23 @@ const getNombreDia = (fecha) => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Cliente -->
                             <div>
-                                <label for="cliente_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-red-500">*</span> Cliente
+                                <label for="cliente_id" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
+                                    <span :style="{ color: 'var(--color-error)' }">*</span> Cliente
                                 </label>
                                 <select
                                     id="cliente_id"
                                     v-model="form.cliente_id"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.cliente_id }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+                                    :style="{ 
+                                        backgroundColor: 'var(--color-base)',
+                                        color: 'var(--color-text)',
+                                        borderColor: form.errors.cliente_id ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     required
                                 >
                                     <option value="">Seleccione un cliente</option>
@@ -158,27 +205,35 @@ const getNombreDia = (fecha) => {
                                         {{ cliente.nombre }} - {{ cliente.email }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.cliente_id" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.cliente_id" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.cliente_id }}
                                 </p>
-                                <p v-if="form.cliente_id && vehiculosCliente.length === 0" class="mt-1 text-sm text-yellow-600">
+                                <p v-if="form.cliente_id && vehiculosCliente.length === 0" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-warning)' }">
                                     Este cliente no tiene vehículos registrados.
                                 </p>
                             </div>
 
                             <!-- Vehículo -->
                             <div>
-                                <label for="vehiculo_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-red-500">*</span> Vehículo
+                                <label for="vehiculo_id" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
+                                    <span :style="{ color: 'var(--color-error)' }">*</span> Vehículo
                                 </label>
                                 <select
                                     id="vehiculo_id"
                                     v-model="form.vehiculo_id"
                                     :disabled="!form.cliente_id || vehiculosCliente.length === 0"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                    :class="{
-                                        'border-red-300': form.errors.vehiculo_id,
-                                        'bg-gray-100': !form.cliente_id || vehiculosCliente.length === 0
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                    :style="{ 
+                                        backgroundColor: (!form.cliente_id || vehiculosCliente.length === 0) ? 'var(--color-neutral)' : 'var(--color-base)',
+                                        color: (!form.cliente_id || vehiculosCliente.length === 0) ? 'var(--color-text-light)' : 'var(--color-text)',
+                                        borderColor: form.errors.vehiculo_id ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
                                     }"
                                     required
                                 >
@@ -191,10 +246,12 @@ const getNombreDia = (fecha) => {
                                         {{ vehiculo.marca }} {{ vehiculo.modelo }} - {{ vehiculo.placa }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.vehiculo_id" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.vehiculo_id" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.vehiculo_id }}
                                 </p>
-                                <p v-if="form.cliente_id && vehiculosCliente.length === 0" class="mt-1 text-sm text-yellow-600">
+                                <p v-if="form.cliente_id && vehiculosCliente.length === 0" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-warning)' }">
                                     Primero registre un vehículo para este cliente.
                                 </p>
                             </div>
@@ -204,39 +261,56 @@ const getNombreDia = (fecha) => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Fecha -->
                             <div>
-                                <label for="fecha" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-red-500">*</span> Fecha de la Cita
+                                <label for="fecha" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
+                                    <span :style="{ color: 'var(--color-error)' }">*</span> Fecha de la Cita
                                 </label>
                                 <input
                                     type="date"
                                     id="fecha"
                                     v-model="form.fecha"
                                     :min="fechaMinima"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.fecha }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+                                    :style="{ 
+                                        backgroundColor: 'var(--color-base)',
+                                        color: 'var(--color-text)',
+                                        borderColor: form.errors.fecha ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     required
                                 />
-                                <p v-if="form.errors.fecha" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.fecha" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.fecha }}
                                 </p>
-                                <p v-if="form.fecha" class="mt-1 text-sm text-blue-600 font-medium">
+                                <p v-if="form.fecha" class="mt-1 text-sm font-medium"
+                                    :style="{ color: 'var(--color-info)' }">
                                     {{ getNombreDia(form.fecha) }}
                                 </p>
                             </div>
 
                             <!-- Hora -->
                             <div>
-                                <label for="hora" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-red-500">*</span> Hora de la Cita
+                                <label for="hora" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
+                                    <span :style="{ color: 'var(--color-error)' }">*</span> Hora de la Cita
                                 </label>
                                 <select
                                     id="hora"
                                     v-model="form.hora"
                                     :disabled="!form.fecha"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                    :class="{
-                                        'border-red-300': form.errors.hora,
-                                        'bg-gray-100': !form.fecha
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                    :style="{ 
+                                        backgroundColor: !form.fecha ? 'var(--color-neutral)' : 'var(--color-base)',
+                                        color: !form.fecha ? 'var(--color-text-light)' : 'var(--color-text)',
+                                        borderColor: form.errors.hora ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
                                     }"
                                     required
                                 >
@@ -245,23 +319,27 @@ const getNombreDia = (fecha) => {
                                         v-for="horario in horariosDisponibles"
                                         :key="horario"
                                         :value="horario"
-                                        :class="{ 'text-green-600': estaDisponible(horario) }"
+                                        :style="{ color: estaDisponible(horario) ? 'var(--color-success)' : 'var(--color-error)' }"
                                     >
                                         {{ horario }} {{ estaDisponible(horario) ? '✓' : '✗' }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.hora" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.hora" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.hora }}
                                 </p>
-                                <p v-if="form.fecha && horariosDisponibles.length === 0" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.fecha && horariosDisponibles.length === 0" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     No hay horarios disponibles para esta fecha.
                                 </p>
                             </div>
                         </div>
 
                         <!-- Visualización de horarios disponibles -->
-                        <div v-if="mostrarCalendario && form.fecha" class="bg-gray-50 p-4 rounded-lg">
-                            <h3 class="text-sm font-medium text-gray-700 mb-3">
+                        <div v-if="mostrarCalendario && form.fecha" class="p-4 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-neutral)' }">
+                            <h3 class="text-sm font-medium mb-3"
+                                :style="{ color: 'var(--color-text)' }">
                                 Horarios Disponibles para el {{ getNombreDia(form.fecha) }} ({{ form.fecha }})
                             </h3>
                             <div class="grid grid-cols-4 md:grid-cols-6 gap-2">
@@ -270,12 +348,18 @@ const getNombreDia = (fecha) => {
                                     :key="horario"
                                     @click="form.hora = horario"
                                     class="p-2 text-center text-sm rounded border cursor-pointer transition duration-200"
-                                    :class="{
-                                        'bg-green-100 border-green-300 text-green-800 hover:bg-green-200': estaDisponible(horario),
-                                        'bg-red-100 border-red-300 text-red-800 cursor-not-allowed': !estaDisponible(horario),
-                                        'bg-taller-blue-dark border-taller-blue-dark text-white': form.hora === horario && estaDisponible(horario)
+                                    :style="{
+                                        backgroundColor: !estaDisponible(horario) ? 'var(--color-error-light)' : 
+                                                        (form.hora === horario ? 'var(--color-primary)' : 'var(--color-success-light)'),
+                                        borderColor: !estaDisponible(horario) ? 'var(--color-error)' : 
+                                                    (form.hora === horario ? 'var(--color-primary)' : 'var(--color-success)'),
+                                        color: !estaDisponible(horario) ? 'var(--color-error)' : 
+                                              (form.hora === horario ? 'var(--color-base)' : 'var(--color-success)'),
+                                        cursor: !estaDisponible(horario) ? 'not-allowed' : 'pointer',
+                                        ':hover': estaDisponible(horario) ? { 
+                                            backgroundColor: form.hora === horario ? 'var(--color-primary)' : 'var(--color-success)' 
+                                        } : {}
                                     }"
-                                    :title="estaDisponible(horario) ? 'Disponible' : 'Ocupado'"
                                 >
                                     {{ horario }}
                                 </div>
@@ -286,37 +370,57 @@ const getNombreDia = (fecha) => {
                         <div class="space-y-6">
                             <!-- Motivo -->
                             <div>
-                                <label for="motivo" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-red-500">*</span> Motivo de la Cita
+                                <label for="motivo" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
+                                    <span :style="{ color: 'var(--color-error)' }">*</span> Motivo de la Cita
                                 </label>
                                 <textarea
                                     id="motivo"
                                     v-model="form.motivo"
                                     rows="3"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.motivo }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent resize-none"
+                                    :style="{ 
+                                        backgroundColor: 'var(--color-base)',
+                                        color: 'var(--color-text)',
+                                        borderColor: form.errors.motivo ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     placeholder="Describa el motivo de la cita (ej: Cambio de aceite, Revisión de frenos, etc.)"
                                     required
                                 />
-                                <p v-if="form.errors.motivo" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.motivo" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.motivo }}
                                 </p>
                             </div>
 
                             <!-- Observaciones -->
                             <div>
-                                <label for="observaciones" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="observaciones" class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
                                     Observaciones Adicionales
                                 </label>
                                 <textarea
                                     id="observaciones"
                                     v-model="form.observaciones"
                                     rows="2"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.observaciones }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent resize-none"
+                                    :style="{ 
+                                        backgroundColor: 'var(--color-base)',
+                                        color: 'var(--color-text)',
+                                        borderColor: form.errors.observaciones ? 'var(--color-error)' : 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     placeholder="Observaciones adicionales o información relevante..."
                                 />
-                                <p v-if="form.errors.observaciones" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.observaciones" class="mt-1 text-sm"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.observaciones }}
                                 </p>
                             </div>
@@ -324,14 +428,23 @@ const getNombreDia = (fecha) => {
                             <!-- Estado -->
                             <!-- Sección: Estado -->
 <div class="max-w-xs">
-    <label for="estado" class="block text-sm font-medium text-gray-700 mb-2">
-        <span class="text-red-500">*</span> Estado Inicial
+    <label for="estado" class="block text-sm font-medium mb-2"
+        :style="{ color: 'var(--color-text)' }">
+        <span :style="{ color: 'var(--color-error)' }">*</span> Estado Inicial
     </label>
     <select
         id="estado"
         v-model="form.estado"
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-        :class="{ 'border-red-300': form.errors.estado }"
+        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+        :style="{ 
+            backgroundColor: 'var(--color-base)',
+            color: 'var(--color-text)',
+            borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
+            ':focus': { 
+                ringColor: 'var(--color-primary)',
+                borderColor: 'var(--color-primary)'
+            }
+        }"
         required
     >
         <option value="">Seleccione un estado</option>
@@ -344,10 +457,12 @@ const getNombreDia = (fecha) => {
             {{ label }}
         </option>
     </select>
-    <p v-if="form.errors.estado" class="mt-1 text-sm text-red-600">
+    <p v-if="form.errors.estado" class="mt-1 text-sm"
+        :style="{ color: 'var(--color-error)' }">
         {{ form.errors.estado }}
     </p>
-    <p class="mt-1 text-xs text-gray-500">
+    <p class="mt-1 text-xs"
+        :style="{ color: 'var(--color-text-light)' }">
         Las citas nuevas generalmente inician como "Pendiente"
     </p>
 </div>
@@ -355,45 +470,75 @@ const getNombreDia = (fecha) => {
 
                         <!-- Resumen de la Cita -->
                         <div v-if="form.cliente_id && form.vehiculo_id && form.fecha && form.hora"
-                             class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h3 class="text-sm font-medium text-blue-900 mb-2">Resumen de la Cita</h3>
+                             class="rounded-lg p-4"
+                             :style="{ 
+                                 backgroundColor: 'var(--color-info-light)',
+                                 borderColor: 'var(--color-info)',
+                                 borderWidth: '1px'
+                             }">
+                            <h3 class="text-sm font-medium mb-2"
+                                :style="{ color: 'var(--color-info-dark)' }">Resumen de la Cita</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                                 <div>
-                                    <span class="font-medium text-blue-800">Cliente:</span>
+                                    <span class="font-medium"
+                                        :style="{ color: 'var(--color-info-dark)' }">Cliente:</span>
                                     {{ clientes.find(c => c.id == form.cliente_id)?.nombre }}
                                 </div>
                                 <div>
-                                    <span class="font-medium text-blue-800">Vehículo:</span>
+                                    <span class="font-medium"
+                                        :style="{ color: 'var(--color-info-dark)' }">Vehículo:</span>
                                     {{ vehiculosCliente.find(v => v.id == form.vehiculo_id)?.marca }}
                                     {{ vehiculosCliente.find(v => v.id == form.vehiculo_id)?.modelo }}
                                 </div>
                                 <div>
-                                    <span class="font-medium text-blue-800">Fecha:</span>
+                                    <span class="font-medium"
+                                        :style="{ color: 'var(--color-info-dark)' }">Fecha:</span>
                                     {{ getNombreDia(form.fecha) }}, {{ form.fecha }}
                                 </div>
                                 <div>
-                                    <span class="font-medium text-blue-800">Hora:</span> {{ form.hora }}
+                                    <span class="font-medium"
+                                        :style="{ color: 'var(--color-info-dark)' }">Hora:</span> {{ form.hora }}
                                 </div>
                                 <div class="md:col-span-2">
-                                    <span class="font-medium text-blue-800">Motivo:</span> {{ form.motivo }}
+                                    <span class="font-medium"
+                                        :style="{ color: 'var(--color-info-dark)' }">Motivo:</span> {{ form.motivo }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Botones de acción -->
-                        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                        <div class="flex justify-end space-x-3 pt-6"
+                            :style="{ borderColor: 'var(--color-border)', borderTopWidth: '1px' }">
                             <Link
                                 :href="route('admin.citas.index')"
-                                class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-medium transition duration-200"
+                                class="px-6 py-2 rounded-md font-medium transition duration-200"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-neutral)',
+                                    color: 'var(--color-text)',
+                                    ':hover': { 
+                                        backgroundColor: 'var(--color-neutral-hover)',
+                                        color: 'var(--color-text)'
+                                    }
+                                }"
                             >
                                 Cancelar
                             </Link>
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="bg-taller-blue-dark hover:bg-taller-blue-light text-white px-6 py-2 rounded-md font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                class="px-6 py-2 rounded-md font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-primary)',
+                                    color: 'var(--color-base)',
+                                    ':hover': { 
+                                        backgroundColor: 'var(--color-primary-hover)',
+                                        color: 'var(--color-base)'
+                                    }
+                                }"
                             >
-                                <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5"
+                                    :style="{ color: 'var(--color-base)' }"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -404,16 +549,25 @@ const getNombreDia = (fecha) => {
                 </div>
 
                 <!-- Información de ayuda -->
-                <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="mt-6 rounded-lg p-4"
+                    :style="{ 
+                        backgroundColor: 'var(--color-warning-light)',
+                        borderColor: 'var(--color-warning)',
+                        borderWidth: '1px'
+                    }">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5"
+                                :style="{ color: 'var(--color-warning)' }"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">Información importante</h3>
-                            <div class="mt-2 text-sm text-yellow-700">
+                            <h3 class="text-sm font-medium"
+                                :style="{ color: 'var(--color-warning-dark)' }">Información importante</h3>
+                            <div class="mt-2 text-sm"
+                                :style="{ color: 'var(--color-warning-dark)' }">
                                 <ul class="list-disc list-inside space-y-1">
                                     <li>Las citas solo pueden programarse para fechas futuras</li>
                                     <li>El horario de atención es de 8:00 AM a 5:00 PM</li>

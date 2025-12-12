@@ -52,6 +52,28 @@ const vehiculoSeleccionadoInfo = computed(() => {
 const formularioValido = computed(() => {
     return form.vehiculo_id && form.fecha && form.hora && form.motivo;
 });
+
+const getEstadoBackgroundColor = (estado) => {
+    const colores = {
+        pendiente: 'var(--color-warning)',
+        confirmada: 'var(--color-info)',
+        en_proceso: 'var(--color-secondary)',
+        completada: 'var(--color-success)',
+        cancelada: 'var(--color-error)'
+    };
+    return colores[estado] || 'var(--color-neutral)';
+};
+
+const getEstadoRingColor = (estado) => {
+    const colores = {
+        pendiente: 'var(--color-warning)',
+        confirmada: 'var(--color-info)',
+        en_proceso: 'var(--color-secondary)',
+        completada: 'var(--color-success)',
+        cancelada: 'var(--color-error)'
+    };
+    return colores[estado] || 'var(--color-neutral)';
+};
 </script>
 
 <template>
@@ -66,36 +88,58 @@ const formularioValido = computed(() => {
                     <div class="flex items-center gap-4 mb-4">
                         <Link
                             :href="route('cliente.citas.index')"
-                            class="inline-flex items-center gap-2 text-gray-600 hover:text-taller-black transition-colors"
+                            class="inline-flex items-center gap-2 transition-colors"
+                            :style="{ 
+                                color: 'var(--color-text)',
+                                ':hover': { color: 'var(--color-text)' }
+                            }"
                         >
                             <ArrowLeftIcon class="h-5 w-5" />
                             Volver a Mis Citas
                         </Link>
                     </div>
 
-                    <h1 class="text-3xl font-bold text-taller-black flex items-center gap-3">
-                        <div class="p-2 bg-taller-blue-light rounded-lg border border-taller-blue-dark">
-                            <CalendarDaysIcon class="h-6 w-6 text-taller-blue-dark" />
+                    <h1 class="text-3xl font-bold flex items-center gap-3"
+                        :style="{ color: 'var(--color-text)' }">
+                        <div class="p-2 rounded-lg border"
+                            :style="{ 
+                                backgroundColor: 'var(--color-primary-light)',
+                                borderColor: 'var(--color-primary)'
+                            }">
+                            <CalendarDaysIcon class="h-6 w-6"
+                                :style="{ color: 'var(--color-primary)' }" />
                         </div>
                         Agendar Nueva Cita
                     </h1>
-                    <p class="mt-2 text-gray-600">
+                    <p class="mt-2"
+                        :style="{ color: 'var(--color-text)' }">
                         Selecciona tu vehículo y el horario que prefieras para tu cita
                     </p>
                 </div>
 
                 <!-- Formulario -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="overflow-hidden shadow-sm sm:rounded-lg"
+                    :style="{ backgroundColor: 'var(--color-base)' }">
                     <form @submit.prevent="submit" class="p-6 space-y-6">
 
                         <!-- Selección de Vehículo -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <label class="block text-sm font-medium mb-2"
+                                :style="{ color: 'var(--color-text)' }">
                                 Vehículo *
                             </label>
                             <select
                                 v-model="form.vehiculo_id"
-                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                                class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-base)',
+                                    color: 'var(--color-text)',
+                                    borderColor: 'var(--color-border)',
+                                    ':focus': { 
+                                        ringColor: 'var(--color-primary)',
+                                        borderColor: 'var(--color-primary)'
+                                    }
+                                }"
                                 required
                             >
                                 <option value="">Seleccionar vehículo</option>
@@ -107,24 +151,33 @@ const formularioValido = computed(() => {
                                     {{ vehiculo.marca }} {{ vehiculo.modelo }} - {{ vehiculo.placa }}
                                 </option>
                             </select>
-                            <p v-if="form.errors.vehiculo_id" class="text-red-600 text-sm mt-1">
+                            <p v-if="form.errors.vehiculo_id" class="text-sm mt-1"
+                                :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.vehiculo_id }}
                             </p>
 
                             <!-- Información del vehículo seleccionado -->
-                            <div v-if="vehiculoSeleccionadoInfo" class="mt-3 p-3 bg-gray-50 rounded-lg border">
+                            <div v-if="vehiculoSeleccionadoInfo" class="mt-3 p-3 rounded-lg border"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-neutral)',
+                                    borderColor: 'var(--color-border)'
+                                }">
                                 <div class="flex items-center gap-3">
-                                    <TruckIcon class="h-8 w-8 text-taller-blue-dark" />
+                                    <TruckIcon class="h-8 w-8"
+                                        :style="{ color: 'var(--color-primary)' }" />
                                     <div>
-                                        <p class="font-semibold">
+                                        <p class="font-semibold"
+                                            :style="{ color: 'var(--color-text)' }">
                                             {{ vehiculoSeleccionadoInfo.marca }} {{ vehiculoSeleccionadoInfo.modelo }}
                                         </p>
-                                        <p class="text-sm text-gray-600">
+                                        <p class="text-sm"
+                                            :style="{ color: 'var(--color-text)' }">
                                             Placa: {{ vehiculoSeleccionadoInfo.placa }} |
                                             Año: {{ vehiculoSeleccionadoInfo.anio }} |
                                             Color: {{ vehiculoSeleccionadoInfo.color }}
                                         </p>
-                                        <p class="text-sm text-gray-500">
+                                        <p class="text-sm"
+                                            :style="{ color: 'var(--color-text)' }">
                                             Kilometraje: {{ vehiculoSeleccionadoInfo.kilometraje?.toLocaleString() }} km
                                         </p>
                                     </div>
@@ -136,12 +189,22 @@ const formularioValido = computed(() => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Fecha -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <label class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
                                     Fecha *
                                 </label>
                                 <select
                                     v-model="form.fecha"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                                    class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                    :style="{ 
+                                        backgroundColor: 'var(--color-base)',
+                                        color: 'var(--color-text)',
+                                        borderColor: 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     required
                                 >
                                     <option value="">Seleccionar fecha</option>
@@ -158,20 +221,31 @@ const formularioValido = computed(() => {
                                         }) }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.fecha" class="text-red-600 text-sm mt-1">
+                                <p v-if="form.errors.fecha" class="text-sm mt-1"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.fecha }}
                                 </p>
                             </div>
 
                             <!-- Hora -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <label class="block text-sm font-medium mb-2"
+                                    :style="{ color: 'var(--color-text)' }">
                                     Hora *
                                 </label>
                                 <select
                                     v-model="form.hora"
                                     :disabled="!form.fecha"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark disabled:bg-gray-100"
+                                    class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                    :style="{ 
+                                        backgroundColor: (!form.fecha) ? 'var(--color-neutral)' : 'var(--color-base)',
+                                        color: (!form.fecha) ? 'var(--color-text)' : 'var(--color-text)',
+                                        borderColor: 'var(--color-border)',
+                                        ':focus': { 
+                                            ringColor: 'var(--color-primary)',
+                                            borderColor: 'var(--color-primary)'
+                                        }
+                                    }"
                                     required
                                 >
                                     <option value="">Seleccionar hora</option>
@@ -183,10 +257,12 @@ const formularioValido = computed(() => {
                                         {{ hora }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.hora" class="text-red-600 text-sm mt-1">
+                                <p v-if="form.errors.hora" class="text-sm mt-1"
+                                    :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.hora }}
                                 </p>
-                                <p v-if="!form.fecha" class="text-xs text-gray-500 mt-1">
+                                <p v-if="!form.fecha" class="text-xs mt-1"
+                                    :style="{ color: 'var(--color-text)' }">
                                     Primero selecciona una fecha
                                 </p>
                             </div>
@@ -194,75 +270,125 @@ const formularioValido = computed(() => {
 
                         <!-- Motivo de la Cita -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <label class="block text-sm font-medium mb-2"
+                                :style="{ color: 'var(--color-text)' }">
                                 Motivo de la Cita *
                             </label>
                             <textarea
                                 v-model="form.motivo"
                                 rows="3"
-                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                                class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-base)',
+                                    color: 'var(--color-text)',
+                                    borderColor: 'var(--color-border)',
+                                    ':focus': { 
+                                        ringColor: 'var(--color-primary)',
+                                        borderColor: 'var(--color-primary)'
+                                    }
+                                }"
                                 placeholder="Describe el problema o servicio que necesitas..."
                                 required
                             ></textarea>
-                            <p v-if="form.errors.motivo" class="text-red-600 text-sm mt-1">
+                            <p v-if="form.errors.motivo" class="text-sm mt-1"
+                                :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.motivo }}
                             </p>
                         </div>
 
                         <!-- Observaciones -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <label class="block text-sm font-medium mb-2"
+                                :style="{ color: 'var(--color-text)' }">
                                 Observaciones Adicionales
                             </label>
                             <textarea
                                 v-model="form.observaciones"
                                 rows="2"
-                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                                class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                :style="{ 
+                                    backgroundColor: 'var(--color-base)',
+                                    color: 'var(--color-text)',
+                                    borderColor: 'var(--color-border)',
+                                    ':focus': { 
+                                        ringColor: 'var(--color-primary)',
+                                        borderColor: 'var(--color-primary)'
+                                    }
+                                }"
                                 placeholder="Síntomas específicos, ruidos, comportamientos extraños..."
                             ></textarea>
-                            <p v-if="form.errors.observaciones" class="text-red-600 text-sm mt-1">
+                            <p v-if="form.errors.observaciones" class="text-sm mt-1"
+                                :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.observaciones }}
                             </p>
                         </div>
 
                         <!-- Resumen de la Cita -->
-                        <div v-if="formularioValido" class="p-4 bg-taller-cream rounded-lg border border-taller-blue-light">
-                            <h3 class="text-lg font-semibold text-taller-black mb-3 flex items-center gap-2">
-                                <ClockIcon class="h-5 w-5" />
+                        <div v-if="formularioValido" class="p-4 rounded-lg border"
+                            :style="{ 
+                                backgroundColor: 'var(--color-neutral)',
+                                borderColor: 'var(--color-primary-light)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-3 flex items-center gap-2"
+                                :style="{ color: 'var(--color-text)' }">
+                                <ClockIcon class="h-5 w-5"
+                                    :style="{ color: 'var(--color-primary)' }" />
                                 Resumen de tu Cita
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p class="text-gray-600">Vehículo:</p>
-                                    <p class="font-semibold">
+                                    <p :style="{ color: 'var(--color-text)' }">Vehículo:</p>
+                                    <p class="font-semibold"
+                                        :style="{ color: 'var(--color-text)' }">
                                         {{ vehiculoSeleccionadoInfo.marca }} {{ vehiculoSeleccionadoInfo.modelo }}
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Fecha y Hora:</p>
-                                    <p class="font-semibold">
+                                    <p :style="{ color: 'var(--color-text)' }">Fecha y Hora:</p>
+                                    <p class="font-semibold"
+                                        :style="{ color: 'var(--color-text)' }">
                                         {{ new Date(form.fecha).toLocaleDateString('es-ES') }} a las {{ form.hora }}
                                     </p>
                                 </div>
                                 <div class="md:col-span-2">
-                                    <p class="text-gray-600">Motivo:</p>
-                                    <p class="font-semibold">{{ form.motivo }}</p>
+                                    <p :style="{ color: 'var(--color-text)' }">Motivo:</p>
+                                    <p class="font-semibold"
+                                        :style="{ color: 'var(--color-text)' }">{{ form.motivo }}</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Botones -->
-                        <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+                        <div class="flex justify-end gap-4 pt-6"
+                            :style="{ borderColor: 'var(--color-border)', borderTopWidth: '1px' }">
                             <Link
                                 :href="route('cliente.citas.index')"
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                class="px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                                :style="{ 
+                                    color: 'var(--color-text)',
+                                    backgroundColor: 'var(--color-base)',
+                                    borderColor: 'var(--color-border)',
+                                    borderWidth: '1px',
+                                    ':hover': { 
+                                        backgroundColor: 'var(--color-neutral)',
+                                        color: 'var(--color-text)'
+                                    }
+                                }"
                             >
                                 Cancelar
                             </Link>
                             <button
                                 type="submit"
                                 :disabled="form.processing || !formularioValido"
-                                class="px-4 py-2 text-sm font-medium text-white bg-taller-blue-dark rounded-lg hover:bg-taller-blue-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                class="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                :style="{ 
+                                    color: 'var(--color-base)',
+                                    backgroundColor: 'var(--color-primary)',
+                                    ':hover': { 
+                                        backgroundColor: 'var(--color-primary-hover)',
+                                        color: 'var(--color-base)'
+                                    }
+                                }"
                             >
                                 <span v-if="form.processing">Agendando...</span>
                                 <span v-else>Confirmar Cita</span>

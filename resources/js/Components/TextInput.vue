@@ -19,8 +19,21 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <input
-        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        class="rounded-md shadow-sm transition duration-200"
+        :style="{ 
+            borderColor: 'var(--color-border)',
+            '--focus-border': 'var(--color-primary)',
+            '--focus-ring': 'var(--color-primary)',
+            color: 'var(--color-text)',
+        }"
         v-model="model"
         ref="input"
     />
 </template>
+
+<style scoped>
+input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.1);
+}
+</style>

@@ -1,16 +1,28 @@
 <script setup>
+import { ref } from 'vue';
+
 defineProps({
     type: {
         type: String,
         default: 'button',
     },
 });
+
+const isHovered = ref(false);
 </script>
 
 <template>
     <button
         :type="type"
-        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25"
+        class="inline-flex items-center rounded-md border px-4 py-2 text-xs font-semibold uppercase tracking-widest shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-25"
+        :style="{ 
+            backgroundColor: 'var(--color-base)',
+            borderColor: 'var(--color-primary)',
+            color: 'var(--color-primary)'
+        }"
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
+        :class="{ 'opacity-75': isHovered }"
     >
         <slot />
     </button>

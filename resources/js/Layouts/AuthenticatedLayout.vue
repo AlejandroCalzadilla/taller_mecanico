@@ -2,6 +2,11 @@
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import ThemeSwitcher from '@/Components/ThemeSwitcher.vue';
+import { useTheme } from '@/Composables/useTheme';
+
+// Inicializar el tema
+useTheme();
 
 const showingNavigationDropdown = ref(false);
 
@@ -11,8 +16,8 @@ const logout = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-taller-cream">
-        <nav class="bg-taller-black border-b border-taller-blue-dark">
+    <div class="min-h-screen" :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)' }">
+        <nav class="border-b" :style="{ backgroundColor: 'var(--color-primary)', borderColor: 'var(--color-secondary)' }">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
@@ -35,7 +40,12 @@ const logout = () => {
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <Link :href="route('dashboard')"
                                 class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                :class="[$page.url === '/dashboard' ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                :style="{ 
+                                    borderColor: $page.url === '/dashboard' ? 'var(--color-primary)' : 'transparent',
+                                    color: 'var(--color-text)'
+                                }"
+                                :class="{ 'hover:opacity-80': true }"
+                            >
                             Dashboard
                             </Link>
 
@@ -43,17 +53,32 @@ const logout = () => {
                             <template v-if="$page.props.auth.user.tipo === 'cliente'">
                                 <Link :href="route('cliente.vehiculos.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/mis-vehiculos') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/mis-vehiculos') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Mis Vehículos
                                 </Link>
                                 <Link :href="route('cliente.citas.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/mis-citas') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/mis-citas') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Mis Citas
                                 </Link>
                                 <Link :href="route('cliente.ordenes.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/mis-ordenes') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/mis-ordenes') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Mis Órdenes
                                 </Link>
                             </template>
@@ -62,12 +87,22 @@ const logout = () => {
                             <template v-if="$page.props.auth.user.tipo === 'mecanico'">
                                 <Link :href="route('mecanico.dashboard')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/diagnosticos') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/diagnosticos') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Diagnosticos
                                 </Link>
                                 <Link :href="route('mecanico.ordenes.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/ordenes-trabajo') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/ordenes-trabajo') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Órdenes de Trabajo
                                 </Link>
                             </template>
@@ -76,17 +111,32 @@ const logout = () => {
                             <template v-if="['secretaria', 'propietario'].includes($page.props.auth.user.tipo)">
                                 <Link :href="route('admin.citas.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/gestion-citas') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/gestion-citas') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Gestión de Citas
                                 </Link>
                                 <Link :href="route('admin.clientes.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/gestion-clientes') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/gestion-clientes') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Gestión de Clientes
                                 </Link>
                                 <Link :href="route('admin.reportes.index')"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                    :class="[$page.url.startsWith('/reportes') ? 'border-taller-blue-light text-white' : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300']">
+                                    :style="{ 
+                                        borderColor: $page.url.startsWith('/reportes') ? 'var(--color-primary)' : 'transparent',
+                                        color: 'var(--color-text)'
+                                    }"
+                                    :class="{ 'hover:opacity-80': true }"
+                                >
                                 Reportes
                                 </Link>
                             </template>
@@ -97,16 +147,25 @@ const logout = () => {
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
                             <div class="flex items-center space-x-4">
-                                <span class="text-sm text-gray-300">
+                                <!-- Theme Switcher -->
+                                <ThemeSwitcher />
+                                
+                                <span class="text-sm"
+                                    :style="{ color: 'var(--color-text-light)' }"
+                                >
                                     {{ $page.props.auth.user.nombre }}
                                 </span>
                                 <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-taller-blue-dark text-white">
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
+                                    :style="{ backgroundColor: 'var(--color-primary)' }"
+                                >
                                     {{ $page.props.auth.user.tipo }}
                                 </span>
 
                                 <Link :href="route('profile.edit')"
-                                    class="text-gray-300 hover:text-white transition duration-150 ease-in-out">
+                                    :style="{ color: 'var(--color-text-light)' }"
+                                    class="hover:opacity-80 transition duration-150 ease-in-out"
+                                >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -117,7 +176,9 @@ const logout = () => {
 
                                 <form @submit.prevent="logout">
                                     <button type="submit"
-                                        class="text-gray-300 hover:text-white transition duration-150 ease-in-out">
+                                        :style="{ color: 'var(--color-text-light)' }"
+                                        class="hover:opacity-80 transition duration-150 ease-in-out"
+                                    >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -155,7 +216,13 @@ const logout = () => {
                 <div class="pt-2 pb-3 space-y-1">
                     <Link :href="route('dashboard')"
                         class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
-                        :class="[$page.url === '/dashboard' ? 'border-taller-blue-light bg-taller-blue-dark text-white' : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700 hover:border-gray-300']">
+                        :style="{ 
+                            borderColor: $page.url === '/dashboard' ? 'var(--color-primary)' : 'transparent',
+                            backgroundColor: $page.url === '/dashboard' ? 'var(--color-primary)' : 'transparent',
+                            color: $page.url === '/dashboard' ? 'white' : 'var(--color-text-light)'
+                        }"
+                        :class="{ 'hover:opacity-80': true }"
+                    >
                     Dashboard
                     </Link>
 
@@ -163,18 +230,99 @@ const logout = () => {
                     <template v-if="$page.props.auth.user.tipo === 'cliente'">
                         <Link :href="route('cliente.vehiculos.index')"
                             class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
-                            :class="[$page.url.startsWith('/mis-vehiculos') ? 'border-taller-blue-light bg-taller-blue-dark text-white' : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700 hover:border-gray-300']">
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/mis-vehiculos') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/mis-vehiculos') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/mis-vehiculos') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
                         Mis Vehículos
                         </Link>
                         <Link :href="route('cliente.citas.index')"
                             class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
-                            :class="[$page.url.startsWith('/mis-citas') ? 'border-taller-blue-light bg-taller-blue-dark text-white' : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700 hover:border-gray-300']">
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/mis-citas') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/mis-citas') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/mis-citas') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
                         Mis Citas
                         </Link>
                         <Link :href="route('cliente.ordenes.index')"
                             class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
-                            :class="[$page.url.startsWith('/mis-ordenes') ? 'border-taller-blue-light bg-taller-blue-dark text-white' : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700 hover:border-gray-300']">
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/mis-ordenes') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/mis-ordenes') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/mis-ordenes') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
                         Mis Órdenes
+                        </Link>
+                    </template>
+
+                    <!-- Responsive links para Mecánicos -->
+                    <template v-if="$page.props.auth.user.tipo === 'mecanico'">
+                        <Link :href="route('mecanico.dashboard')"
+                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/diagnosticos') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/diagnosticos') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/diagnosticos') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
+                        Diagnosticos
+                        </Link>
+                        <Link :href="route('mecanico.ordenes.index')"
+                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/ordenes-trabajo') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/ordenes-trabajo') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/ordenes-trabajo') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
+                        Órdenes de Trabajo
+                        </Link>
+                    </template>
+
+                    <!-- Responsive links para Admin/Secretaria -->
+                    <template v-if="['secretaria', 'propietario'].includes($page.props.auth.user.tipo)">
+                        <Link :href="route('admin.citas.index')"
+                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/gestion-citas') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/gestion-citas') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/gestion-citas') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
+                        Gestión de Citas
+                        </Link>
+                        <Link :href="route('admin.clientes.index')"
+                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/gestion-clientes') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/gestion-clientes') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/gestion-clientes') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
+                        Gestión de Clientes
+                        </Link>
+                        <Link :href="route('admin.reportes.index')"
+                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out focus:outline-none"
+                            :style="{ 
+                                borderColor: $page.url.startsWith('/reportes') ? 'var(--color-primary)' : 'transparent',
+                                backgroundColor: $page.url.startsWith('/reportes') ? 'var(--color-primary)' : 'transparent',
+                                color: $page.url.startsWith('/reportes') ? 'white' : 'var(--color-text-light)'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
+                        Reportes
                         </Link>
                     </template>
                 </div>
@@ -190,19 +338,39 @@ const logout = () => {
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <div class="text-base font-medium text-white">{{ $page.props.auth.user.nombre }}</div>
-                            <div class="text-sm font-medium text-gray-400">{{ $page.props.auth.user.email }}</div>
+                            <div class="text-base font-medium"
+                                :style="{ color: 'var(--color-text)' }"
+                            >
+                                {{ $page.props.auth.user.nombre }}
+                            </div>
+                            <div class="text-sm font-medium"
+                                :style="{ color: 'var(--color-text-light)' }"
+                            >
+                                {{ $page.props.auth.user.email }}
+                            </div>
                         </div>
                     </div>
 
                     <div class="mt-3 space-y-1">
                         <Link :href="route('profile.edit')"
-                            class="block px-4 py-2 text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 transition duration-150 ease-in-out">
+                            class="block px-4 py-2 text-base font-medium transition duration-150 ease-in-out"
+                            :style="{ 
+                                color: 'var(--color-text-light)',
+                                backgroundColor: 'transparent'
+                            }"
+                            :class="{ 'hover:opacity-80': true }"
+                        >
                         Perfil
                         </Link>
                         <form @submit.prevent="logout">
                             <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 transition duration-150 ease-in-out">
+                                class="block w-full text-left px-4 py-2 text-base font-medium transition duration-150 ease-in-out"
+                                :style="{ 
+                                    color: 'var(--color-text-light)',
+                                    backgroundColor: 'transparent'
+                                }"
+                                :class="{ 'hover:opacity-80': true }"
+                            >
                                 Cerrar Sesión
                             </button>
                         </form>
