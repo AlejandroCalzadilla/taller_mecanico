@@ -98,6 +98,22 @@ onMounted(() => {
   <AdminLayout>
     <div class="px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
 
+      <!-- Mostrar errores flash -->
+      <div v-if="$page.props.flash?.error" class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
+          <p class="text-red-800 font-medium">{{ $page.props.flash.error }}</p>
+        </div>
+      </div>
+
+      <!-- Mostrar mensajes de éxito flash -->
+      <div v-if="$page.props.flash?.success" class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <CheckCircleIcon class="h-6 w-6 text-green-600" />
+          <p class="text-green-800 font-medium">{{ $page.props.flash.success }}</p>
+        </div>
+      </div>
+
       <div class="md:flex md:items-center md:justify-between mb-8">
         <div class="min-w-0 flex-1">
           <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3">

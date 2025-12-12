@@ -352,6 +352,24 @@ const formatDateTime = (date, time) => {
 
         <div class="space-y-6">
 
+          <!-- Botones de Pago Rápido -->
+          <div class="grid grid-cols-2 gap-3">
+            <Link
+              :href="route('admin.pagofacil.index', { pago_id: pago.id })"
+              class="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-purple-700 transition-colors"
+            >
+              <QrCodeIcon class="h-5 w-5" />
+              QR PagoFácil
+            </Link>
+            <Link
+              :href="route('admin.pagos.cobrar', pago.id)"
+              class="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-700 transition-colors"
+            >
+              <BanknotesIcon class="h-5 w-5" />
+              Cobrar
+            </Link>
+          </div>
+
           <div class="bg-white rounded-xl shadow-lg ring-1 ring-gray-900/5 p-6 border-t-4 border-t-taller-blue-dark">
             <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <CurrencyDollarIcon class="h-6 w-6 text-taller-blue-dark" />

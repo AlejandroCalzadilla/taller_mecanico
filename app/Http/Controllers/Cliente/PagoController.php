@@ -71,7 +71,6 @@ class PagoController extends Controller
      */
     public function show(Pago $pago)
     {
-
         $pago->load([
             'ordenTrabajo.diagnostico.cita.vehiculo',
             'ordenTrabajo.diagnostico.cita.cliente',
@@ -79,6 +78,14 @@ class PagoController extends Controller
             'ordenTrabajo.servicios.servicio',
             'detalles.recibidoPor'
         ]);
+
+        // Validar que el usuario autenticado sea el cliente dueño de este pago
+        $usuarioAutenticado = auth()->user();
+        $clientePago = $pago->ordenTrabajo->diagnostico->cita->cliente;
+        
+        if ($usuarioAutenticado->id !== $clientePago->id) {
+            abort(403, 'No tienes permiso para acceder a este pago');
+        }
 
         // Transformar datos numéricos
         $pago->monto_total = (float) $pago->monto_total;
@@ -98,11 +105,18 @@ class PagoController extends Controller
      */
     public function pagar(Pago $pago)
     {
-
         $pago->load([
             'ordenTrabajo.diagnostico.cita.vehiculo',
             'ordenTrabajo.diagnostico.cita.cliente'
         ]);
+
+        // Validar que el usuario autenticado sea el cliente dueño de este pago
+        $usuarioAutenticado = auth()->user();
+        $clientePago = $pago->ordenTrabajo->diagnostico->cita->cliente;
+        
+        if ($usuarioAutenticado->id !== $clientePago->id) {
+            abort(403, 'No tienes permiso para acceder a este pago');
+        }
 
         // Transformar datos numéricos
         $pago->monto_total = (float) $pago->monto_total;
@@ -116,31 +130,76 @@ class PagoController extends Controller
     }
 
     /**
-     * Procesar pago QR
+     * Procesar pago QR usando PagoFácil
      */
     public function procesarQr(Request $request, Pago $pago)
     {
+        \Log::info('=== CLIENTE PROCESAR QR ===', ['pago_id' => $pago->id]);
+
         $request->validate([
             'monto' => 'required|numeric|min:0.01|max:' . $pago->monto_pendiente,
+            'banco' => 'required|string',
+            'referencia' => 'required|string',
         ]);
 
         try {
-            // Simular generación de QR (en un sistema real integrarías con tu servicio de pagos)
-            $qrData = [
-                'pago_id' => $pago->id,
+            // Usar el controlador de PagoFácil para generar QR
+            $pagoFacilController = new \App\Http\Controllers\Admin\PagoFacilController();
+            
+            // Generar QR
+            $response = $pagoFacilController->generarQR(
+                new Request([
+                    'pago_id' => $pago->id,
+                    'monto' => $request->monto
+                ])
+            );
+
+            $data = json_decode($response->getContent(), true);
+
+            if (!$data['success']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $data['message'] ?? 'Error al generar QR'
+                ], 400);
+            }
+
+            // Registrar detalles del pago QR
+            $pago->detalles()->create([
+                'numero_cuota' => $pago->cuotas_pagadas + 1,
                 'monto' => $request->monto,
-                'codigo_qr' => 'QR-' . $pago->codigo . '-' . time(),
-                'fecha_expiracion' => now()->addMinutes(30)->format('Y-m-d H:i:s'),
-                'url_pago' => '#', // En un sistema real sería la URL del QR
-            ];
+                'metodo_pago' => 'qr',
+                'numero_comprobante' => $request->referencia,
+                'banco' => $request->banco,
+                'referencia' => $data['transaction_id'],
+                'recibido_por' => auth()->id(),
+                'observaciones' => 'Pago QR iniciado desde portal cliente',
+            ]);
+
+            // Actualizar notas del pago con el transaction ID
+            $pago->update([
+                'notas' => $pago->notas . " | Cliente QR: {$data['transaction_id']}"
+            ]);
+
+            \Log::info('QR generado para cliente', [
+                'pago_id' => $pago->id,
+                'transaction_id' => $data['transaction_id'],
+                'monto' => $request->monto
+            ]);
 
             return response()->json([
                 'success' => true,
-                'qr_data' => $qrData,
-                'message' => 'Código QR generado correctamente. Escanea el código para completar el pago.'
+                'qr_image' => $data['qr_image'],
+                'transaction_id' => $data['transaction_id'],
+                'nro_pago' => $data['nro_pago'],
+                'message' => 'Código QR generado. Escanea para completar el pago.'
             ]);
 
         } catch (\Exception $e) {
+            \Log::error('Error en procesarQr', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al generar el código QR: ' . $e->getMessage()

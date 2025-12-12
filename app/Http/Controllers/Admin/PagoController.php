@@ -58,54 +58,94 @@ class PagoController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-{
-    // Mostrar todas las órdenes completadas, incluso las que ya tienen pagos
-    $ordenes = OrdenTrabajo::where('estado', 'completada')
-                        ->with([
-                            'diagnostico.cita.cliente',
-                            'diagnostico.cita.vehiculo',
-                            'servicios.servicio',
-                            'pagos' // Cargar pagos existentes para mostrar información
-                        ])
-                        ->orderBy('fecha_creacion', 'desc')
-                        ->get();
-
-    return Inertia::render('Admin/Pagos/Create', [
-        'ordenes' => $ordenes,
-        'tiposPago' => Pago::getTiposPagoDisponibles(),
-        'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
-    ]);
-}
-
-    /**
+    {
+        
+        // Mostrar solo órdenes completadas que no tienen pagos activos
+        $ordenes = OrdenTrabajo::where('estado', 'completada')
+                            ->whereDoesntHave('pagos', function($query) {
+                                $query->where('estado', '!=', 'cancelada');
+                            })
+                            ->with([
+                                'diagnostico.cita.cliente',
+                                'diagnostico.cita.vehiculo',
+                                'servicios.servicio',
+                            ])
+                            ->orderBy('fecha_creacion', 'desc')
+                            ->get();
+        
+        return Inertia::render('Admin/Pagos/Create', [
+            'ordenes' => $ordenes,
+            'tiposPago' => Pago::getTiposPagoDisponibles(),
+            'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
+        ]);
+    }    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'orden_trabajo_id' => 'required|exists:ordenes_trabajo,id',
-            'tipo_pago' => 'required|in:contado,credito',
-            'numero_cuotas' => 'required_if:tipo_pago,credito|integer|min:2|max:24',
-            'fecha_vencimiento' => 'required_if:tipo_pago,credito|date|after:today',
-            'observaciones' => 'nullable|string|max:500',
-        ]);
+        \Log::info('=== INICIANDO CREACIÓN DE PAGO ===');
+        \Log::info('Datos recibidos:', $request->all());
+
+        try {
+            \Log::info('Iniciando validación...');
+            
+            $rules = [
+                'orden_trabajo_id' => 'required|exists:ordenes_trabajo,id',
+                'tipo_pago' => 'required|in:contado,credito',
+                'observaciones' => 'nullable|string|max:500',
+            ];
+
+            // Agregar validación condicional para crédito
+            if ($request->tipo_pago === 'credito') {
+                $rules['numero_cuotas'] = 'required|integer|min:2|max:24';
+                $rules['fecha_vencimiento'] = 'required|date|after:today';
+            } else {
+                // Para contado, numero_cuotas debe ser 1
+                $rules['numero_cuotas'] = 'nullable|integer';
+            }
+
+            $validated = $request->validate($rules);
+            \Log::info('Validación pasada:', $validated);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('ERROR en validación:', ['errors' => $e->errors()]);
+            throw $e;
+        }
 
         try {
             DB::beginTransaction();
+            \Log::info('Transacción iniciada');
 
             $orden = OrdenTrabajo::with(['diagnostico.cita.cliente'])->findOrFail($request->orden_trabajo_id);
+            \Log::info('Orden encontrada:', ['id' => $orden->id, 'estado' => $orden->estado, 'subtotal' => $orden->subtotal]);
 
             // Verificar que la orden esté completada
             if ($orden->estado !== 'completada') {
+                \Log::warning('Orden no está completada', ['estado' => $orden->estado]);
                 return back()->with('error', 'Solo se pueden crear pagos para órdenes completadas.');
             }
 
             // Verificar que no tenga pagos activos
-            if ($orden->pagos()->where('estado', '!=', 'cancelada')->exists()) {
+            $pagosActivos = $orden->pagos()->where('estado', '!=', 'cancelada')->exists();
+            \Log::info('Verificación de pagos activos:', ['tiene_pagos_activos' => $pagosActivos]);
+
+            if ($pagosActivos) {
+                \Log::warning('Orden ya tiene pagos activos');
                 return back()->with('error', 'Esta orden ya tiene un pago activo asociado.');
             }
 
+            \Log::info('Creando pago con datos:', [
+                'orden_trabajo_id' => $orden->id,
+                'monto_total' => $orden->subtotal,
+                'tipo_pago' => $request->tipo_pago,
+                'numero_cuotas' => $request->tipo_pago === 'credito' ? $request->numero_cuotas : 1,
+            ]);
+
+            // Generar código único para el pago
+            $codigo = 'PAG-' . date('Ymd') . '-' . str_pad(Pago::count() + 1, 4, '0', STR_PAD_LEFT);
+            \Log::info('Código generado:', ['codigo' => $codigo]);
+
             $pago = Pago::create([
+                'codigo' => $codigo,
                 'orden_trabajo_id' => $orden->id,
                 'monto_total' => $orden->subtotal,
                 'tipo_pago' => $request->tipo_pago,
@@ -114,13 +154,22 @@ class PagoController extends Controller
                 'observaciones' => $request->observaciones,
             ]);
 
+            \Log::info('Pago creado exitosamente:', ['pago_id' => $pago->id, 'codigo' => $pago->codigo]);
+
             DB::commit();
+            \Log::info('Transacción completada');
 
             return redirect()->route('admin.pagos.show', $pago->id)
                            ->with('success', 'Pago creado exitosamente.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Error al crear el pago: ' . $e->getMessage());
+            \Log::error('ERROR al crear pago:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return back()->with('error', 'Error al crear el pago: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -255,12 +304,6 @@ class PagoController extends Controller
                 'observaciones' => $request->observaciones,
             ]);
 
-            \Log::info('Detalle de pago CREADO exitosamente:', [
-                'id' => $detallePago->id,
-                'numero_cuota' => $detallePago->numero_cuota,
-                'monto' => $detallePago->monto,
-                'metodo_pago' => $detallePago->metodo_pago
-            ]);
 
             // ACTUALIZAR MANUALMENTE EL PAGO PRINCIPAL
             $nuevoMontoPagado = $pago->monto_pagado + $request->monto;
@@ -282,30 +325,16 @@ class PagoController extends Controller
                 $nuevoEstado = 'pagado_parcial';
                 \Log::info('Pago parcial registrado');
             }
-
-            \Log::info('Actualizando pago principal...');
-
             // Actualizar el pago principal
             $pago->update([
                 'monto_pagado' => $nuevoMontoPagado,
                 'cuotas_pagadas' => $nuevasCuotasPagadas,
                 'estado' => $nuevoEstado,
             ]);
-
-            \Log::info('Pago principal ACTUALIZADO:', [
-                'nuevo_monto_pagado' => $nuevoMontoPagado,
-                'nuevas_cuotas_pagadas' => $nuevasCuotasPagadas,
-                'nuevo_estado' => $nuevoEstado
-            ]);
-
             DB::commit();
-
-            \Log::info('=== TRANSACCIÓN COMPLETADA EXITOSAMENTE ===');
-
             return redirect()->route('admin.pagos.show', $pago->id)
                         ->with('success', 'Pago registrado exitosamente. Se ha abonado ' .
                                 number_format($request->monto, 2) . ' Bs. al pago.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -318,8 +347,6 @@ class PagoController extends Controller
                         ->withInput();
         }
     }
-
-
 
     /**
      * Obtener estadísticas de pagos

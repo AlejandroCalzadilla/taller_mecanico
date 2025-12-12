@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ReporteController as AdminReporteController;
 use App\Http\Controllers\Admin\ConfiguracionController as AdminConfiguracionController;
 use App\Http\Controllers\Admin\DiagnosticoController as AdminDiagnosticoController;
 use App\Http\Controllers\Admin\PagoController as AdminPagoController;
+use App\Http\Controllers\Admin\PagoFacilController as AdminPagoFacilController;
 
 
 use App\Http\Controllers\Mecanico\DashboardController as MecanicoDashboardController;
@@ -33,8 +34,10 @@ use Illuminate\Support\Facades\Route;
 // RUTAS PÚBLICAS
 // ============================================================================
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
-// ⚠️ IMPORTANTE: Ruta del callback FUERA del middleware auth (debe ser pública)
-Route::post('/api/pagos/callback', [QrController::class, 'handleCallback'])->name('api.pagos.callback');
+
+// ⚠️ IMPORTANTE: Rutas del callback y PagoFácil FUERA del middleware auth (deben ser públicas)
+Route::post('/api/pagos/callback', [AdminPagoFacilController::class, 'callback'])->name('api.pagos.callback');
+Route::get('/pagos/pagofacil/return', [AdminPagoFacilController::class, 'return'])->name('pagos.return');
 
 // ============================================================================
 // RUTAS DE AUTENTICACIÓN
@@ -98,6 +101,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pagos/{pago}/pagar', [ClientePagoController::class, 'pagar'])->name('pagos.pagar');
         Route::post('/pagos/{pago}/procesar-qr', [ClientePagoController::class, 'procesarQr'])->name('pagos.procesar-qr');
         Route::post('/pagos/{pago}/confirmar-efectivo', [ClientePagoController::class, 'confirmarEfectivo'])->name('pagos.confirmar-efectivo');
+
+        // PagoFácil - Cliente puede generar QR para sus pagos
+        Route::post('/pagofacil/generar-qr', [AdminPagoFacilController::class, 'generarQR'])->name('pagofacil.generar-qr');
 
     });
 
@@ -201,6 +207,14 @@ Route::get('/citas/por-fecha', [AdminCitaController::class, 'getCitasPorFecha'])
         Route::put('/pagos/{pago}', [AdminPagoController::class, 'update'])->name('pagos.update');
         Route::post('/pagos/{pago}/registrar', [AdminPagoController::class, 'registrarPago'])->name('pagos.registrar');
         Route::get('/pagos/{pago}/cobrar', [AdminPagoController::class, 'cobrar'])->name('pagos.cobrar');
+
+        // === RUTAS DE PAGOFÁCIL ===
+        Route::prefix('pagofacil')->name('pagofacil.')->group(function () {
+            Route::get('/generar-qr', [AdminPagoFacilController::class, 'index'])->name('index');
+            Route::post('/generar-qr', [AdminPagoFacilController::class, 'generarQR'])->name('generar-qr');
+            Route::post('/consultar-estado', [AdminPagoFacilController::class, 'consultarEstado'])->name('consultar-estado');
+            Route::get('/estado/{pago}', [AdminPagoFacilController::class, 'obtenerEstadoPago'])->name('obtener-estado');
+        });
 
         // Generar QR
         Route::post('/pagos/{pago}/generar-qr', [QrController::class, 'generarQR'])->name('api.generar-qr');

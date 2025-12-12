@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import axios from 'axios';
 import {
     ArrowLeftIcon,
     BanknotesIcon,
@@ -117,8 +118,8 @@ const generarNumeroComprobante = () => {
     return `${prefix}-${fecha}-${random}`;
 };
 
-// Función para generar QR estático
-const generarQR = () => {
+// Función para generar QR desde el backend
+const generarQR = async () => {
     if (!montoPago.value || montoPago.value <= 0) {
         errorQR.value = 'Primero establece un monto para generar el QR';
         return;
@@ -127,24 +128,32 @@ const generarQR = () => {
     generandoQR.value = true;
     errorQR.value = null;
 
-    // Simular tiempo de generación
-    setTimeout(() => {
-        // Usar un QR estático de ejemplo
-        qrImage.value = 'https://res.cloudinary.com/dcdhuwp0y/image/upload/v1762365279/WhatsApp_Image_2025-11-05_at_13.49.35_pertza.jpg';
+    try {
+        const response = await axios.post(route('cliente.pagofacil.generar-qr'), {
+            pago_id: props.pago.id,
+            monto: montoPago.value
+        });
 
-        // Generar número de pago único
-        const timestamp = new Date().getTime();
-        const randomNum = Math.floor(Math.random() * 1000);
-        nroPagoQR.value = `QR${timestamp}${randomNum}`.slice(0, 15);
+        if (response.data.success) {
+            qrImage.value = response.data.qr_image;
+            nroPagoQR.value = response.data.nro_pago;
 
-        // Auto-completar campos del formulario
-        formQR.value.referencia = nroPagoQR.value;
-        formQR.value.numero_comprobante = `QR-${nroPagoQR.value}`;
-        formQR.value.banco = 'Tigo Money';
+            // Auto-completar campos del formulario
+            formQR.value.referencia = response.data.transaction_id;
+            formQR.value.numero_comprobante = response.data.nro_pago;
+            formQR.value.banco = 'PagoFácil';
 
+            generandoQR.value = false;
+            errorQR.value = null;
+        } else {
+            errorQR.value = response.data.message || 'Error al generar el QR';
+            generandoQR.value = false;
+        }
+    } catch (error) {
+        console.error('Error al generar QR:', error);
+        errorQR.value = error.response?.data?.message || 'Error al generar el código QR. Intenta nuevamente.';
         generandoQR.value = false;
-        errorQR.value = null;
-    }, 1500);
+    }
 };
 
 const onMetodoPagoChange = () => {
@@ -403,7 +412,7 @@ onMounted(() => {
                                                 <span class="text-xs text-gray-500">Transferencia/Pago móvil</span>
                                             </div>
                                         </label>
-                                        <label class="cursor-pointer">
+                                        <!-- <label class="cursor-pointer">
                                             <input
                                                 type="radio"
                                                 name="metodo_pago"
@@ -417,7 +426,7 @@ onMounted(() => {
                                                 <span class="block text-sm font-medium text-gray-900">Efectivo</span>
                                                 <span class="text-xs text-gray-500">En el taller</span>
                                             </div>
-                                        </label>
+                                        </label> -->
                                     </div>
                                 </div>
 
@@ -482,7 +491,7 @@ onMounted(() => {
                                     </div>
 
                                     <!-- Información de la transacción QR -->
-                                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                   <!--  <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                                         <h4 class="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
                                             <BuildingLibraryIcon class="h-4 w-4" />
                                             Información de la Transacción
@@ -525,7 +534,7 @@ onMounted(() => {
                                                 />
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <!-- Información para Efectivo -->
