@@ -3,6 +3,8 @@ import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import ThemeSwitcher from '@/Components/ThemeSwitcher.vue';
+import GlobalSearch from '@/Components/GlobalSearch.vue';
+import PageViewsCounter from '@/Components/PageViewsCounter.vue';
 import { useTheme } from '@/Composables/useTheme';
 
 // Inicializar el tema
@@ -147,6 +149,9 @@ const logout = () => {
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
                             <div class="flex items-center space-x-4">
+                                <!-- Global Search -->
+                                <GlobalSearch />
+                                
                                 <!-- Theme Switcher -->
                                 <ThemeSwitcher />
                                 
@@ -383,5 +388,8 @@ const logout = () => {
         <main>
             <slot />
         </main>
+
+        <!-- Page Views Counter -->
+        <PageViewsCounter />
     </div>
 </template>

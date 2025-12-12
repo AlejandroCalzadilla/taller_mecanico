@@ -12,13 +12,40 @@ import {
     CalendarDaysIcon,
     DocumentChartBarIcon,
     ArrowDownTrayIcon,
-    EyeIcon
+    EyeIcon,
+    ChartPieIcon,
+    ArrowTrendingUpIcon
 } from '@heroicons/vue/24/outline'
+import { Line, Bar, Pie, Doughnut } from 'vue-chartjs'
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js'
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+)
 
 const props = defineProps({
+    kpis: Object,
     datos: Object,
     filtros: Object,
-    estadisticasGenerales: Object
 })
 
 const form = useForm({
@@ -31,9 +58,8 @@ const form = useForm({
 const tiposReporte = [
     { id: 'financiero', nombre: 'Financiero', icono: CurrencyDollarIcon, color: 'green' },
     { id: 'servicios', nombre: 'Servicios', icono: WrenchScrewdriverIcon, color: 'blue' },
-    { id: 'mecanicos', nombre: 'Mecánicos', icono: UserGroupIcon, color: 'purple' },
-    { id: 'clientes', nombre: 'Clientes', icono: UserGroupIcon, color: 'orange' },
-    { id: 'vehiculos', nombre: 'Vehículos', icono: TruckIcon, color: 'indigo' }
+    { id: 'citas', nombre: 'Citas', icono: CalendarDaysIcon, color: 'purple' },
+    { id: 'mecanicos', nombre: 'Mecánicos', icono: UserGroupIcon, color: 'orange' },
 ]
 
 const periodos = [
@@ -41,7 +67,6 @@ const periodos = [
     { id: 'semanal', nombre: 'Semanal' },
     { id: 'mensual', nombre: 'Mensual' },
     { id: 'anual', nombre: 'Anual' },
-    { id: 'personalizado', nombre: 'Personalizado' }
 ]
 
 // Métodos de formato
@@ -77,15 +102,232 @@ const exportarReporte = () => {
     })
 }
 
-// Computed para datos del reporte actual
-const datosReporte = computed(() => {
-    return props.datos || {}
+// Computed para gráficos
+const chartIngresosPeriodo = computed(() => {
+    const labels = Object.keys(props.datos.ingresos_periodo || {})
+    const data = Object.values(props.datos.ingresos_periodo || {})
+    
+    return {
+        labels,
+        datasets: [
+            {
+                label: 'Ingresos',
+                data,
+                borderColor: '#059669',
+                backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#059669',
+            }
+        ]
+    }
 })
 
-const tituloReporte = computed(() => {
-    const tipo = tiposReporte.find(t => t.id === form.tipo_reporte)
-    return tipo ? tipo.nombre : 'Reporte'
+const chartIngresosPorMetodo = computed(() => {
+    const metodos = props.datos.ingresos_por_metodo?.map(m => m.name) || []
+    const totales = props.datos.ingresos_por_metodo?.map(m => m.total) || []
+    const colores = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+    
+    return {
+        labels: metodos,
+        datasets: [
+            {
+                label: 'Monto (S/.)',
+                data: totales,
+                backgroundColor: colores.slice(0, metodos.length),
+                borderColor: colores.slice(0, metodos.length),
+                borderWidth: 1,
+            }
+        ]
+    }
 })
+
+const chartEstadoPagos = computed(() => {
+    const estados = props.datos.estado_pagos?.map(e => e.estado) || []
+    const cantidades = props.datos.estado_pagos?.map(e => e.cantidad) || []
+    
+    return {
+        labels: estados,
+        datasets: [
+            {
+                label: 'Cantidad de Pagos',
+                data: cantidades,
+                backgroundColor: [
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#06b6d4'
+                ].slice(0, estados.length),
+            }
+        ]
+    }
+})
+
+const chartServiciosPeriodo = computed(() => {
+    const labels = Object.keys(props.datos.servicios_periodo || {})
+    const data = Object.values(props.datos.servicios_periodo || {})
+    
+    return {
+        labels,
+        datasets: [
+            {
+                label: 'Servicios Realizados',
+                data,
+                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                borderColor: '#3b82f6',
+                borderWidth: 2,
+            }
+        ]
+    }
+})
+
+const chartTasaConversion = computed(() => {
+    const labels = Object.keys(props.datos?.tasa_conversion_periodo || {})
+    const data = Object.values(props.datos?.tasa_conversion_periodo || {})
+    
+    return {
+        labels: labels.length > 0 ? labels : ['Sin datos'],
+        datasets: [
+            {
+                label: 'Tasa de Conversión (%)',
+                data: data.length > 0 ? data : [0],
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#8b5cf6',
+            }
+        ]
+    }
+})
+
+const chartRendimientoMecanicos = computed(() => {
+    const mecanicos = props.datos.rendimiento_mecanicos?.map(m => m.nombre) || []
+    const ingresos = props.datos.rendimiento_mecanicos?.map(m => m.ingresos_generados) || []
+    const ordenes = props.datos.rendimiento_mecanicos?.map(m => m.total_ordenes) || []
+    
+    return {
+        labels: mecanicos,
+        datasets: [
+            {
+                label: 'Ingresos Generados (S/.)',
+                data: ingresos,
+                backgroundColor: '#3b82f6',
+                borderColor: '#1e40af',
+                borderWidth: 1,
+                yAxisID: 'y',
+            },
+            {
+                label: 'Total Órdenes',
+                data: ordenes,
+                backgroundColor: '#10b981',
+                borderColor: '#065f46',
+                borderWidth: 1,
+                yAxisID: 'y1',
+            }
+        ]
+    }
+})
+
+const chartCitasPorEstado = computed(() => {
+    const estados = props.datos?.citas_por_estado?.map(c => c.estado) || []
+    const cantidades = props.datos?.citas_por_estado?.map(c => c.cantidad) || []
+    const colores = ['#10b981', '#f59e0b', '#ef4444']
+    
+    return {
+        labels: estados.length > 0 ? estados : ['Sin datos'],
+        datasets: [
+            {
+                label: 'Cantidad de Citas',
+                data: cantidades.length > 0 ? cantidades : [0],
+                backgroundColor: colores.slice(0, estados.length || 1),
+            }
+        ]
+    }
+})
+
+const chartCitasPeriodo = computed(() => {
+    const labels = Object.keys(props.datos?.citas_periodo || {})
+    const data = Object.values(props.datos?.citas_periodo || {})
+    
+    return {
+        labels: labels.length > 0 ? labels : ['Sin datos'],
+        datasets: [
+            {
+                label: 'Citas',
+                data: data.length > 0 ? data : [0],
+                borderColor: '#06b6d4',
+                backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#06b6d4',
+            }
+        ]
+    }
+})
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+        legend: {
+            position: 'top',
+            labels: {
+                font: {
+                    size: 12,
+                    weight: '500'
+                },
+                padding: 15,
+            }
+        }
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: '#e5e7eb',
+            },
+            ticks: {
+                font: {
+                    size: 11
+                }
+            }
+        },
+        x: {
+            grid: {
+                display: false,
+            },
+            ticks: {
+                font: {
+                    size: 11
+                }
+            }
+        }
+    }
+}
+
+const chartOptionsPie = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+        legend: {
+            position: 'right',
+            labels: {
+                font: {
+                    size: 12,
+                    weight: '500'
+                },
+                padding: 15,
+            }
+        }
+    }
+}
 </script>
 
 <template>
@@ -99,10 +341,10 @@ const tituloReporte = computed(() => {
                         <div class="p-2 bg-taller-blue-light rounded-lg border border-taller-blue-dark shadow-sm">
                             <ChartBarIcon class="h-6 w-6 text-taller-blue-dark" />
                         </div>
-                        Reportes y Estadísticas
+                        Reportes y Análisis
                     </h2>
                     <p class="mt-2 text-sm text-gray-600 ml-12">
-                        Análisis detallado del rendimiento del taller
+                        Visualización detallada del rendimiento del taller
                     </p>
                 </div>
 
@@ -117,60 +359,60 @@ const tituloReporte = computed(() => {
                 </div>
             </div>
 
-            <!-- Estadísticas Rápidas -->
+            <!-- KPIs Principales -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 p-3 bg-green-100 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Ingresos Totales</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                                {{ formatMoney(kpis.ingresos_totales) }}
+                            </p>
+                        </div>
+                        <div class="p-3 bg-green-100 rounded-lg">
                             <CurrencyDollarIcon class="h-6 w-6 text-green-600" />
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500">Ingresos Hoy</p>
-                            <p class="text-2xl font-bold text-gray-900">
-                                {{ formatMoney(estadisticasGenerales.ingresos_hoy) }}
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Por Cobrar</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                                {{ formatMoney(kpis.pendiente_cobrar) }}
                             </p>
+                        </div>
+                        <div class="p-3 bg-orange-100 rounded-lg">
+                            <ArrowTrendingUpIcon class="h-6 w-6 text-orange-600" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 p-3 bg-blue-100 rounded-lg">
-                            <CalendarDaysIcon class="h-6 w-6 text-blue-600" />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500">Citas Hoy</p>
-                            <p class="text-2xl font-bold text-gray-900">
-                                {{ formatNumber(estadisticasGenerales.citas_hoy) }}
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Órdenes Completadas</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                                {{ formatNumber(kpis.ordenes_completadas) }}
                             </p>
+                        </div>
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <WrenchScrewdriverIcon class="h-6 w-6 text-blue-600" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 p-3 bg-purple-100 rounded-lg">
-                            <WrenchScrewdriverIcon class="h-6 w-6 text-purple-600" />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500">Órdenes Pendientes</p>
-                            <p class="text-2xl font-bold text-gray-900">
-                                {{ formatNumber(estadisticasGenerales.ordenes_pendientes) }}
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Tasa Conversión</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                                {{ kpis.tasa_conversion }}%
                             </p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 p-3 bg-orange-100 rounded-lg">
-                            <UserGroupIcon class="h-6 w-6 text-orange-600" />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500">Clientes Activos</p>
-                            <p class="text-2xl font-bold text-gray-900">
-                                {{ formatNumber(estadisticasGenerales.clientes_activos) }}
-                            </p>
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <ChartPieIcon class="h-6 w-6 text-purple-600" />
                         </div>
                     </div>
                 </div>
@@ -245,154 +487,66 @@ const tituloReporte = computed(() => {
                 </div>
             </div>
 
-            <!-- Contenido del Reporte -->
-            <div class="space-y-6">
+            <!-- Gráficos según tipo de reporte -->
+            <div class="space-y-8">
 
                 <!-- Reporte Financiero -->
-                <div v-if="form.tipo_reporte === 'financiero'" class="space-y-6">
-                    <!-- Resumen Financiero -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                            <p class="text-sm text-gray-500 mb-2">Ingresos Totales</p>
-                            <p class="text-2xl font-bold text-taller-black">
-                                {{ formatMoney(datosReporte.resumen?.ingresos_totales) }}
-                            </p>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                            <p class="text-sm text-gray-500 mb-2">Total de Pagos</p>
-                            <p class="text-2xl font-bold text-taller-black">
-                                {{ formatNumber(datosReporte.resumen?.pagos_totales) }}
-                            </p>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                            <p class="text-sm text-gray-500 mb-2">Promedio por Pago</p>
-                            <p class="text-2xl font-bold text-taller-black">
-                                {{ formatMoney(datosReporte.resumen?.promedio_pago) }}
-                            </p>
+                <div v-if="form.tipo_reporte === 'financiero'" class="space-y-8">
+                    <!-- Ingresos por Período -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Evolución de Ingresos</h3>
+                        <div style="height: 300px;">
+                            <Line :data="chartIngresosPeriodo" :options="chartOptions" />
                         </div>
                     </div>
 
-                    <!-- Ingresos por Método de Pago -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Método de Pago</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div
-                                v-for="metodo in datosReporte.ingresos_por_metodo"
-                                :key="metodo.metodo_pago"
-                                class="border border-gray-200 rounded-lg p-4"
-                            >
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-medium text-gray-900 capitalize">
-                                        {{ metodo.metodo_pago }}
-                                    </span>
-                                    <span class="text-sm text-gray-500">
-                                        {{ metodo.cantidad }} pagos
-                                    </span>
-                                </div>
-                                <p class="text-xl font-bold text-taller-blue-dark">
-                                    {{ formatMoney(metodo.total) }}
-                                </p>
+                    <!-- Ingresos por Método -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Método de Pago</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartIngresosPorMetodo" :options="chartOptions" />
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Estado de Pagos -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Estado de Pagos</h4>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Estado
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Cantidad
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Monto Total
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Pagado
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Pendiente
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr
-                                        v-for="estado in datosReporte.estado_pagos"
-                                        :key="estado.estado"
-                                    >
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900 capitalize">
-                                            {{ estado.estado.replace('_', ' ') }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatNumber(estado.cantidad) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(estado.monto_total) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(estado.monto_pagado) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney((estado.monto_total || 0) - (estado.monto_pagado || 0)) }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado de Pagos</h3>
+                            <div style="height: 300px;">
+                                <Doughnut :data="chartEstadoPagos" :options="chartOptionsPie" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reporte de Servicios -->
-                <div v-if="form.tipo_reporte === 'servicios'" class="space-y-6">
-                    <!-- Servicios Más Solicitados -->
+                <div v-if="form.tipo_reporte === 'servicios'" class="space-y-8">
+                    <!-- Servicios por Período -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Servicios Más Solicitados</h4>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Realizados por Período</h3>
+                        <div style="height: 300px;">
+                            <Bar :data="chartServiciosPeriodo" :options="chartOptions" />
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Servicios Más Solicitados -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Más Solicitados</h3>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Servicio
-                                        </th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Tipo
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Cantidad
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Ingresos
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Precio Promedio
-                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Servicio</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Ingresos</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                    <tr
-                                        v-for="servicio in datosReporte.servicios_mas_solicitados"
-                                        :key="servicio.nombre"
-                                    >
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
-                                            {{ servicio.nombre }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-500 capitalize">
-                                            {{ servicio.tipo }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatNumber(servicio.cantidad) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(servicio.ingresos) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(servicio.precio_promedio) }}
-                                        </td>
+                                    <tr v-for="servicio in datos.servicios_mas_usados" :key="servicio.nombre">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ servicio.nombre }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-500 capitalize">{{ servicio.tipo }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(servicio.cantidad) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-right font-medium">{{ formatMoney(servicio.ingresos) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -400,51 +554,62 @@ const tituloReporte = computed(() => {
                     </div>
                 </div>
 
-                <!-- Reporte de Mecánicos -->
-                <div v-if="form.tipo_reporte === 'mecanicos'" class="space-y-6">
-                    <!-- Rendimiento de Mecánicos -->
+                <!-- Reporte de Citas -->
+                <div v-if="form.tipo_reporte === 'citas'" class="space-y-8">
+                    <!-- Citas por Período -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Citas por Período</h3>
+                            <div style="height: 300px;">
+                                <Line :data="chartCitasPeriodo" :options="chartOptions" />
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribución por Estado</h3>
+                            <div style="height: 300px;">
+                                <Pie :data="chartCitasPorEstado" :options="chartOptionsPie" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasa de Conversión -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Rendimiento de Mecánicos</h4>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Conversión por Período (citas confirmadas / citas totales)</h3>
+                        <div style="height: 300px;">
+                            <Line :data="chartTasaConversion" :options="chartOptions" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reporte de Mecánicos -->
+                <div v-if="form.tipo_reporte === 'mecanicos'" class="space-y-8">
+                    <!-- Tabla de Rendimiento -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Rendimiento de Mecánicos</h3>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Mecánico
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Órdenes
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Completadas
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Ingresos
-                                        </th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Promedio/Orden
-                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mecánico</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Órdenes</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Completadas</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Ingresos</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Completación (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                    <tr
-                                        v-for="mecanico in datosReporte.rendimiento_mecanicos"
-                                        :key="mecanico.id"
-                                    >
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
-                                            {{ mecanico.nombre }}
-                                        </td>
+                                    <tr v-for="mecanico in datos.rendimiento_mecanicos" :key="mecanico.id">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ mecanico.nombre }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(mecanico.total_ordenes) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(mecanico.ordenes_completadas) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-right font-medium">{{ formatMoney(mecanico.ingresos_generados) }}</td>
                                         <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatNumber(mecanico.total_ordenes) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatNumber(mecanico.ordenes_completadas) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(mecanico.ingresos_generados) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
-                                            {{ formatMoney(mecanico.promedio_por_orden) }}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                                :class="mecanico.tasa_completacion >= 80 ? 'bg-green-100 text-green-800' : mecanico.tasa_completacion >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'"
+                                            >
+                                                {{ mecanico.tasa_completacion }}%
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -455,7 +620,7 @@ const tituloReporte = computed(() => {
 
                 <!-- Mensaje cuando no hay datos -->
                 <div
-                    v-if="!datosReporte || Object.keys(datosReporte).length === 0"
+                    v-if="!datos || Object.keys(datos).length === 0"
                     class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center"
                 >
                     <DocumentChartBarIcon class="h-12 w-12 text-gray-400 mx-auto mb-4" />

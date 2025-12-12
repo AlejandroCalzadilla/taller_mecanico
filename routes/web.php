@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\ClienteController as AdminClienteController;
 use App\Http\Controllers\Admin\VehiculoController as AdminVehiculoController;
 use App\Http\Controllers\Admin\ServicioController as AdminServicioController;
 use App\Http\Controllers\Admin\OrdenController as AdminOrdenController;
-use App\Http\Controllers\Admin\ReporteController as AdminReporteController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ConfiguracionController as AdminConfiguracionController;
 use App\Http\Controllers\Admin\DiagnosticoController as AdminDiagnosticoController;
 use App\Http\Controllers\Admin\PagoController as AdminPagoController;
@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\QrController as QrController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\PageViewController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
@@ -220,11 +221,27 @@ Route::get('/citas/por-fecha', [AdminCitaController::class, 'getCitasPorFecha'])
         Route::post('/pagos/{pago}/generar-qr', [QrController::class, 'generarQR'])->name('api.generar-qr');
         //Route::post('/pagos/callback', [QrController::class, 'handleCallback'])->name('api.pagos.callback');
         // Reportes
-        Route::get('/reportes', [AdminReporteController::class, 'index'])->name('reportes.index');
-        Route::post('/reportes/exportar', [AdminReporteController::class, 'exportar'])->name('reportes.exportar');
+        Route::get('/reportes', [AdminReportController::class, 'index'])->name('reportes.index');
+        Route::post('/reportes/exportar', [AdminReportController::class, 'exportar'])->name('reportes.exportar');
 
         // Configuración
         Route::get('/configuracion', [AdminConfiguracionController::class, 'index'])->name('configuracion.index');
 
     });
+
+    // ========================================================================
+    // RUTAS DE ESTADÍSTICAS DE PÁGINAS VISTAS (ACCESIBLE PARA TODOS)
+    // ========================================================================
+    Route::prefix('api/page-views')->name('api.page-views.')->group(function () {
+        Route::get('/stats', [PageViewController::class, 'getStats'])->name('stats');
+        Route::get('/unique-pages', [PageViewController::class, 'uniquePagesCount'])->name('unique-pages');
+        Route::get('/total-views', [PageViewController::class, 'totalViewsCount'])->name('total-views');
+        Route::get('/most-viewed', [PageViewController::class, 'getMostViewedPages'])->name('most-viewed');
+        Route::get('/today', [PageViewController::class, 'getTodayViews'])->name('today');
+        Route::get('/week', [PageViewController::class, 'getWeekViews'])->name('week');
+        Route::get('/month', [PageViewController::class, 'getMonthViews'])->name('month');
+        Route::get('/all', [PageViewController::class, 'getAllViews'])->name('all');
+        Route::get('/page/{pageName}', [PageViewController::class, 'getPageViews'])->name('page');
+    });
 });
+
