@@ -293,7 +293,7 @@ onMounted(() => {
     <Head :title="`Pagar - ${pago.codigo}`" />
 
     <AuthenticatedLayout>
-        <div class="py-8 bg-taller-cream min-h-screen">
+        <div class="py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
                 <!-- Header -->
@@ -301,20 +301,28 @@ onMounted(() => {
                     <div class="flex items-center gap-4">
                         <Link
                             :href="route('cliente.pagos.show', pago.id)"
-                            class="inline-flex items-center gap-2 text-taller-blue-dark hover:text-taller-blue-light transition-colors duration-200 p-2 hover:bg-white rounded-lg"
+                            class="inline-flex items-center gap-2 transition-colors duration-200 p-2 hover:bg-white rounded-lg"
+                            :style="{ 
+                              color: 'var(--color-primary)',
+                              ':hover': { backgroundColor: 'var(--color-base)' }
+                            }"
                         >
                             <ArrowLeftIcon class="h-5 w-5" />
                             <span class="font-medium">Volver al Detalle</span>
                         </Link>
                         <div class="h-8 w-px bg-gray-300"></div>
                         <div>
-                            <h1 class="text-3xl font-bold text-taller-black flex items-center gap-3">
-                                <div class="p-2.5 bg-white rounded-xl shadow-sm border border-taller-blue-light/50">
-                                    <BanknotesIcon class="h-8 w-8 text-taller-blue-dark" />
+                            <h1 class="text-3xl font-bold flex items-center gap-3" :style="{ color: 'var(--color-text)' }">
+                                <div class="p-2.5 rounded-xl shadow-sm border"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)',
+                                      borderColor: 'var(--color-border)'
+                                    }">
+                                    <BanknotesIcon class="h-8 w-8" :style="{ color: 'var(--color-primary)' }" />
                                 </div>
                                 <span class="tracking-tight">Realizar Pago</span>
                             </h1>
-                            <p class="mt-2 text-gray-600 ml-1">
+                            <p class="mt-2 ml-1" :style="{ color: 'var(--color-text-light)' }">
                                 Completa el pago para la orden {{ pago.orden_trabajo?.codigo }}
                             </p>
                         </div>
@@ -325,36 +333,47 @@ onMounted(() => {
                     <!-- Formulario de Pago -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Información del Pago -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-100">
-                            <h2 class="text-xl font-bold text-taller-black mb-4 flex items-center gap-2">
-                                <CurrencyDollarIcon class="h-6 w-6 text-green-600" />
+                        <div class="rounded-2xl shadow-sm border p-6 animate-fade-in-up delay-100"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h2 class="text-xl font-bold mb-4 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <CurrencyDollarIcon class="h-6 w-6" :style="{ color: 'var(--color-success)' }" />
                                 Información del Pago
                             </h2>
 
                             <div class="space-y-4">
                                 <!-- Monto a Pagar -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                                         Monto a Pagar *
                                     </label>
                                     <div class="relative">
                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <CurrencyDollarIcon class="h-5 w-5 text-gray-400" />
+                                            <CurrencyDollarIcon class="h-5 w-5" :style="{ color: 'var(--color-text-light)' }" />
                                         </div>
                                         <input
                                             type="number"
                                             v-model="montoPago"
                                             :max="montoMaximo"
                                             step="0.01"
-                                            class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-semibold"
+                                            class="block w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors text-lg font-semibold"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-base)',
+                                              color: 'var(--color-text)',
+                                              borderColor: 'var(--color-border)'
+                                            }"
+                                            onFocus="this.style.borderColor='var(--color-success)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-success-rgb), 0.1)'"
+                                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                                             placeholder="0.00"
                                         />
                                         <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                            <span class="text-gray-500 font-medium">Bs.</span>
+                                            <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Bs.</span>
                                         </div>
                                     </div>
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        Máximo permitido: <span class="font-semibold">${{ formatPrecio(montoMaximo) }}</span>
+                                    <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
+                                        Máximo permitido: <span class="font-semibold" :style="{ color: 'var(--color-text)' }">${{ formatPrecio(montoMaximo) }}</span>
                                     </p>
 
                                     <!-- Botones de montos sugeridos -->
@@ -362,7 +381,14 @@ onMounted(() => {
                                         <button
                                             type="button"
                                             @click="sugerirMonto('completo')"
-                                            class="px-3 py-1.5 text-xs font-medium bg-green-100 text-green-700 rounded-lg border border-green-200 hover:bg-green-200 transition-colors"
+                                            class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-success-light)',
+                                              color: 'var(--color-success)',
+                                              borderColor: 'var(--color-success)'
+                                            }"
+                                            onMouseOver="this.style.backgroundColor='var(--color-success)'"
+                                            onMouseOut="this.style.backgroundColor='var(--color-success-light)'"
                                         >
                                             Pagar Total (${{ formatPrecio(saldoPendiente) }})
                                         </button>
@@ -370,21 +396,42 @@ onMounted(() => {
                                             v-if="esCredito"
                                             type="button"
                                             @click="sugerirMonto('cuota')"
-                                            class="px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-lg border border-blue-200 hover:bg-blue-200 transition-colors"
+                                            class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-primary-light)',
+                                              color: 'var(--color-primary)',
+                                              borderColor: 'var(--color-primary)'
+                                            }"
+                                            onMouseOver="this.style.backgroundColor='var(--color-primary)'"
+                                            onMouseOut="this.style.backgroundColor='var(--color-primary-light)'"
                                         >
                                             Cuota {{ proximaCuota }} (${{ formatPrecio(montoCuota) }})
                                         </button>
                                         <button
                                             type="button"
                                             @click="sugerirMonto('mitad')"
-                                            class="px-3 py-1.5 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-lg border border-yellow-200 hover:bg-yellow-200 transition-colors"
+                                            class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-warning-light)',
+                                              color: 'var(--color-warning)',
+                                              borderColor: 'var(--color-warning)'
+                                            }"
+                                            onMouseOver="this.style.backgroundColor='var(--color-warning)'"
+                                            onMouseOut="this.style.backgroundColor='var(--color-warning-light)'"
                                         >
                                             Mitad (${{ formatPrecio(saldoPendiente / 2) }})
                                         </button>
                                         <button
                                             type="button"
                                             @click="sugerirMonto('minimo')"
-                                            class="px-3 py-1.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-lg border border-purple-200 hover:bg-purple-200 transition-colors"
+                                            class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-accent-light)',
+                                              color: 'var(--color-accent)',
+                                              borderColor: 'var(--color-accent)'
+                                            }"
+                                            onMouseOver="this.style.backgroundColor='var(--color-accent)'"
+                                            onMouseOut="this.style.backgroundColor='var(--color-accent-light)'"
                                         >
                                             Mínimo ($100.00)
                                         </button>
@@ -393,7 +440,7 @@ onMounted(() => {
 
                                 <!-- Método de Pago -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                                         Método de Pago *
                                     </label>
                                     <div class="grid grid-cols-2 gap-3">
@@ -406,10 +453,17 @@ onMounted(() => {
                                                 @change="onMetodoPagoChange"
                                                 class="peer sr-only"
                                             />
-                                            <div class="rounded-lg border-2 border-gray-200 bg-white p-4 hover:bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all text-center">
-                                                <QrCodeIcon class="h-6 w-6 mx-auto mb-2 text-gray-600 peer-checked:text-green-600" />
-                                                <span class="block text-sm font-medium text-gray-900">Pago QR</span>
-                                                <span class="text-xs text-gray-500">Transferencia/Pago móvil</span>
+                                            <div class="rounded-lg border-2 bg-white p-4 hover:bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all text-center"
+                                                :style="{ 
+                                                  backgroundColor: 'var(--color-base)',
+                                                  borderColor: 'var(--color-border)'
+                                                }"
+                                                onMouseOver="this.style.backgroundColor='var(--color-base-hover)'"
+                                                onMouseOut="this.style.backgroundColor='var(--color-base)'"
+                                            >
+                                                <QrCodeIcon class="h-6 w-6 mx-auto mb-2" :style="{ color: 'var(--color-text-light)' }" />
+                                                <span class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Pago QR</span>
+                                                <span class="text-xs" :style="{ color: 'var(--color-text-light)' }">Transferencia/Pago móvil</span>
                                             </div>
                                         </label>
                                         <!-- <label class="cursor-pointer">
@@ -421,10 +475,17 @@ onMounted(() => {
                                                 @change="onMetodoPagoChange"
                                                 class="peer sr-only"
                                             />
-                                            <div class="rounded-lg border-2 border-gray-200 bg-white p-4 hover:bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all text-center">
-                                                <BanknotesIcon class="h-6 w-6 mx-auto mb-2 text-gray-600 peer-checked:text-green-600" />
-                                                <span class="block text-sm font-medium text-gray-900">Efectivo</span>
-                                                <span class="text-xs text-gray-500">En el taller</span>
+                                            <div class="rounded-lg border-2 bg-white p-4 hover:bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all text-center"
+                                                :style="{ 
+                                                  backgroundColor: 'var(--color-base)',
+                                                  borderColor: 'var(--color-border)'
+                                                }"
+                                                onMouseOver="this.style.backgroundColor='var(--color-base-hover)'"
+                                                onMouseOut="this.style.backgroundColor='var(--color-base)'"
+                                            >
+                                                <BanknotesIcon class="h-6 w-6 mx-auto mb-2" :style="{ color: 'var(--color-text-light)' }" />
+                                                <span class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Efectivo</span>
+                                                <span class="text-xs" :style="{ color: 'var(--color-text-light)' }">En el taller</span>
                                             </div>
                                         </label> -->
                                     </div>
@@ -434,15 +495,20 @@ onMounted(() => {
                                 <div v-if="metodoPagoSeleccionado === 'qr'" class="space-y-4">
 
                                     <!-- Sección del Código QR -->
-                                    <div class="p-4 bg-blue-50 rounded-lg border border-blue-200 text-center">
-                                        <h4 class="text-sm font-semibold text-blue-900 flex items-center justify-center gap-2 mb-3">
+                                    <div class="p-4 rounded-lg border text-center"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-primary-light)',
+                                          borderColor: 'var(--color-primary)',
+                                          color: 'var(--color-primary)'
+                                        }">
+                                        <h4 class="text-sm font-semibold flex items-center justify-center gap-2 mb-3">
                                             <QrCodeIcon class="h-4 w-4" />
                                             Código QR de Pago
                                         </h4>
 
                                         <div v-if="generandoQR" class="flex flex-col items-center justify-center py-8">
-                                            <ArrowPathIcon class="h-8 w-8 text-blue-500 animate-spin mb-2" />
-                                            <p class="text-sm text-blue-700">Generando código QR...</p>
+                                            <ArrowPathIcon class="h-8 w-8 animate-spin mb-2" :style="{ color: 'var(--color-primary)' }" />
+                                            <p class="text-sm">Generando código QR...</p>
                                         </div>
 
                                         <div v-else-if="qrImage" class="space-y-3">
@@ -450,20 +516,36 @@ onMounted(() => {
                                                 <img
                                                     :src="qrImage"
                                                     alt="Código QR de pago"
-                                                    class="w-48 h-48 border-2 border-white rounded-lg shadow-sm"
+                                                    class="w-48 h-48 border-2 rounded-lg shadow-sm"
+                                                    :style="{ 
+                                                      borderColor: 'var(--color-base)',
+                                                      backgroundColor: 'var(--color-base)'
+                                                    }"
                                                 />
                                             </div>
                                             <div class="text-center">
-                                                <p class="text-xs text-gray-600 mb-1">Escanea este código con tu app de pagos</p>
-                                                <p class="text-xs font-mono text-gray-700 bg-white px-2 py-1 rounded border">
+                                                <p class="text-xs mb-1" :style="{ color: 'var(--color-text-light)' }">Escanea este código con tu app de pagos</p>
+                                                <p class="text-xs font-mono px-2 py-1 rounded border"
+                                                    :style="{ 
+                                                      backgroundColor: 'var(--color-base)',
+                                                      borderColor: 'var(--color-border)',
+                                                      color: 'var(--color-text)'
+                                                    }">
                                                     Referencia: {{ nroPagoQR }}
                                                 </p>
-                                                <p class="text-xs text-gray-600 mt-1">Monto: ${{ formatPrecio(montoPago) }}</p>
+                                                <p class="text-xs mt-1" :style="{ color: 'var(--color-text-light)' }">Monto: ${{ formatPrecio(montoPago) }}</p>
                                             </div>
                                             <button
                                                 type="button"
                                                 @click="generarQR"
-                                                class="inline-flex items-center gap-1 px-3 py-1 text-xs bg-white text-blue-600 border border-blue-300 rounded hover:bg-blue-50 transition-colors"
+                                                class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded transition-colors"
+                                                :style="{ 
+                                                  backgroundColor: 'var(--color-base)',
+                                                  color: 'var(--color-primary)',
+                                                  borderColor: 'var(--color-primary)'
+                                                }"
+                                                onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
+                                                onMouseOut="this.style.backgroundColor='var(--color-base)'"
                                             >
                                                 <ArrowPathIcon class="h-3 w-3" />
                                                 Regenerar QR
@@ -471,21 +553,32 @@ onMounted(() => {
                                         </div>
 
                                         <div v-else class="py-6">
-                                            <p class="text-sm text-gray-600 mb-3">
+                                            <p class="text-sm mb-3" :style="{ color: 'var(--color-text-light)' }">
                                                 Establece un monto y haz clic para generar el código QR
                                             </p>
                                             <button
                                                 type="button"
                                                 @click="generarQR"
                                                 :disabled="!montoPago || montoPago <= 0"
-                                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                                                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                                                :style="{ 
+                                                  backgroundColor: 'var(--color-primary)',
+                                                  color: 'var(--color-base)'
+                                                }"
+                                                onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
+                                                onMouseOut="this.style.backgroundColor='var(--color-primary)'"
                                             >
                                                 <QrCodeIcon class="h-4 w-4" />
                                                 Generar Código QR
                                             </button>
                                         </div>
 
-                                        <div v-if="errorQR" class="mt-3 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                                        <div v-if="errorQR" class="mt-3 p-2 rounded text-xs"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-danger-light)',
+                                              borderColor: 'var(--color-danger)',
+                                              color: 'var(--color-danger)'
+                                            }">
                                             {{ errorQR }}
                                         </div>
                                     </div>
@@ -538,54 +631,78 @@ onMounted(() => {
                                 </div>
 
                                 <!-- Información para Efectivo -->
-                                <div v-if="metodoPagoSeleccionado === 'efectivo'" class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                                    <h4 class="text-sm font-semibold text-yellow-900 flex items-center gap-2 mb-3">
+                                <div v-if="metodoPagoSeleccionado === 'efectivo'" class="p-4 rounded-lg border"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-warning-light)',
+                                      borderColor: 'var(--color-warning)',
+                                      color: 'var(--color-warning)'
+                                    }">
+                                    <h4 class="text-sm font-semibold flex items-center gap-2 mb-3">
                                         <BanknotesIcon class="h-4 w-4" />
                                         Información para Pago en Efectivo
                                     </h4>
-                                    <p class="text-sm text-yellow-700 mb-3">
+                                    <p class="text-sm mb-3">
                                         Al confirmar este pago, se registrará una solicitud. Deberás acercarte al taller para completar el pago en efectivo.
                                     </p>
-                                    <div class="bg-white p-3 rounded border border-yellow-100">
-                                        <p class="text-xs font-medium text-gray-700">Dirección del Taller:</p>
-                                        <p class="text-xs text-gray-600">Av. Principal #123, Zona Central</p>
-                                        <p class="text-xs text-gray-600">Horario: Lunes a Viernes 8:00 - 18:00</p>
-                                        <p class="text-xs text-gray-600">Sábados: 8:00 - 12:00</p>
+                                    <div class="p-3 rounded border"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)',
+                                          borderColor: 'var(--color-border)',
+                                          color: 'var(--color-text)'
+                                        }">
+                                        <p class="text-xs font-medium">Dirección del Taller:</p>
+                                        <p class="text-xs" :style="{ color: 'var(--color-text-light)' }">Av. Principal #123, Zona Central</p>
+                                        <p class="text-xs" :style="{ color: 'var(--color-text-light)' }">Horario: Lunes a Viernes 8:00 - 18:00</p>
+                                        <p class="text-xs" :style="{ color: 'var(--color-text-light)' }">Sábados: 8:00 - 12:00</p>
                                     </div>
                                 </div>
 
                                 <!-- Número de Comprobante -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                                         N° Comprobante (Opcional)
                                     </label>
                                     <div class="relative">
                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <DocumentTextIcon class="h-4 w-4 text-gray-400" />
+                                            <DocumentTextIcon class="h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                                         </div>
                                         <input
                                             type="text"
-                                            :value="metodoPagoSeleccionado === 'qr' ? formQR.numero_comprobante : formEfectivo.value.numero_comprobante"
-                                            @input="metodoPagoSeleccionado === 'qr' ? formQR.numero_comprobante = $event.target.value : formEfectivo.value.numero_comprobante = $event.target.value"
-                                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-mono text-sm"
+                                            :value="metodoPagoSeleccionado === 'qr' ? formQR.numero_comprobante : formEfectivo.numero_comprobante"
+                                            @input="metodoPagoSeleccionado === 'qr' ? formQR.numero_comprobante = $event.target.value : formEfectivo.numero_comprobante = $event.target.value"
+                                            class="block w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors font-mono text-sm"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-base)',
+                                              color: 'var(--color-text)',
+                                              borderColor: 'var(--color-border)'
+                                            }"
+                                            onFocus="this.style.borderColor='var(--color-success)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-success-rgb), 0.1)'"
+                                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                                             placeholder="Generado automáticamente"
                                         />
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-1">
+                                    <p class="text-xs mt-1" :style="{ color: 'var(--color-text-light)' }">
                                         Se genera automáticamente si se deja vacío
                                     </p>
                                 </div>
 
                                 <!-- Observaciones -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                                         Observaciones
                                     </label>
                                     <textarea
-                                        :value="metodoPagoSeleccionado === 'qr' ? formQR.observaciones : formEfectivo.value.observaciones"
-                                        @input="metodoPagoSeleccionado === 'qr' ? formQR.observaciones = $event.target.value : formEfectivo.value.observaciones = $event.target.value"
+                                        :value="metodoPagoSeleccionado === 'qr' ? formQR.observaciones : formEfectivo.observaciones"
+                                        @input="metodoPagoSeleccionado === 'qr' ? formQR.observaciones = $event.target.value : formEfectivo.observaciones = $event.target.value"
                                         rows="3"
-                                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                                        class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors text-sm"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)',
+                                          color: 'var(--color-text)',
+                                          borderColor: 'var(--color-border)'
+                                        }"
+                                        onFocus="this.style.borderColor='var(--color-success)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-success-rgb), 0.1)'"
+                                        onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                                         placeholder="Notas adicionales sobre este pago..."
                                     ></textarea>
                                 </div>
@@ -593,11 +710,21 @@ onMounted(() => {
                         </div>
 
                         <!-- Botón de Envío -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-200">
+                        <div class="rounded-2xl shadow-sm border p-6 animate-fade-in-up delay-200"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
                             <button
                                 @click="submitPago"
                                 :disabled="procesandoPago || !montoPago || montoPago <= 0 || (metodoPagoSeleccionado === 'qr' && !qrImage)"
-                                class="w-full py-4 px-6 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center gap-2 text-lg"
+                                class="w-full py-4 px-6 font-semibold rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center gap-2 text-lg"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-success)',
+                                  color: 'var(--color-base)'
+                                }"
+                                onMouseOver="this.style.backgroundColor='var(--color-success-light)'"
+                                onMouseOut="this.style.backgroundColor='var(--color-success)'"
                             >
                                 <BanknotesIcon class="h-6 w-6" />
                                 <span v-if="procesandoPago">Procesando Pago...</span>
@@ -607,7 +734,12 @@ onMounted(() => {
                                 </span>
                             </button>
 
-                            <div v-if="errorQR" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                            <div v-if="errorQR" class="mt-4 p-3 rounded-lg text-sm"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-danger-light)',
+                                  borderColor: 'var(--color-danger)',
+                                  color: 'var(--color-danger)'
+                                }">
                                 <ExclamationTriangleIcon class="h-4 w-4 inline mr-1" />
                                 {{ errorQR }}
                             </div>
@@ -617,77 +749,86 @@ onMounted(() => {
                     <!-- Panel Lateral - Información -->
                     <div class="space-y-6">
                         <!-- Resumen del Pago -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-300">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <DocumentTextIcon class="h-5 w-5 text-blue-600" />
+                        <div class="rounded-2xl shadow-sm border p-6 animate-fade-in-up delay-300"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <DocumentTextIcon class="h-5 w-5" :style="{ color: 'var(--color-primary)' }" />
                                 Resumen del Pago
                             </h3>
 
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Cliente:</span>
-                                    <span class="text-sm font-medium text-gray-900">
+                                    <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Cliente:</span>
+                                    <span class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                         {{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.nombre }}
                                     </span>
                                 </div>
 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Vehículo:</span>
-                                    <span class="text-sm font-medium text-gray-900">
+                                    <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Vehículo:</span>
+                                    <span class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                         {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.marca }}
                                         {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.modelo }}
                                     </span>
                                 </div>
 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Placa:</span>
-                                    <span class="text-sm font-mono font-medium text-gray-900">
+                                    <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Placa:</span>
+                                    <span class="text-sm font-mono font-medium" :style="{ color: 'var(--color-text)' }">
                                         {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.placa }}
                                     </span>
                                 </div>
 
-                                <div class="border-t border-gray-200 pt-3">
+                                <div class="border-t pt-3" :style="{ borderColor: 'var(--color-border)' }">
                                     <div class="flex justify-between items-center mb-2">
-                                        <span class="text-sm font-medium text-gray-700">Total Orden:</span>
-                                        <span class="text-lg font-bold text-gray-900">
+                                        <span class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">Total Orden:</span>
+                                        <span class="text-lg font-bold" :style="{ color: 'var(--color-text)' }">
                                             ${{ formatPrecio(pago.monto_total) }}
                                         </span>
                                     </div>
 
                                     <div class="flex justify-between items-center mb-2">
-                                        <span class="text-sm font-medium text-green-600">Pagado:</span>
-                                        <span class="text-lg font-bold text-green-600">
+                                        <span class="text-sm font-medium" :style="{ color: 'var(--color-success)' }">Pagado:</span>
+                                        <span class="text-lg font-bold" :style="{ color: 'var(--color-success)' }">
                                             ${{ formatPrecio(pago.monto_pagado) }}
                                         </span>
                                     </div>
 
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-red-600">Pendiente:</span>
-                                        <span class="text-lg font-bold text-red-600">
+                                        <span class="text-sm font-medium" :style="{ color: 'var(--color-danger)' }">Pendiente:</span>
+                                        <span class="text-lg font-bold" :style="{ color: 'var(--color-danger)' }">
                                             ${{ formatPrecio(saldoPendiente) }}
                                         </span>
                                     </div>
                                 </div>
 
                                 <!-- Información de Crédito (si aplica) -->
-                                <div v-if="esCredito" class="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                                    <h4 class="text-sm font-semibold text-yellow-900 mb-2">Plan de Crédito</h4>
+                                <div v-if="esCredito" class="mt-4 p-3 rounded-lg border"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-warning-light)',
+                                      borderColor: 'var(--color-warning)',
+                                      color: 'var(--color-warning)'
+                                    }">
+                                    <h4 class="text-sm font-semibold mb-2">Plan de Crédito</h4>
                                     <div class="space-y-1 text-xs">
                                         <div class="flex justify-between">
-                                            <span class="text-yellow-700">Total Cuotas:</span>
-                                            <span class="font-medium">{{ pago.numero_cuotas }}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-yellow-700">Cuotas Pagadas:</span>
-                                            <span class="font-medium text-green-600">{{ pago.cuotas_pagadas }}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-yellow-700">Próxima Cuota:</span>
+                                            <span>Próxima Cuota:</span>
                                             <span class="font-medium">#{{ proximaCuota }}</span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-yellow-700">Monto por Cuota:</span>
+                                            <span>Monto por Cuota:</span>
                                             <span class="font-medium">${{ formatPrecio(montoCuota) }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Cuotas Pagadas:</span>
+                                            <span class="font-medium" :style="{ color: 'var(--color-success)' }">{{ pago.cuotas_pagadas }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Total Cuotas:</span>
+                                            <span class="font-medium">{{ pago.numero_cuotas }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -695,21 +836,25 @@ onMounted(() => {
                         </div>
 
                         <!-- Información de Contacto -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-400">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <UserIcon class="h-5 w-5 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm border p-6 animate-fade-in-up delay-400"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <UserIcon class="h-5 w-5" :style="{ color: 'var(--color-primary)' }" />
                                 Contacto y Soporte
                             </h3>
 
                             <div class="space-y-3 text-sm">
-                                <p class="text-gray-600">
+                                <p :style="{ color: 'var(--color-text-light)' }">
                                     Si tienes problemas con el pago, contáctanos:
                                 </p>
                                 <div class="space-y-2">
-                                    <p class="font-medium text-gray-900">Taller Mecánico</p>
-                                    <p class="text-gray-600">📞 Tel: +591 77777777</p>
-                                    <p class="text-gray-600">📧 Email: contacto@tallermecanico.com</p>
-                                    <p class="text-gray-600">🕒 Horario: Lunes a Viernes 8:00 - 18:00</p>
+                                    <p class="font-medium" :style="{ color: 'var(--color-text)' }">Taller Mecánico</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">📞 Tel: +591 77777777</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">📧 Email: contacto@tallermecanico.com</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">🕒 Horario: Lunes a Viernes 8:00 - 18:00</p>
                                 </div>
                             </div>
                         </div>
@@ -720,10 +865,14 @@ onMounted(() => {
 
         <!-- Modal de Confirmación -->
         <div v-if="mostrarConfirmacion" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
-            <div class="bg-white rounded-2xl p-6 w-full max-w-md animate-scale-in text-center">
-                <CheckCircleIcon class="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 class="text-xl font-bold text-gray-900 mb-2">¡Pago Registrado Exitosamente!</h3>
-                <p class="text-gray-600 mb-6">
+            <div class="rounded-2xl p-6 w-full max-w-md animate-scale-in text-center"
+                :style="{ 
+                  backgroundColor: 'var(--color-base)',
+                  borderColor: 'var(--color-border)'
+                }">
+                <CheckCircleIcon class="h-16 w-16 mx-auto mb-4" :style="{ color: 'var(--color-success)' }" />
+                <h3 class="text-xl font-bold mb-2" :style="{ color: 'var(--color-text)' }">¡Pago Registrado Exitosamente!</h3>
+                <p class="mb-6" :style="{ color: 'var(--color-text-light)' }">
                     {{ metodoPagoSeleccionado === 'qr'
                         ? 'Tu pago QR ha sido procesado. El monto se reflejará en tu cuenta una vez confirmado por el sistema.'
                         : 'Tu solicitud de pago en efectivo ha sido registrada. Por favor acércate al taller para completar el pago.'
@@ -732,13 +881,26 @@ onMounted(() => {
                 <div class="space-y-3">
                     <button
                         @click="irADetalles"
-                        class="w-full py-3 px-4 bg-taller-blue-dark text-white font-semibold rounded-lg hover:bg-taller-blue-light transition-colors"
+                        class="w-full py-3 px-4 font-semibold rounded-lg transition-colors"
+                        :style="{ 
+                          backgroundColor: 'var(--color-primary)',
+                          color: 'var(--color-base)'
+                        }"
+                        onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
+                        onMouseOut="this.style.backgroundColor='var(--color-primary)'"
                     >
                         Ver Detalles del Pago
                     </button>
                     <button
                         @click="mostrarConfirmacion = false"
-                        class="w-full py-3 px-4 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                        class="w-full py-3 px-4 font-semibold rounded-lg border transition-colors"
+                        :style="{ 
+                          color: 'var(--color-text-light)',
+                          borderColor: 'var(--color-border)',
+                          backgroundColor: 'var(--color-base)'
+                        }"
+                        onMouseOver="this.style.backgroundColor='var(--color-base-hover)'"
+                        onMouseOut="this.style.backgroundColor='var(--color-base)'"
                     >
                         Cerrar
                     </button>

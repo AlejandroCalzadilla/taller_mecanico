@@ -107,20 +107,24 @@ const clearFilters = () => {
     <Head title="Mis Pagos" />
 
     <AuthenticatedLayout>
-        <div class="py-8 bg-taller-cream min-h-screen">
+        <div class="py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
                 <!-- Header -->
                 <div class="mb-10 animate-fade-in-down">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h1 class="text-3xl font-bold text-taller-black flex items-center gap-3">
-                                <div class="p-2.5 bg-white rounded-xl shadow-sm border border-taller-blue-light/50">
-                                    <BanknotesIcon class="h-8 w-8 text-taller-blue-dark" />
+                            <h1 class="text-3xl font-bold flex items-center gap-3" :style="{ color: 'var(--color-text)' }">
+                                <div class="p-2.5 rounded-xl shadow-sm border"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)',
+                                      borderColor: 'var(--color-border)'
+                                    }">
+                                    <BanknotesIcon class="h-8 w-8" :style="{ color: 'var(--color-primary)' }" />
                                 </div>
                                 <span class="tracking-tight">Mis Pagos</span>
                             </h1>
-                            <p class="mt-2 text-gray-600 ml-1">
+                            <p class="mt-2 ml-1" :style="{ color: 'var(--color-text-light)' }">
                                 Historial y estado de tus pagos de servicios mecánicos.
                             </p>
                         </div>
@@ -129,84 +133,130 @@ const clearFilters = () => {
 
                 <!-- Estadísticas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <div class="stats-card animate-fade-in-up delay-100 group">
+                    <div class="stats-card animate-fade-in-up delay-100 group"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-border)',
+                          borderWidth: '1px',
+                          borderStyle: 'solid'
+                        }">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <BanknotesIcon class="h-16 w-16 text-taller-blue-dark" />
+                            <BanknotesIcon class="h-16 w-16" :style="{ color: 'var(--color-primary)' }" />
                         </div>
                         <div class="relative z-10">
-                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Pagos</p>
+                            <p class="text-sm font-medium uppercase tracking-wide" :style="{ color: 'var(--color-text-light)' }">Total Pagos</p>
                             <div class="mt-2 flex items-baseline gap-2">
-                                <span class="text-3xl font-bold text-taller-black">{{ estadisticas.total }}</span>
-                                <span class="text-xs text-gray-400">registrados</span>
+                                <span class="text-3xl font-bold" :style="{ color: 'var(--color-text)' }">{{ estadisticas.total }}</span>
+                                <span class="text-xs" :style="{ color: 'var(--color-text-light)' }">registrados</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="stats-card animate-fade-in-up delay-200 group border-l-4 border-l-yellow-400">
+                    <div class="stats-card animate-fade-in-up delay-200 group"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-warning)',
+                          borderWidth: '4px',
+                          borderStyle: 'solid',
+                          borderLeftWidth: '4px'
+                        }">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <ClockIcon class="h-16 w-16 text-yellow-600" />
+                            <ClockIcon class="h-16 w-16" :style="{ color: 'var(--color-warning)' }" />
                         </div>
                         <div class="relative z-10">
-                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Pendientes</p>
+                            <p class="text-sm font-medium uppercase tracking-wide" :style="{ color: 'var(--color-text-light)' }">Pendientes</p>
                             <div class="mt-2 flex items-baseline gap-2">
-                                <span class="text-3xl font-bold text-yellow-600">{{ estadisticas.pendientes }}</span>
-                                <span class="text-xs text-yellow-600/70">por pagar</span>
+                                <span class="text-3xl font-bold" :style="{ color: 'var(--color-warning)' }">{{ estadisticas.pendientes }}</span>
+                                <span class="text-xs" :style="{ color: 'var(--color-warning)' }">por pagar</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="stats-card animate-fade-in-up delay-300 group border-l-4 border-l-green-500">
+                    <div class="stats-card animate-fade-in-up delay-300 group"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-success)',
+                          borderWidth: '4px',
+                          borderStyle: 'solid',
+                          borderLeftWidth: '4px'
+                        }">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <CheckCircleIcon class="h-16 w-16 text-green-600" />
+                            <CheckCircleIcon class="h-16 w-16" :style="{ color: 'var(--color-success)' }" />
                         </div>
                         <div class="relative z-10">
-                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Completados</p>
+                            <p class="text-sm font-medium uppercase tracking-wide" :style="{ color: 'var(--color-text-light)' }">Completados</p>
                             <div class="mt-2 flex items-baseline gap-2">
-                                <span class="text-3xl font-bold text-green-600">{{ estadisticas.completos }}</span>
-                                <span class="text-xs text-green-600/70">pagados</span>
+                                <span class="text-3xl font-bold" :style="{ color: 'var(--color-success)' }">{{ estadisticas.completos }}</span>
+                                <span class="text-xs" :style="{ color: 'var(--color-success)' }">pagados</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="stats-card animate-fade-in-up delay-400 group border-l-4 border-l-red-500">
+                    <div class="stats-card animate-fade-in-up delay-400 group"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-danger)',
+                          borderWidth: '4px',
+                          borderStyle: 'solid',
+                          borderLeftWidth: '4px'
+                        }">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <ExclamationTriangleIcon class="h-16 w-16 text-red-600" />
+                            <ExclamationTriangleIcon class="h-16 w-16" :style="{ color: 'var(--color-danger)' }" />
                         </div>
                         <div class="relative z-10">
-                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Saldo Pendiente</p>
+                            <p class="text-sm font-medium uppercase tracking-wide" :style="{ color: 'var(--color-text-light)' }">Saldo Pendiente</p>
                             <div class="mt-2 flex items-baseline gap-2">
-                                <span class="text-3xl font-bold text-red-600">${{ formatPrecio(estadisticas.total_pendiente) }}</span>
-                                <span class="text-xs text-red-600/70">por cobrar</span>
+                                <span class="text-3xl font-bold" :style="{ color: 'var(--color-danger)' }">${{ formatPrecio(estadisticas.total_pendiente) }}</span>
+                                <span class="text-xs" :style="{ color: 'var(--color-danger)' }">por cobrar</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Filtros y Lista -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up delay-500">
+                <div class="rounded-2xl shadow-sm overflow-hidden animate-fade-in-up delay-500"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)',
+                      borderWidth: '1px',
+                      borderStyle: 'solid'
+                    }">
                     <div class="p-6 md:p-8">
 
                         <!-- Barra de Filtros -->
-                        <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-6 p-4 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-primary-light)' }">
                             <div class="relative w-full md:max-w-md">
                                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
+                                    <MagnifyingGlassIcon class="h-5 w-5" :style="{ color: 'var(--color-text-light)' }" />
                                 </div>
                                 <input
                                     type="text"
                                     v-model="filtersForm.search"
                                     placeholder="Buscar por código, placa..."
-                                    class="block w-full rounded-lg border-0 py-2.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6 bg-white"
+                                    class="block w-full rounded-lg border-0 py-2.5 pl-10 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)',
+                                      color: 'var(--color-text)',
+                                      borderColor: 'var(--color-border)',
+                                      '--tw-ring-color': 'var(--color-primary)'
+                                    }"
                                 />
                             </div>
 
                             <div class="flex items-center gap-3 w-full md:w-auto">
                                 <div class="flex items-center gap-2 w-full">
-                                    <FunnelIcon class="h-5 w-5 text-gray-400 hidden sm:block" />
+                                    <FunnelIcon class="h-5 w-5 hidden sm:block" :style="{ color: 'var(--color-text-light)' }" />
 
                                     <select
                                         v-model="filtersForm.estado"
-                                        class="block w-full md:w-40 rounded-lg border-0 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                                        class="block w-full md:w-40 rounded-lg border-0 py-2.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)',
+                                          color: 'var(--color-text)',
+                                          borderColor: 'var(--color-border)',
+                                          '--tw-ring-color': 'var(--color-primary)'
+                                        }"
                                     >
                                         <option value="">Estado: Todos</option>
                                         <option v-for="(label, value) in estados" :key="value" :value="value">
@@ -216,7 +266,13 @@ const clearFilters = () => {
 
                                     <select
                                         v-model="filtersForm.tipo_pago"
-                                        class="block w-full md:w-40 rounded-lg border-0 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                                        class="block w-full md:w-40 rounded-lg border-0 py-2.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)',
+                                          color: 'var(--color-text)',
+                                          borderColor: 'var(--color-border)',
+                                          '--tw-ring-color': 'var(--color-primary)'
+                                        }"
                                     >
                                         <option value="">Tipo: Todos</option>
                                         <option v-for="(label, value) in tiposPago" :key="value" :value="value">
@@ -228,7 +284,12 @@ const clearFilters = () => {
                                 <button
                                     v-if="filtersForm.search || filtersForm.estado || filtersForm.tipo_pago"
                                     @click="clearFilters"
-                                    class="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                    class="p-2.5 rounded-lg transition-colors"
+                                    :style="{ 
+                                      color: 'var(--color-text-light)',
+                                      '--tw-hover:color': 'var(--color-danger)',
+                                      '--tw-hover:bg-color': 'var(--color-danger-light)'
+                                    }"
                                     title="Limpiar filtros"
                                 >
                                     <XMarkIcon class="h-5 w-5" />
@@ -238,11 +299,12 @@ const clearFilters = () => {
 
                         <!-- Lista de Pagos -->
                         <div v-if="pagos.data.length === 0" class="text-center py-16">
-                            <div class="mx-auto h-24 w-24 bg-gray-50 rounded-full flex items-center justify-center mb-6 animate-bounce-slow">
-                                <BanknotesIcon class="h-12 w-12 text-gray-300" />
+                            <div class="mx-auto h-24 w-24 rounded-full flex items-center justify-center mb-6 animate-bounce-slow"
+                                :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                <BanknotesIcon class="h-12 w-12" :style="{ color: 'var(--color-text-light)' }" />
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">No tienes pagos registrados</h3>
-                            <p class="text-gray-500 mb-8 max-w-sm mx-auto">
+                            <h3 class="text-xl font-bold mb-2" :style="{ color: 'var(--color-text)' }">No tienes pagos registrados</h3>
+                            <p class="mb-8 max-w-sm mx-auto" :style="{ color: 'var(--color-text-light)' }">
                                 Tus pagos aparecerán aquí una vez que se generen órdenes de trabajo para tus vehículos.
                             </p>
                         </div>
@@ -251,20 +313,32 @@ const clearFilters = () => {
                             <div
                                 v-for="(pago, index) in pagos.data"
                                 :key="pago.id"
-                                class="group border border-gray-100 rounded-xl p-5 hover:border-taller-blue-light/50 hover:shadow-md transition-all duration-300 bg-white relative overflow-hidden"
-                                :style="{ animationDelay: `${index * 100}ms` }"
+                                class="group rounded-xl p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden"
+                                :style="{ 
+                                  animationDelay: `${index * 100}ms`,
+                                  backgroundColor: 'var(--color-base)',
+                                  borderColor: 'var(--color-border)',
+                                  borderWidth: '1px',
+                                  borderStyle: 'solid',
+                                  '--tw-hover:border-color': 'var(--color-primary-light)'
+                                }"
                             >
-                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-taller-blue-dark transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+                                <div class="absolute left-0 top-0 bottom-0 w-1 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                                    :style="{ backgroundColor: 'var(--color-primary)' }"></div>
 
                                 <div class="flex flex-col md:flex-row justify-between gap-4">
 
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between md:justify-start gap-4 mb-3">
-                                            <span class="font-mono text-xs font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">
+                                            <span class="font-mono text-xs font-bold px-2 py-1 rounded"
+                                                :style="{ 
+                                                  color: 'var(--color-text-light)',
+                                                  backgroundColor: 'var(--color-primary-light)'
+                                                }">
                                                 {{ pago.codigo }}
                                             </span>
                                             <div class="flex items-center gap-1.5">
-                                                <component :is="getEstadoIcon(pago.estado)" class="h-4 w-4" :class="pago.estado === 'pagado_total' ? 'text-green-600' : 'text-gray-500'" />
+                                                <component :is="getEstadoIcon(pago.estado)" class="h-4 w-4" :style="{ color: pago.estado === 'pagado_total' ? 'var(--color-success)' : 'var(--color-text-light)' }" />
                                                 <span :class="['px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset capitalize', getEstadoColor(pago.estado)]">
                                                     {{ pago.estado.replace('_', ' ') }}
                                                 </span>
@@ -272,50 +346,58 @@ const clearFilters = () => {
                                         </div>
 
                                         <div class="flex items-start gap-4">
-                                            <div class="hidden sm:flex h-12 w-12 rounded-full bg-taller-blue-light/10 items-center justify-center shrink-0">
-                                                <TruckIcon class="h-6 w-6 text-taller-blue-dark" />
+                                            <div class="hidden sm:flex h-12 w-12 rounded-full items-center justify-center shrink-0"
+                                                :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                                <TruckIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                             </div>
                                             <div class="flex-1">
-                                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-taller-blue-dark transition-colors">
+                                                <h3 class="text-lg font-bold transition-colors"
+                                                    :style="{ 
+                                                      color: 'var(--color-text)',
+                                                      '--tw-group-hover:color': 'var(--color-primary)'
+                                                    }">
                                                     {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.marca }} {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.modelo }}
                                                 </h3>
-                                                <p class="text-sm text-gray-500 mb-2 font-mono">
+                                                <p class="text-sm mb-2 font-mono" :style="{ color: 'var(--color-text-light)' }">
                                                     {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.placa }}
                                                 </p>
 
-                                                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                                                    <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                                        <UserIcon class="h-4 w-4 text-gray-400" />
+                                                <div class="flex flex-wrap items-center gap-4 text-sm" :style="{ color: 'var(--color-text)' }">
+                                                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                                                        :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                                        <UserIcon class="h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                                                         <span>{{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.nombre }}</span>
                                                     </div>
-                                                    <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                                        <CalendarDaysIcon class="h-4 w-4 text-gray-400" />
+                                                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                                                        :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                                        <CalendarDaysIcon class="h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                                                         <span>{{ formatDate(pago.created_at) }}</span>
                                                     </div>
-                                                    <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                                        <CurrencyDollarIcon class="h-4 w-4 text-gray-400" />
-                                                        <span class="font-semibold">${{ formatPrecio(pago.monto_total) }}</span>
+                                                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                                                        :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                                        <CurrencyDollarIcon class="h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
+                                                        <span class="font-semibold" :style="{ color: 'var(--color-text)' }">${{ formatPrecio(pago.monto_total) }}</span>
                                                     </div>
                                                 </div>
 
                                                 <!-- Barra de Progreso del Pago -->
                                                 <div class="mt-4">
-                                                    <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                                                    <div class="flex items-center justify-between text-sm mb-2" :style="{ color: 'var(--color-text-light)' }">
                                                         <span>Progreso del pago</span>
-                                                        <span class="font-semibold">{{ Math.round(pago.porcentaje_pagado) }}%</span>
+                                                        <span class="font-semibold" :style="{ color: 'var(--color-text)' }">{{ Math.round(pago.porcentaje_pagado) }}%</span>
                                                     </div>
-                                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                                    <div class="w-full rounded-full h-2" :style="{ backgroundColor: 'var(--color-border)' }">
                                                         <div
                                                             class="h-2 rounded-full transition-all duration-500"
-                                                            :class="{
-                                                                'bg-green-500': pago.porcentaje_pagado >= 100,
-                                                                'bg-yellow-500': pago.porcentaje_pagado < 100 && pago.porcentaje_pagado > 0,
-                                                                'bg-gray-400': pago.porcentaje_pagado == 0
+                                                            :style="{ 
+                                                              width: `${pago.porcentaje_pagado}%`,
+                                                              backgroundColor: pago.porcentaje_pagado >= 100 ? 'var(--color-success)' : 
+                                                                              pago.porcentaje_pagado > 0 ? 'var(--color-warning)' : 
+                                                                              'var(--color-text-light)'
                                                             }"
-                                                            :style="{ width: `${pago.porcentaje_pagado}%` }"
                                                         ></div>
                                                     </div>
-                                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                                    <div class="flex justify-between text-xs mt-1" :style="{ color: 'var(--color-text-light)' }">
                                                         <span>Pagado: ${{ formatPrecio(pago.monto_pagado) }}</span>
                                                         <span>Pendiente: ${{ formatPrecio(pago.monto_pendiente) }}</span>
                                                     </div>
@@ -324,19 +406,24 @@ const clearFilters = () => {
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col justify-between md:items-end gap-4 mt-4 md:mt-0 md:pl-6 md:border-l border-gray-100">
+                                    <div class="flex flex-col justify-between md:items-end gap-4 mt-4 md:mt-0 md:pl-6"
+                                        :style="{ borderColor: 'var(--color-border)' }">
                                         <div class="w-full">
-                                            <p class="text-xs text-gray-400 uppercase font-bold mb-2">Información</p>
+                                            <p class="text-xs uppercase font-bold mb-2" :style="{ color: 'var(--color-text-light)' }">Información</p>
                                             <div class="space-y-1 text-sm">
                                                 <div class="flex justify-between">
-                                                    <span class="text-gray-500">Tipo:</span>
-                                                    <span class="font-medium">{{ getTipoPagoTexto(pago.tipo_pago) }}</span>
+                                                    <span :style="{ color: 'var(--color-text-light)' }">Tipo:</span>
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text)' }">{{ getTipoPagoTexto(pago.tipo_pago) }}</span>
                                                 </div>
-                                                <div v-if="pago.fecha_vencimiento" class="flex justify-between" :class="getEstaVencido(pago) ? 'text-red-600 font-semibold' : 'text-gray-500'">
+                                                <div v-if="pago.fecha_vencimiento" class="flex justify-between" :style="{ color: getEstaVencido(pago) ? 'var(--color-danger)' : 'var(--color-text-light)' }">
                                                     <span>Vencimiento:</span>
                                                     <span>{{ formatDate(pago.fecha_vencimiento) }}</span>
                                                 </div>
-                                                <div v-if="getEstaVencido(pago)" class="text-red-600 text-xs font-medium bg-red-50 px-2 py-1 rounded text-center">
+                                                <div v-if="getEstaVencido(pago)" class="text-xs font-medium px-2 py-1 rounded text-center"
+                                                    :style="{ 
+                                                      color: 'var(--color-danger)',
+                                                      backgroundColor: 'var(--color-danger-light)'
+                                                    }">
                                                     ¡Pago vencido!
                                                 </div>
                                             </div>
@@ -345,7 +432,12 @@ const clearFilters = () => {
                                         <div class="flex items-center gap-2 w-full justify-end">
                                             <Link
                                                 :href="route('cliente.pagos.show', pago.id)"
-                                                class="p-2 text-gray-400 hover:text-taller-blue-dark hover:bg-blue-50 rounded-lg transition-colors"
+                                                class="p-2 rounded-lg transition-colors"
+                                                :style="{ 
+                                                  color: 'var(--color-text-light)',
+                                                  '--tw-hover:color': 'var(--color-primary)',
+                                                  '--tw-hover:bg-color': 'var(--color-primary-light)'
+                                                }"
                                                 title="Ver Detalles"
                                             >
                                                 <EyeIcon class="h-5 w-5" />
@@ -354,7 +446,12 @@ const clearFilters = () => {
                                             <template v-if="pago.monto_pendiente > 0">
                                                 <Link
                                                     :href="route('cliente.pagos.pagar', pago.id)"
-                                                    class="inline-flex items-center gap-1 px-3 py-1.5 bg-taller-blue-dark text-white text-xs font-semibold rounded-lg hover:bg-taller-blue-light transition-colors"
+                                                    class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors"
+                                                    :style="{ 
+                                                      backgroundColor: 'var(--color-primary)',
+                                                      color: 'var(--color-base)',
+                                                      '--tw-hover:bg-color': 'var(--color-primary-light)'
+                                                    }"
                                                 >
                                                     <QrCodeIcon class="h-3 w-3" />
                                                     Pagar
@@ -367,14 +464,15 @@ const clearFilters = () => {
                         </div>
 
                         <!-- Paginación -->
-                        <div v-if="pagos.data.length > 0" class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
-                            <div class="text-sm text-gray-700">
+                        <div v-if="pagos.data.length > 0" class="mt-8 flex items-center justify-between pt-6"
+                            :style="{ borderColor: 'var(--color-border)' }">
+                            <div class="text-sm" :style="{ color: 'var(--color-text)' }">
                                 Mostrando
-                                <span class="font-medium">{{ pagos.from }}</span>
+                                <span class="font-medium" :style="{ color: 'var(--color-text)' }">{{ pagos.from }}</span>
                                 a
-                                <span class="font-medium">{{ pagos.to }}</span>
+                                <span class="font-medium" :style="{ color: 'var(--color-text)' }">{{ pagos.to }}</span>
                                 de
-                                <span class="font-medium">{{ pagos.total }}</span>
+                                <span class="font-medium" :style="{ color: 'var(--color-text)' }">{{ pagos.total }}</span>
                                 resultados
                             </div>
                             <div class="flex gap-1">
@@ -383,10 +481,12 @@ const clearFilters = () => {
                                     :key="key"
                                     :href="link.url || '#'"
                                     class="px-3 py-1 text-sm rounded-lg border transition-colors"
-                                    :class="{
-                                        'bg-taller-blue-dark text-white border-taller-blue-dark': link.active,
-                                        'text-gray-500 border-gray-300 hover:bg-gray-50': !link.active && link.url,
-                                        'text-gray-300 border-gray-200 cursor-not-allowed': !link.url
+                                    :style="{
+                                        backgroundColor: link.active ? 'var(--color-primary)' : 'transparent',
+                                        color: link.active ? 'var(--color-base)' : (link.url ? 'var(--color-text)' : 'var(--color-text-light)'),
+                                        borderColor: link.active ? 'var(--color-primary)' : 'var(--color-border)',
+                                        '--tw-hover:bg-color': link.url && !link.active ? 'var(--color-primary-light)' : undefined,
+                                        cursor: !link.url ? 'not-allowed' : 'pointer'
                                     }"
                                     v-html="link.label"
                                 />

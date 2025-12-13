@@ -89,7 +89,7 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
     <Head :title="`Pago #${pago.codigo}`" />
 
     <AuthenticatedLayout>
-        <div class="py-8 bg-taller-cream min-h-screen">
+        <div class="py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
                 <!-- Header -->
@@ -98,20 +98,29 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                         <div class="flex items-center gap-4">
                             <Link
                                 :href="route('cliente.pagos.index')"
-                                class="inline-flex items-center gap-2 text-taller-blue-dark hover:text-taller-blue-light transition-colors duration-200 p-2 hover:bg-white rounded-lg"
+                                class="inline-flex items-center gap-2 transition-colors duration-200 p-2 rounded-lg"
+                                :style="{ 
+                                  color: 'var(--color-primary)',
+                                  '--tw-hover:color': 'var(--color-primary-light)',
+                                  '--tw-hover:bg-color': 'var(--color-base)'
+                                }"
                             >
                                 <ArrowLeftIcon class="h-5 w-5" />
                                 <span class="font-medium">Volver a Pagos</span>
                             </Link>
-                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="h-8 w-px" :style="{ backgroundColor: 'var(--color-border)' }"></div>
                             <div>
-                                <h1 class="text-3xl font-bold text-taller-black flex items-center gap-3">
-                                    <div class="p-2.5 bg-white rounded-xl shadow-sm border border-taller-blue-light/50">
-                                        <BanknotesIcon class="h-8 w-8 text-taller-blue-dark" />
+                                <h1 class="text-3xl font-bold flex items-center gap-3" :style="{ color: 'var(--color-text)' }">
+                                    <div class="p-2.5 rounded-xl shadow-sm border"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)',
+                                          borderColor: 'var(--color-border)'
+                                        }">
+                                        <BanknotesIcon class="h-8 w-8" :style="{ color: 'var(--color-primary)' }" />
                                     </div>
                                     <span class="tracking-tight">Pago #{{ pago.codigo }}</span>
                                 </h1>
-                                <p class="mt-2 text-gray-600 ml-1">
+                                <p class="mt-2 ml-1" :style="{ color: 'var(--color-text-light)' }">
                                     Detalles completos y seguimiento del pago
                                 </p>
                             </div>
@@ -131,7 +140,13 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                             <Link
                                 v-if="pago.monto_pendiente > 0"
                                 :href="route('cliente.pagos.pagar', pago.id)"
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-taller-blue-dark text-sm font-medium rounded-lg text-taller-blue-dark bg-white hover:bg-taller-blue-light transition-colors duration-200"
+                                class="inline-flex items-center gap-2 px-4 py-2 border text-sm font-medium rounded-lg transition-colors duration-200"
+                                :style="{ 
+                                  borderColor: 'var(--color-primary)',
+                                  color: 'var(--color-primary)',
+                                  backgroundColor: 'var(--color-base)',
+                                  '--tw-hover:bg-color': 'var(--color-primary-light)'
+                                }"
                             >
                                 <QrCodeIcon class="h-4 w-4" />
                                 Realizar Pago
@@ -144,111 +159,154 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                     <!-- Contenido Principal -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Resumen del Pago -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-100">
-                            <h2 class="text-xl font-bold text-taller-black mb-6 flex items-center gap-2">
-                                <CurrencyDollarIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-100"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-6 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <CurrencyDollarIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Resumen del Pago
                             </h2>
 
                             <div class="space-y-6">
                                 <!-- Barra de Progreso -->
                                 <div>
-                                    <div class="flex items-center justify-between text-sm text-gray-600 mb-3">
+                                    <div class="flex items-center justify-between text-sm mb-3" :style="{ color: 'var(--color-text-light)' }">
                                         <span class="font-medium">Estado: {{ pago.estado.replace('_', ' ') }}</span>
-                                        <span class="font-bold text-taller-blue-dark">{{ Math.round(pago.porcentaje_pagado) }}% completado</span>
+                                        <span class="font-bold" :style="{ color: 'var(--color-primary)' }">{{ Math.round(pago.porcentaje_pagado) }}% completado</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div class="w-full rounded-full h-3" :style="{ backgroundColor: 'var(--color-border)' }">
                                         <div
-                                            class="bg-taller-blue-dark h-3 rounded-full transition-all duration-1000"
-                                            :style="{ width: `${pago.porcentaje_pagado}%` }"
+                                            class="h-3 rounded-full transition-all duration-1000"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-primary)',
+                                              width: `${pago.porcentaje_pagado}%`
+                                            }"
                                         ></div>
                                     </div>
                                 </div>
 
                                 <!-- Montos -->
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                        <p class="text-sm text-gray-500 mb-1">Total a Pagar</p>
-                                        <p class="text-2xl font-bold text-gray-900">${{ formatPrecio(pago.monto_total) }}</p>
+                                    <div class="text-center p-4 rounded-lg"
+                                        :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                                        <p class="text-sm mb-1" :style="{ color: 'var(--color-text-light)' }">Total a Pagar</p>
+                                        <p class="text-2xl font-bold" :style="{ color: 'var(--color-text)' }">${{ formatPrecio(pago.monto_total) }}</p>
                                     </div>
-                                    <div class="text-center p-4 bg-green-50 rounded-lg">
-                                        <p class="text-sm text-green-600 mb-1">Pagado</p>
-                                        <p class="text-2xl font-bold text-green-600">${{ formatPrecio(pago.monto_pagado) }}</p>
+                                    <div class="text-center p-4 rounded-lg"
+                                        :style="{ backgroundColor: 'var(--color-success-light)' }">
+                                        <p class="text-sm mb-1" :style="{ color: 'var(--color-success)' }">Pagado</p>
+                                        <p class="text-2xl font-bold" :style="{ color: 'var(--color-success)' }">${{ formatPrecio(pago.monto_pagado) }}</p>
                                     </div>
-                                    <div class="text-center p-4 bg-red-50 rounded-lg">
-                                        <p class="text-sm text-red-600 mb-1">Pendiente</p>
-                                        <p class="text-2xl font-bold text-red-600">${{ formatPrecio(pago.monto_pendiente) }}</p>
+                                    <div class="text-center p-4 rounded-lg"
+                                        :style="{ backgroundColor: 'var(--color-danger-light)' }">
+                                        <p class="text-sm mb-1" :style="{ color: 'var(--color-danger)' }">Pendiente</p>
+                                        <p class="text-2xl font-bold" :style="{ color: 'var(--color-danger)' }">${{ formatPrecio(pago.monto_pendiente) }}</p>
                                     </div>
                                 </div>
 
                                 <!-- Información Adicional -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4"
+                                    :style="{ borderColor: 'var(--color-border)' }">
                                     <div>
-                                        <p class="text-sm text-gray-500">Tipo de Pago</p>
-                                        <p class="font-medium text-gray-900">{{ getTipoPagoTexto(pago.tipo_pago) }}</p>
+                                        <p class="text-sm" :style="{ color: 'var(--color-text-light)' }">Tipo de Pago</p>
+                                        <p class="font-medium" :style="{ color: 'var(--color-text)' }">{{ getTipoPagoTexto(pago.tipo_pago) }}</p>
                                     </div>
                                     <div v-if="pago.fecha_vencimiento">
-                                        <p class="text-sm text-gray-500">Fecha de Vencimiento</p>
-                                        <p class="font-medium text-gray-900">{{ formatDate(pago.fecha_vencimiento) }}</p>
+                                        <p class="text-sm" :style="{ color: 'var(--color-text-light)' }">Fecha de Vencimiento</p>
+                                        <p class="font-medium" :style="{ color: 'var(--color-text)' }">{{ formatDate(pago.fecha_vencimiento) }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Información de la Orden -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-200">
-                            <h2 class="text-xl font-bold text-taller-black mb-6 flex items-center gap-2">
-                                <WrenchScrewdriverIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-200"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-6 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <WrenchScrewdriverIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Información de la Orden
                             </h2>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="flex items-start gap-3">
-                                    <div class="p-2 bg-blue-50 rounded-lg text-taller-blue-dark">
+                                    <div class="p-2 rounded-lg"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-primary-light)',
+                                          color: 'var(--color-primary)'
+                                        }">
                                         <UserIcon class="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <p class="text-xs font-medium text-gray-500 uppercase">Cliente</p>
-                                        <p class="font-medium text-gray-900">{{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.nombre }}</p>
-                                        <p class="text-xs text-gray-500">{{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.email }}</p>
+                                        <p class="text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Cliente</p>
+                                        <p class="font-medium" :style="{ color: 'var(--color-text)' }">{{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.nombre }}</p>
+                                        <p class="text-xs" :style="{ color: 'var(--color-text-light)' }">{{ pago.orden_trabajo?.diagnostico?.cita?.cliente?.email }}</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start gap-3">
-                                    <div class="p-2 bg-orange-50 rounded-lg text-orange-600">
+                                    <div class="p-2 rounded-lg"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-warning-light)',
+                                          color: 'var(--color-warning)'
+                                        }">
                                         <TruckIcon class="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <p class="text-xs font-medium text-gray-500 uppercase">Vehículo</p>
-                                        <p class="font-medium text-gray-900">
+                                        <p class="text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Vehículo</p>
+                                        <p class="font-medium" :style="{ color: 'var(--color-text)' }">
                                             {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.marca }}
                                             {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.modelo }}
                                         </p>
-                                        <p class="text-xs font-mono bg-gray-100 inline-block px-1 rounded text-gray-600">
+                                        <p class="text-xs font-mono inline-block px-1 rounded"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-primary-light)',
+                                              color: 'var(--color-text-light)'
+                                            }">
                                             {{ pago.orden_trabajo?.diagnostico?.cita?.vehiculo?.placa }}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start gap-3">
-                                    <div class="p-2 bg-gray-50 rounded-lg text-gray-600">
+                                    <div class="p-2 rounded-lg"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-primary-light)',
+                                          color: 'var(--color-text-light)'
+                                        }">
                                         <WrenchScrewdriverIcon class="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <p class="text-xs font-medium text-gray-500 uppercase">Mecánico</p>
-                                        <p class="font-medium text-gray-900">{{ pago.orden_trabajo?.mecanico?.nombre }}</p>
+                                        <p class="text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Mecánico</p>
+                                        <p class="font-medium" :style="{ color: 'var(--color-text)' }">{{ pago.orden_trabajo?.mecanico?.nombre }}</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start gap-3">
-                                    <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                                    <div class="p-2 rounded-lg"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-accent-light)',
+                                          color: 'var(--color-accent)'
+                                        }">
                                         <DocumentTextIcon class="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <p class="text-xs font-medium text-gray-500 uppercase">Orden de Trabajo</p>
+                                        <p class="text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Orden de Trabajo</p>
                                         <Link
                                             :href="route('cliente.ordenes.show', pago.orden_trabajo?.id)"
-                                            class="font-medium text-taller-blue-dark hover:underline"
+                                            class="font-medium hover:underline"
+                                            :style="{ 
+                                              color: 'var(--color-primary)',
+                                              '--tw-hover:color': 'var(--color-primary-light)'
+                                            }"
                                         >
                                             {{ pago.orden_trabajo?.codigo }}
                                         </Link>
@@ -258,9 +316,15 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                         </div>
 
                         <!-- Historial de Pagos -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-300">
-                            <h2 class="text-xl font-bold text-taller-black mb-6 flex items-center gap-2">
-                                <ClockIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-300"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-6 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <ClockIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Historial de Pagos
                             </h2>
 
@@ -268,45 +332,65 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                                 <div
                                     v-for="detalle in pago.detalles"
                                     :key="detalle.id"
-                                    class="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-taller-blue-light/50 hover:shadow-sm transition-all duration-200"
+                                    class="flex items-center justify-between p-4 rounded-xl hover:shadow-sm transition-all duration-200"
+                                    :style="{ 
+                                      borderColor: 'var(--color-border)',
+                                      borderWidth: '1px',
+                                      borderStyle: 'solid',
+                                      '--tw-hover:border-color': 'var(--color-primary-light)'
+                                    }"
                                 >
                                     <div class="flex items-center gap-3">
-                                        <div class="p-2 rounded-lg" :class="detalle.metodo_pago === 'efectivo' ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'">
+                                        <div class="p-2 rounded-lg"
+                                            :style="{ 
+                                              backgroundColor: detalle.metodo_pago === 'efectivo' ? 'var(--color-success-light)' : 'var(--color-accent-light)',
+                                              color: detalle.metodo_pago === 'efectivo' ? 'var(--color-success)' : 'var(--color-accent)'
+                                            }">
                                             <QrCodeIcon class="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <h3 class="font-semibold text-gray-900">
+                                            <h3 class="font-semibold" :style="{ color: 'var(--color-text)' }">
                                                 Pago de Cuota {{ detalle.numero_cuota }}
                                             </h3>
-                                            <p class="text-sm text-gray-600 mt-1">
+                                            <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
                                                 {{ formatDateTime(detalle.fecha_pago, detalle.hora_pago) }}
                                             </p>
                                             <div class="flex items-center gap-2 mt-1">
-                                                <span class="text-xs px-2 py-1 bg-gray-100 rounded text-gray-600">
+                                                <span class="text-xs px-2 py-1 rounded"
+                                                    :style="{ 
+                                                      backgroundColor: 'var(--color-primary-light)',
+                                                      color: 'var(--color-text-light)'
+                                                    }">
                                                     {{ getMetodoPagoTexto(detalle.metodo_pago) }}
                                                 </span>
-                                                <span v-if="detalle.numero_comprobante" class="text-xs text-gray-500">
+                                                <span v-if="detalle.numero_comprobante" class="text-xs" :style="{ color: 'var(--color-text-light)' }">
                                                     Comprobante: {{ detalle.numero_comprobante }}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-lg font-bold text-taller-blue-dark">${{ formatPrecio(detalle.monto) }}</p>
-                                        <p class="text-xs text-gray-500">Recibido por: {{ detalle.recibido_por?.nombre || 'Sistema' }}</p>
+                                        <p class="text-lg font-bold" :style="{ color: 'var(--color-primary)' }">${{ formatPrecio(detalle.monto) }}</p>
+                                        <p class="text-xs" :style="{ color: 'var(--color-text-light)' }">Recibido por: {{ detalle.recibido_por?.nombre || 'Sistema' }}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="text-center py-8 text-gray-500">
-                                <BanknotesIcon class="h-12 w-12 mx-auto text-gray-300 mb-2" />
+                            <div v-else class="text-center py-8" :style="{ color: 'var(--color-text-light)' }">
+                                <BanknotesIcon class="h-12 w-12 mx-auto mb-2" :style="{ color: 'var(--color-text-light)' }" />
                                 <p>No se han registrado pagos todavía.</p>
                             </div>
                         </div>
 
                         <!-- Plan de Pagos (Solo para créditos) -->
-                        <div v-if="esAlCredito && planPagos && planPagos.length > 0" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-400">
-                            <h2 class="text-xl font-bold text-taller-black mb-6 flex items-center gap-2">
-                                <CalendarDaysIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div v-if="esAlCredito && planPagos && planPagos.length > 0" class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-400"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-6 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <CalendarDaysIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Plan de Pagos
                             </h2>
 
@@ -314,21 +398,27 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                                 <div
                                     v-for="cuota in planPagos"
                                     :key="cuota.numero_cuota"
-                                    class="flex items-center justify-between p-3 border border-gray-100 rounded-lg"
-                                    :class="{'bg-green-50 border-green-200': cuota.pagada}"
+                                    class="flex items-center justify-between p-3 rounded-lg"
+                                    :style="{ 
+                                      borderColor: 'var(--color-border)',
+                                      borderWidth: '1px',
+                                      borderStyle: 'solid',
+                                      backgroundColor: cuota.pagada ? 'var(--color-success-light)' : 'var(--color-base)',
+                                      borderColor: cuota.pagada ? 'var(--color-success)' : 'var(--color-border)'
+                                    }"
                                 >
                                     <div class="flex items-center gap-3">
-                                        <CheckCircleIcon v-if="cuota.pagada" class="h-5 w-5 text-green-500" />
-                                        <ClockIcon v-else class="h-5 w-5 text-gray-300" />
+                                        <CheckCircleIcon v-if="cuota.pagada" class="h-5 w-5" :style="{ color: 'var(--color-success)' }" />
+                                        <ClockIcon v-else class="h-5 w-5" :style="{ color: 'var(--color-text-light)' }" />
                                         <div>
-                                            <p class="font-medium text-gray-900">Cuota #{{ cuota.numero_cuota }}</p>
-                                            <p class="text-sm text-gray-500">Vence: {{ cuota.fecha_vencimiento }}</p>
+                                            <p class="font-medium" :style="{ color: 'var(--color-text)' }">Cuota #{{ cuota.numero_cuota }}</p>
+                                            <p class="text-sm" :style="{ color: 'var(--color-text-light)' }">Vence: {{ cuota.fecha_vencimiento }}</p>
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-semibold text-gray-900">${{ formatPrecio(cuota.monto) }}</p>
-                                        <span v-if="cuota.pagada" class="text-xs text-green-600 font-medium">Pagado</span>
-                                        <span v-else class="text-xs text-orange-600 font-medium">Pendiente</span>
+                                        <p class="font-semibold" :style="{ color: 'var(--color-text)' }">${{ formatPrecio(cuota.monto) }}</p>
+                                        <span v-if="cuota.pagada" class="text-xs font-medium" :style="{ color: 'var(--color-success)' }">Pagado</span>
+                                        <span v-else class="text-xs font-medium" :style="{ color: 'var(--color-warning)' }">Pendiente</span>
                                     </div>
                                 </div>
                             </div>
@@ -338,50 +428,66 @@ const esAlCredito = props.pago.tipo_pago === 'credito';
                     <!-- Sidebar -->
                     <div class="space-y-6">
                         <!-- Acciones Rápidas -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-500">
-                            <h2 class="text-xl font-bold text-taller-black mb-4 flex items-center gap-2">
-                                <QrCodeIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-500"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-4 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <QrCodeIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Realizar Pago
                             </h2>
 
                             <div class="space-y-3">
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm" :style="{ color: 'var(--color-text-light)' }">
                                     Saldo pendiente:
-                                    <span class="font-bold text-red-600">${{ formatPrecio(pago.monto_pendiente) }}</span>
+                                    <span class="font-bold" :style="{ color: 'var(--color-danger)' }">${{ formatPrecio(pago.monto_pendiente) }}</span>
                                 </p>
 
                                 <Link
                                     v-if="pago.monto_pendiente > 0"
                                     :href="route('cliente.pagos.pagar', pago.id)"
-                                    class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 border border-transparent text-sm font-bold rounded-lg text-white bg-taller-blue-dark hover:bg-taller-blue-light transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                    class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 border border-transparent text-sm font-bold rounded-lg text-white transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-primary)',
+                                      '--tw-hover:bg-color': 'var(--color-primary-light)'
+                                    }"
                                 >
                                     <QrCodeIcon class="h-5 w-5" />
                                     Pagar Ahora
                                 </Link>
 
                                 <div v-else class="text-center py-4">
-                                    <CheckCircleIcon class="h-12 w-12 text-green-500 mx-auto mb-2" />
-                                    <p class="text-sm text-green-600 font-medium">¡Pago completado!</p>
+                                    <CheckCircleIcon class="h-12 w-12 mx-auto mb-2" :style="{ color: 'var(--color-success)' }" />
+                                    <p class="text-sm font-medium" :style="{ color: 'var(--color-success)' }">¡Pago completado!</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Información de Contacto -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 animate-fade-in-up delay-600">
-                            <h2 class="text-xl font-bold text-taller-black mb-4 flex items-center gap-2">
-                                <UserIcon class="h-6 w-6 text-taller-blue-dark" />
+                        <div class="rounded-2xl shadow-sm p-6 animate-fade-in-up delay-600"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              borderWidth: '1px',
+                              borderStyle: 'solid'
+                            }">
+                            <h2 class="text-xl font-bold mb-4 flex items-center gap-2" :style="{ color: 'var(--color-text)' }">
+                                <UserIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                                 Contacto
                             </h2>
 
                             <div class="space-y-3 text-sm">
-                                <p class="text-gray-600">
+                                <p :style="{ color: 'var(--color-text-light)' }">
                                     Si tienes dudas sobre este pago, contáctanos:
                                 </p>
                                 <div class="space-y-2">
-                                    <p class="font-medium text-gray-900">Taller Mecánico</p>
-                                    <p class="text-gray-600">Tel: +591 77777777</p>
-                                    <p class="text-gray-600">Email: contacto@tallermecanico.com</p>
-                                    <p class="text-gray-600">Horario: Lunes a Viernes 8:00 - 18:00</p>
+                                    <p class="font-medium" :style="{ color: 'var(--color-text)' }">Taller Mecánico</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">Tel: +591 77777777</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">Email: contacto@tallermecanico.com</p>
+                                    <p :style="{ color: 'var(--color-text-light)' }">Horario: Lunes a Viernes 8:00 - 18:00</p>
                                 </div>
                             </div>
                         </div>
