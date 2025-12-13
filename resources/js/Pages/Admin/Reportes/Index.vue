@@ -205,6 +205,96 @@ const chartTasaConversion = computed(() => {
     }
 })
 
+const chartIngresosVsPendiente = computed(() => {
+    const resumen = props.datos.resumen || {}
+    
+    return {
+        labels: ['Ingresos', 'Pendiente'],
+        datasets: [
+            {
+                label: 'Monto (S/.)',
+                data: [resumen.ingresos_totales || 0, resumen.pendiente_total || 0],
+                backgroundColor: ['#10b981', '#ef4444'],
+                borderColor: ['#065f46', '#dc2626'],
+                borderWidth: 1,
+            }
+        ]
+    }
+})
+
+const chartServiciosPorTipo = computed(() => {
+    const tipos = props.datos.servicios_por_tipo?.map(s => s.tipo) || []
+    const ingresos = props.datos.servicios_por_tipo?.map(s => s.ingresos) || []
+    const colores = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+    
+    return {
+        labels: tipos,
+        datasets: [
+            {
+                label: 'Ingresos (S/.)',
+                data: ingresos,
+                backgroundColor: colores.slice(0, tipos.length),
+                borderColor: colores.slice(0, tipos.length),
+                borderWidth: 1,
+            }
+        ]
+    }
+})
+
+const chartDistribucionHora = computed(() => {
+    const horas = props.datos?.distribucion_hora?.map(h => h.hora) || []
+    const cantidades = props.datos?.distribucion_hora?.map(h => h.cantidad) || []
+    
+    return {
+        labels: horas.length > 0 ? horas : ['Sin datos'],
+        datasets: [
+            {
+                label: 'Citas por Hora',
+                data: cantidades.length > 0 ? cantidades : [0],
+                backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                borderColor: '#8b5cf6',
+                borderWidth: 2,
+            }
+        ]
+    }
+})
+
+const chartIngresosMecanicos = computed(() => {
+    const mecanicos = props.datos.rendimiento_mecanicos?.map(m => m.nombre) || []
+    const ingresos = props.datos.rendimiento_mecanicos?.map(m => m.ingresos_generados) || []
+    
+    return {
+        labels: mecanicos,
+        datasets: [
+            {
+                label: 'Ingresos (S/.)',
+                data: ingresos,
+                backgroundColor: '#3b82f6',
+                borderColor: '#1e40af',
+                borderWidth: 1,
+            }
+        ]
+    }
+})
+
+const chartTasaCompletacionMecanicos = computed(() => {
+    const mecanicos = props.datos.rendimiento_mecanicos?.map(m => m.nombre) || []
+    const tasas = props.datos.rendimiento_mecanicos?.map(m => m.tasa_completacion) || []
+    
+    return {
+        labels: mecanicos,
+        datasets: [
+            {
+                label: 'Completación (%)',
+                data: tasas,
+                backgroundColor: '#10b981',
+                borderColor: '#065f46',
+                borderWidth: 1,
+            }
+        ]
+    }
+})
+
 const chartRendimientoMecanicos = computed(() => {
     const mecanicos = props.datos.rendimiento_mecanicos?.map(m => m.nombre) || []
     const ingresos = props.datos.rendimiento_mecanicos?.map(m => m.ingresos_generados) || []
@@ -491,40 +581,58 @@ const chartOptionsPie = {
             <div class="space-y-8">
 
                 <!-- Reporte Financiero -->
-                <div v-if="form.tipo_reporte === 'financiero'" class="space-y-8">
-                    <!-- Ingresos por Período -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Evolución de Ingresos</h3>
-                        <div style="height: 300px;">
-                            <Line :data="chartIngresosPeriodo" :options="chartOptions" />
-                        </div>
-                    </div>
-
-                    <!-- Ingresos por Método -->
+                <div v-if="form.tipo_reporte === 'financiero'" class="space-y-6">
+                    <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Evolución de Ingresos</h3>
+                            <div style="height: 300px;">
+                                <Line :data="chartIngresosPeriodo" :options="chartOptions" />
+                            </div>
+                        </div>
+
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Método de Pago</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartIngresosPorMetodo" :options="chartOptions" />
                             </div>
                         </div>
+                    </div>
 
+                    <!-- Fila 2: Dos gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado de Pagos</h3>
                             <div style="height: 300px;">
                                 <Doughnut :data="chartEstadoPagos" :options="chartOptionsPie" />
                             </div>
                         </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos vs Pendiente</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartIngresosVsPendiente" :options="chartOptions" />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Reporte de Servicios -->
-                <div v-if="form.tipo_reporte === 'servicios'" class="space-y-8">
-                    <!-- Servicios por Período -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Realizados por Período</h3>
-                        <div style="height: 300px;">
-                            <Bar :data="chartServiciosPeriodo" :options="chartOptions" />
+                <div v-if="form.tipo_reporte === 'servicios'" class="space-y-6">
+                    <!-- Fila 1: Dos gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Realizados por Período</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartServiciosPeriodo" :options="chartOptions" />
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Tipo de Servicio</h3>
+                            <div style="height: 300px;">
+                                <Pie :data="chartServiciosPorTipo" :options="chartOptionsPie" />
+                            </div>
                         </div>
                     </div>
 
@@ -555,8 +663,8 @@ const chartOptionsPie = {
                 </div>
 
                 <!-- Reporte de Citas -->
-                <div v-if="form.tipo_reporte === 'citas'" class="space-y-8">
-                    <!-- Citas por Período -->
+                <div v-if="form.tipo_reporte === 'citas'" class="space-y-6">
+                    <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Citas por Período</h3>
@@ -573,20 +681,46 @@ const chartOptionsPie = {
                         </div>
                     </div>
 
-                    <!-- Tasa de Conversión -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Conversión por Período (citas confirmadas / citas totales)</h3>
-                        <div style="height: 300px;">
-                            <Line :data="chartTasaConversion" :options="chartOptions" />
+                    <!-- Fila 2: Dos gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Conversión por Período</h3>
+                            <div style="height: 300px;">
+                                <Line :data="chartTasaConversion" :options="chartOptions" />
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribución por Hora del Día</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartDistribucionHora" :options="chartOptions" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reporte de Mecánicos -->
-                <div v-if="form.tipo_reporte === 'mecanicos'" class="space-y-8">
+                <div v-if="form.tipo_reporte === 'mecanicos'" class="space-y-6">
+                    <!-- Fila 1: Dos gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos Generados por Mecánico</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartIngresosMecanicos" :options="chartOptions" />
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Completación por Mecánico</h3>
+                            <div style="height: 300px;">
+                                <Bar :data="chartTasaCompletacionMecanicos" :options="chartOptions" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tabla de Rendimiento -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Rendimiento de Mecánicos</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Rendimiento Detallado</h3>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>

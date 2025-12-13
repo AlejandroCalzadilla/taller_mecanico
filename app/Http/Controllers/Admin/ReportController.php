@@ -69,7 +69,7 @@ class ReportController extends Controller
     {
         // Ingresos
         $ingresos = Pago::whereBetween('created_at', [$fechaInicio, $fechaFin])
-            ->where('estado', 'pagado')
+            ->whereIn('estado', ['pagado_total', 'pagado_parcial'])
             ->sum('monto_pagado');
 
         // Pendiente por cobrar
@@ -104,7 +104,7 @@ class ReportController extends Controller
 
         // Ingresos hoy
         $ingresosHoy = Pago::whereDate('created_at', Carbon::today())
-            ->where('estado', 'pagado')
+            ->whereIn('estado', ['pagado_total', 'pagado_parcial'])
             ->sum('monto_pagado');
 
         // Citas hoy
@@ -131,7 +131,7 @@ class ReportController extends Controller
     {
         // Ingresos por método de pago
         $ingresosPorMetodo = Pago::whereBetween('created_at', [$fechaInicio, $fechaFin])
-            ->where('estado', 'pagado')
+            ->whereIn('estado', ['pagado_total', 'pagado_parcial'])
             ->selectRaw('tipo_pago, COUNT(*) as cantidad, SUM(monto_pagado) as total')
             ->groupBy('tipo_pago')
             ->get()
@@ -272,7 +272,7 @@ class ReportController extends Controller
                     $query->whereBetween('created_at', [$fechaInicio, $fechaFin]);
                 },
                 'ordenesTrabajo.pagos' => function ($query) {
-                    $query->where('estado', 'pagado');
+                    $query->whereIn('estado', ['pagado_total', 'pagado_parcial']);
                 }
             ])
             ->get()
@@ -317,7 +317,7 @@ class ReportController extends Controller
                 default => $fecha->format('d-m-Y'),
             };
 
-            $ingresos = Pago::where('estado', 'pagado');
+            $ingresos = Pago::whereIn('estado', ['pagado_total', 'pagado_parcial']);
 
             match ($periodo) {
                 'diario' => $ingresos->whereDate('created_at', $fecha),
