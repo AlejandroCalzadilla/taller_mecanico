@@ -101,16 +101,23 @@ const submit = () => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">
+                    <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">
                         Editar Vehículo
                     </h1>
-                    <p class="text-sm text-gray-600 mt-1">
+                    <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
                         {{ vehiculo.marca }} {{ vehiculo.modelo }} - {{ vehiculo.placa }}
                     </p>
                 </div>
                 <div class="flex space-x-2">
                     <Link :href="route('admin.vehiculos.show', vehiculo.id)"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                        class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                        :style="{ 
+                          backgroundColor: 'var(--color-secondary)', 
+                          color: 'var(--color-text)',
+                          '--tw-ring-color': 'var(--color-secondary)'
+                        }"
+                        onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                        onmouseout="this.style.backgroundColor='var(--color-secondary)'">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -123,31 +130,53 @@ const submit = () => {
         <div class="py-6">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
                 <!-- Alertas -->
-                <div v-if="flash.success" class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div v-if="flash.success" class="mb-6 px-4 py-3 rounded"
+                     :style="{ 
+                       backgroundColor: 'var(--color-success-light)',
+                       borderColor: 'var(--color-success)',
+                       borderWidth: '1px',
+                       color: 'var(--color-success-dark)'
+                     }">
                     {{ flash.success }}
                 </div>
 
-                <div v-if="flash.error" class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <div v-if="flash.error" class="mb-6 px-4 py-3 rounded"
+                     :style="{ 
+                       backgroundColor: 'var(--color-error-light)',
+                       borderColor: 'var(--color-error)',
+                       borderWidth: '1px',
+                       color: 'var(--color-error-dark)'
+                     }">
                     {{ flash.error }}
                 </div>
 
                 <!-- Formulario -->
-                <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Información del Vehículo</h2>
+                <div class="shadow-sm rounded-lg border"
+                    :style="{ 
+                        backgroundColor: 'var(--color-base)',
+                        borderColor: 'var(--color-border)'
+                    }">
+                    <div class="px-6 py-4 border-b"
+                        :style="{ borderColor: 'var(--color-border)' }">
+                        <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Vehículo</h2>
                     </div>
 
                     <form @submit.prevent="submit" class="p-6 space-y-6">
                         <!-- Cliente -->
                         <div>
-                            <label for="cliente_id" class="block text-sm font-medium text-gray-700">
+                            <label for="cliente_id" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                 Cliente *
                             </label>
                             <select
                                 id="cliente_id"
                                 v-model="form.cliente_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                :class="{ 'border-red-300': form.errors.cliente_id }"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)', 
+                                  color: 'var(--color-text)', 
+                                  borderColor: form.errors.cliente_id ? 'var(--color-error)' : 'var(--color-border)',
+                                  '--tw-ring-color': form.errors.cliente_id ? 'var(--color-error)' : 'var(--color-primary)'
+                                }"
                             >
                                 <option value="">Seleccione un cliente</option>
                                 <option
@@ -158,25 +187,30 @@ const submit = () => {
                                     {{ cliente.nombre }}
                                 </option>
                             </select>
-                            <p v-if="form.errors.cliente_id" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.cliente_id" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.cliente_id }}
                             </p>
                         </div>
 
                         <!-- Placa -->
                         <div>
-                            <label for="placa" class="block text-sm font-medium text-gray-700">
+                            <label for="placa" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                 Placa *
                             </label>
                             <input
                                 type="text"
                                 id="placa"
                                 v-model="form.placa"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark uppercase"
-                                :class="{ 'border-red-300': form.errors.placa }"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 uppercase"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)', 
+                                  color: 'var(--color-text)', 
+                                  borderColor: form.errors.placa ? 'var(--color-error)' : 'var(--color-border)',
+                                  '--tw-ring-color': form.errors.placa ? 'var(--color-error)' : 'var(--color-primary)'
+                                }"
                                 placeholder="Ej: ABC123"
                             />
-                            <p v-if="form.errors.placa" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.placa" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.placa }}
                             </p>
                         </div>

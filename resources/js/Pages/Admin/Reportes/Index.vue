@@ -422,18 +422,24 @@ const chartOptionsPie = {
 
 <template>
     <AdminLayout>
-        <div class="px-4 sm:px-6 lg:px-8 py-8 bg-taller-cream min-h-screen">
+        <div class="px-4 sm:px-6 lg:px-8 py-8 min-h-screen"
+             :style="{ backgroundColor: 'var(--color-base)' }">
 
             <!-- Header -->
             <div class="md:flex md:items-center md:justify-between mb-8">
                 <div class="min-w-0 flex-1">
-                    <h2 class="text-2xl font-bold leading-7 text-taller-black sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3">
-                        <div class="p-2 bg-taller-blue-light rounded-lg border border-taller-blue-dark shadow-sm">
-                            <ChartBarIcon class="h-6 w-6 text-taller-blue-dark" />
+                    <h2 class="text-2xl font-bold leading-7 sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3"
+                        :style="{ color: 'var(--color-text)' }">
+                        <div class="p-2 rounded-lg border shadow-sm"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <ChartBarIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                         </div>
                         Reportes y Análisis
                     </h2>
-                    <p class="mt-2 text-sm text-gray-600 ml-12">
+                    <p class="mt-2 text-sm ml-12" :style="{ color: 'var(--color-text-light)' }">
                         Visualización detallada del rendimiento del taller
                     </p>
                 </div>
@@ -441,7 +447,14 @@ const chartOptionsPie = {
                 <div class="mt-4 flex md:mt-0 md:ml-4 space-x-3">
                     <button
                         @click="exportarReporte"
-                        class="inline-flex items-center gap-2 px-4 py-2 border border-taller-blue-dark text-sm font-medium rounded-lg text-taller-blue-dark bg-white hover:bg-taller-blue-light transition-colors"
+                        class="inline-flex items-center gap-2 px-4 py-2 border text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          color: 'var(--color-primary)',
+                          borderColor: 'var(--color-primary)'
+                        }"
+                        onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
+                        onMouseOut="this.style.backgroundColor='var(--color-base)'"
                     >
                         <ArrowDownTrayIcon class="h-4 w-4" />
                         Exportar
@@ -451,81 +464,116 @@ const chartOptionsPie = {
 
             <!-- KPIs Principales -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)'
+                    }">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Ingresos Totales</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                            <p class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Ingresos Totales</p>
+                            <p class="text-2xl font-bold mt-2" :style="{ color: 'var(--color-text)' }">
                                 {{ formatMoney(kpis.ingresos_totales) }}
                             </p>
                         </div>
-                        <div class="p-3 bg-green-100 rounded-lg">
-                            <CurrencyDollarIcon class="h-6 w-6 text-green-600" />
+                        <div class="p-3 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-success-light)' }">
+                            <CurrencyDollarIcon class="h-6 w-6" :style="{ color: 'var(--color-success)' }" />
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)'
+                    }">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Por Cobrar</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                            <p class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Por Cobrar</p>
+                            <p class="text-2xl font-bold mt-2" :style="{ color: 'var(--color-text)' }">
                                 {{ formatMoney(kpis.pendiente_cobrar) }}
                             </p>
                         </div>
-                        <div class="p-3 bg-orange-100 rounded-lg">
-                            <ArrowTrendingUpIcon class="h-6 w-6 text-orange-600" />
+                        <div class="p-3 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-warning-light)' }">
+                            <ArrowTrendingUpIcon class="h-6 w-6" :style="{ color: 'var(--color-warning)' }" />
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)'
+                    }">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Órdenes Completadas</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                            <p class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Órdenes Completadas</p>
+                            <p class="text-2xl font-bold mt-2" :style="{ color: 'var(--color-text)' }">
                                 {{ formatNumber(kpis.ordenes_completadas) }}
                             </p>
                         </div>
-                        <div class="p-3 bg-blue-100 rounded-lg">
-                            <WrenchScrewdriverIcon class="h-6 w-6 text-blue-600" />
+                        <div class="p-3 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-primary-light)' }">
+                            <WrenchScrewdriverIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)'
+                    }">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Tasa Conversión</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-2">
+                            <p class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Tasa Conversión</p>
+                            <p class="text-2xl font-bold mt-2" :style="{ color: 'var(--color-text)' }">
                                 {{ kpis.tasa_conversion }}%
                             </p>
                         </div>
-                        <div class="p-3 bg-purple-100 rounded-lg">
-                            <ChartPieIcon class="h-6 w-6 text-purple-600" />
+                        <div class="p-3 rounded-lg"
+                            :style="{ backgroundColor: 'var(--color-accent-light)' }">
+                            <ChartPieIcon class="h-6 w-6" :style="{ color: 'var(--color-accent)' }" />
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Filtros -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Filtros del Reporte</h3>
+            <div class="rounded-xl shadow-sm border p-6 mb-8"
+                :style="{ 
+                  backgroundColor: 'var(--color-base)',
+                  borderColor: 'var(--color-border)'
+                }">
+                <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Filtros del Reporte</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <!-- Tipo de Reporte -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                             Tipo de Reporte
                         </label>
                         <select
                             v-model="form.tipo_reporte"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                            class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              color: 'var(--color-text)',
+                              borderColor: 'var(--color-border)'
+                            }"
+                            onFocus="this.style.borderColor='var(--color-primary)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-primary-rgb), 0.1)'"
+                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                         >
                             <option
                                 v-for="tipo in tiposReporte"
                                 :key="tipo.id"
                                 :value="tipo.id"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)',
+                                  color: 'var(--color-text)'
+                                }"
                             >
                                 {{ tipo.nombre }}
                             </option>
@@ -534,17 +582,28 @@ const chartOptionsPie = {
 
                     <!-- Periodo -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                             Período
                         </label>
                         <select
                             v-model="form.periodo"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                            class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              color: 'var(--color-text)',
+                              borderColor: 'var(--color-border)'
+                            }"
+                            onFocus="this.style.borderColor='var(--color-primary)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-primary-rgb), 0.1)'"
+                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                         >
                             <option
                                 v-for="periodo in periodos"
                                 :key="periodo.id"
                                 :value="periodo.id"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)',
+                                  color: 'var(--color-text)'
+                                }"
                             >
                                 {{ periodo.nombre }}
                             </option>
@@ -553,25 +612,39 @@ const chartOptionsPie = {
 
                     <!-- Fecha Inicio -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                             Fecha Inicio
                         </label>
                         <input
                             type="date"
                             v-model="form.fecha_inicio"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                            class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              color: 'var(--color-text)',
+                              borderColor: 'var(--color-border)'
+                            }"
+                            onFocus="this.style.borderColor='var(--color-primary)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-primary-rgb), 0.1)'"
+                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                         />
                     </div>
 
                     <!-- Fecha Fin -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium mb-2" :style="{ color: 'var(--color-text)' }">
                             Fecha Fin
                         </label>
                         <input
                             type="date"
                             v-model="form.fecha_fin"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-taller-blue-dark focus:border-taller-blue-dark"
+                            class="block w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              color: 'var(--color-text)',
+                              borderColor: 'var(--color-border)'
+                            }"
+                            onFocus="this.style.borderColor='var(--color-primary)'; this.style.boxShadow='0 0 0 3px rgba(var(--color-primary-rgb), 0.1)'"
+                            onBlur="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'"
                         />
                     </div>
                 </div>
@@ -584,15 +657,23 @@ const chartOptionsPie = {
                 <div v-if="form.tipo_reporte === 'financiero'" class="space-y-6">
                     <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Evolución de Ingresos</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Evolución de Ingresos</h3>
                             <div style="height: 300px;">
                                 <Line :data="chartIngresosPeriodo" :options="chartOptions" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Método de Pago</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Ingresos por Método de Pago</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartIngresosPorMetodo" :options="chartOptions" />
                             </div>
@@ -601,15 +682,23 @@ const chartOptionsPie = {
 
                     <!-- Fila 2: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado de Pagos</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Estado de Pagos</h3>
                             <div style="height: 300px;">
                                 <Doughnut :data="chartEstadoPagos" :options="chartOptionsPie" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos vs Pendiente</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Ingresos vs Pendiente</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartIngresosVsPendiente" :options="chartOptions" />
                             </div>
@@ -621,15 +710,23 @@ const chartOptionsPie = {
                 <div v-if="form.tipo_reporte === 'servicios'" class="space-y-6">
                     <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Realizados por Período</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Servicios Realizados por Período</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartServiciosPeriodo" :options="chartOptions" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos por Tipo de Servicio</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Ingresos por Tipo de Servicio</h3>
                             <div style="height: 300px;">
                                 <Pie :data="chartServiciosPorTipo" :options="chartOptionsPie" />
                             </div>
@@ -637,24 +734,29 @@ const chartOptionsPie = {
                     </div>
 
                     <!-- Tabla de Servicios Más Solicitados -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Servicios Más Solicitados</h3>
+                    <div class="rounded-xl shadow-sm border p-6"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-border)'
+                        }">
+                        <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Servicios Más Solicitados</h3>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full divide-y"
+                                :style="{ borderColor: 'var(--color-border)' }">
                                 <thead>
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Servicio</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cantidad</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Ingresos</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Servicio</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Tipo</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Cantidad</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Ingresos</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="servicio in datos.servicios_mas_usados" :key="servicio.nombre">
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ servicio.nombre }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-500 capitalize">{{ servicio.tipo }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(servicio.cantidad) }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right font-medium">{{ formatMoney(servicio.ingresos) }}</td>
+                                <tbody class="divide-y" :style="{ borderColor: 'var(--color-border)' }">
+                                    <tr v-for="servicio in datos.servicios_mas_usados" :key="servicio.nombre" class="hover" :style="{ backgroundColor: 'var(--color-base)' }">
+                                        <td class="px-4 py-3 text-sm font-medium" :style="{ color: 'var(--color-text)' }">{{ servicio.nombre }}</td>
+                                        <td class="px-4 py-3 text-sm capitalize" :style="{ color: 'var(--color-text-light)' }">{{ servicio.tipo }}</td>
+                                        <td class="px-4 py-3 text-sm text-right" :style="{ color: 'var(--color-text)' }">{{ formatNumber(servicio.cantidad) }}</td>
+                                        <td class="px-4 py-3 text-sm text-right font-medium" :style="{ color: 'var(--color-text)' }">{{ formatMoney(servicio.ingresos) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -666,15 +768,23 @@ const chartOptionsPie = {
                 <div v-if="form.tipo_reporte === 'citas'" class="space-y-6">
                     <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Citas por Período</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Citas por Período</h3>
                             <div style="height: 300px;">
                                 <Line :data="chartCitasPeriodo" :options="chartOptions" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribución por Estado</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Distribución por Estado</h3>
                             <div style="height: 300px;">
                                 <Pie :data="chartCitasPorEstado" :options="chartOptionsPie" />
                             </div>
@@ -683,15 +793,23 @@ const chartOptionsPie = {
 
                     <!-- Fila 2: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Conversión por Período</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Tasa de Conversión por Período</h3>
                             <div style="height: 300px;">
                                 <Line :data="chartTasaConversion" :options="chartOptions" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribución por Hora del Día</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Distribución por Hora del Día</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartDistribucionHora" :options="chartOptions" />
                             </div>
@@ -703,15 +821,23 @@ const chartOptionsPie = {
                 <div v-if="form.tipo_reporte === 'mecanicos'" class="space-y-6">
                     <!-- Fila 1: Dos gráficos -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ingresos Generados por Mecánico</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Ingresos Generados por Mecánico</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartIngresosMecanicos" :options="chartOptions" />
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Tasa de Completación por Mecánico</h3>
+                        <div class="rounded-xl shadow-sm border p-6"
+                            :style="{ 
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)'
+                            }">
+                            <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Tasa de Completación por Mecánico</h3>
                             <div style="height: 300px;">
                                 <Bar :data="chartTasaCompletacionMecanicos" :options="chartOptions" />
                             </div>
@@ -719,28 +845,36 @@ const chartOptionsPie = {
                     </div>
 
                     <!-- Tabla de Rendimiento -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Rendimiento Detallado</h3>
+                    <div class="rounded-xl shadow-sm border p-6"
+                        :style="{ 
+                          backgroundColor: 'var(--color-base)',
+                          borderColor: 'var(--color-border)'
+                        }">
+                        <h3 class="text-lg font-semibold mb-4" :style="{ color: 'var(--color-text)' }">Rendimiento Detallado</h3>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full divide-y"
+                                :style="{ borderColor: 'var(--color-border)' }">
                                 <thead>
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mecánico</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Órdenes</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Completadas</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Ingresos</th>
-                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Completación (%)</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Mecánico</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Órdenes</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Completadas</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Ingresos</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium uppercase" :style="{ color: 'var(--color-text-light)' }">Completación (%)</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="mecanico in datos.rendimiento_mecanicos" :key="mecanico.id">
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ mecanico.nombre }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(mecanico.total_ordenes) }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(mecanico.ordenes_completadas) }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right font-medium">{{ formatMoney(mecanico.ingresos_generados) }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-900 text-right">
+                                <tbody class="divide-y" :style="{ borderColor: 'var(--color-border)' }">
+                                    <tr v-for="mecanico in datos.rendimiento_mecanicos" :key="mecanico.id" class="hover" :style="{ backgroundColor: 'var(--color-base)' }">
+                                        <td class="px-4 py-3 text-sm font-medium" :style="{ color: 'var(--color-text)' }">{{ mecanico.nombre }}</td>
+                                        <td class="px-4 py-3 text-sm text-right" :style="{ color: 'var(--color-text)' }">{{ formatNumber(mecanico.total_ordenes) }}</td>
+                                        <td class="px-4 py-3 text-sm text-right" :style="{ color: 'var(--color-text)' }">{{ formatNumber(mecanico.ordenes_completadas) }}</td>
+                                        <td class="px-4 py-3 text-sm text-right font-medium" :style="{ color: 'var(--color-text)' }">{{ formatMoney(mecanico.ingresos_generados) }}</td>
+                                        <td class="px-4 py-3 text-sm text-right">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                                                :class="mecanico.tasa_completacion >= 80 ? 'bg-green-100 text-green-800' : mecanico.tasa_completacion >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'"
+                                                :style="{ 
+                                                  backgroundColor: mecanico.tasa_completacion >= 80 ? 'var(--color-success-light)' : mecanico.tasa_completacion >= 60 ? 'var(--color-warning-light)' : 'var(--color-danger-light)',
+                                                  color: mecanico.tasa_completacion >= 80 ? 'var(--color-success)' : mecanico.tasa_completacion >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'
+                                                }"
                                             >
                                                 {{ mecanico.tasa_completacion }}%
                                             </span>
@@ -755,11 +889,15 @@ const chartOptionsPie = {
                 <!-- Mensaje cuando no hay datos -->
                 <div
                     v-if="!datos || Object.keys(datos).length === 0"
-                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center"
+                    class="rounded-xl shadow-sm border p-12 text-center"
+                    :style="{ 
+                      backgroundColor: 'var(--color-base)',
+                      borderColor: 'var(--color-border)'
+                    }"
                 >
-                    <DocumentChartBarIcon class="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">No hay datos disponibles</h3>
-                    <p class="text-gray-500">
+                    <DocumentChartBarIcon class="h-12 w-12 mx-auto mb-4" :style="{ color: 'var(--color-text-light)' }" />
+                    <h3 class="text-lg font-medium mb-2" :style="{ color: 'var(--color-text)' }">No hay datos disponibles</h3>
+                    <p :style="{ color: 'var(--color-text-light)' }">
                         No se encontraron datos para los filtros seleccionados.
                     </p>
                 </div>

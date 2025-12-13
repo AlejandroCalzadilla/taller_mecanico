@@ -30,16 +30,23 @@ const submit = () => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">
+                    <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">
                         Editar Servicio
                     </h1>
-                    <p class="text-sm text-gray-600 mt-1">
+                    <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
                         {{ servicio.nombre }}
                     </p>
                 </div>
                 <div class="flex space-x-2">
                     <Link :href="route('admin.servicios.index')"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                        class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                        :style="{ 
+                          backgroundColor: 'var(--color-secondary)', 
+                          color: 'var(--color-text)',
+                          '--tw-ring-color': 'var(--color-secondary)'
+                        }"
+                        onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                        onmouseout="this.style.backgroundColor='var(--color-secondary)'">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -52,42 +59,57 @@ const submit = () => {
         <div class="py-6">
             <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
                 <!-- Formulario -->
-                <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Información del Servicio</h2>
+                <div class="shadow-sm rounded-lg border"
+                    :style="{ 
+                        backgroundColor: 'var(--color-base)',
+                        borderColor: 'var(--color-border)'
+                    }">
+                    <div class="px-6 py-4 border-b"
+                        :style="{ borderColor: 'var(--color-border)' }">
+                        <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Servicio</h2>
                     </div>
 
                     <form @submit.prevent="submit" class="p-6 space-y-6">
                         <!-- Nombre -->
                         <div>
-                            <label for="nombre" class="block text-sm font-medium text-gray-700">
+                            <label for="nombre" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                 Nombre del Servicio *
                             </label>
                             <input
                                 type="text"
                                 id="nombre"
                                 v-model="form.nombre"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                :class="{ 'border-red-300': form.errors.nombre }"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)', 
+                                  color: 'var(--color-text)', 
+                                  borderColor: form.errors.nombre ? 'var(--color-error)' : 'var(--color-border)',
+                                  '--tw-ring-color': form.errors.nombre ? 'var(--color-error)' : 'var(--color-primary)'
+                                }"
                             />
-                            <p v-if="form.errors.nombre" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.nombre" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.nombre }}
                             </p>
                         </div>
 
                         <!-- Descripción -->
                         <div>
-                            <label for="descripcion" class="block text-sm font-medium text-gray-700">
+                            <label for="descripcion" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                 Descripción
                             </label>
                             <textarea
                                 id="descripcion"
                                 v-model="form.descripcion"
                                 rows="3"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                :class="{ 'border-red-300': form.errors.descripcion }"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-base)', 
+                                  color: 'var(--color-text)', 
+                                  borderColor: form.errors.descripcion ? 'var(--color-error)' : 'var(--color-border)',
+                                  '--tw-ring-color': form.errors.descripcion ? 'var(--color-error)' : 'var(--color-primary)'
+                                }"
                             />
-                            <p v-if="form.errors.descripcion" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.descripcion" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                 {{ form.errors.descripcion }}
                             </p>
                         </div>
@@ -95,28 +117,33 @@ const submit = () => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Tipo -->
                             <div>
-                                <label for="tipo" class="block text-sm font-medium text-gray-700">
+                                <label for="tipo" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                     Tipo de Servicio *
                                 </label>
                                 <select
                                     id="tipo"
                                     v-model="form.tipo"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.tipo }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)', 
+                                      color: 'var(--color-text)', 
+                                      borderColor: form.errors.tipo ? 'var(--color-error)' : 'var(--color-border)',
+                                      '--tw-ring-color': form.errors.tipo ? 'var(--color-error)' : 'var(--color-primary)'
+                                    }"
                                 >
                                     <option value="">Seleccione un tipo</option>
                                     <option v-for="(label, value) in tipos" :key="value" :value="value">
                                         {{ label }}
                                     </option>
                                 </select>
-                                <p v-if="form.errors.tipo" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.tipo" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.tipo }}
                                 </p>
                             </div>
 
                             <!-- Precio Base -->
                             <div>
-                                <label for="precio_base" class="block text-sm font-medium text-gray-700">
+                                <label for="precio_base" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                     Precio Base (S/.) *
                                 </label>
                                 <input
@@ -125,10 +152,15 @@ const submit = () => {
                                     v-model="form.precio_base"
                                     step="0.01"
                                     min="0"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.precio_base }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)', 
+                                      color: 'var(--color-text)', 
+                                      borderColor: form.errors.precio_base ? 'var(--color-error)' : 'var(--color-border)',
+                                      '--tw-ring-color': form.errors.precio_base ? 'var(--color-error)' : 'var(--color-primary)'
+                                    }"
                                 />
-                                <p v-if="form.errors.precio_base" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.precio_base" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.precio_base }}
                                 </p>
                             </div>
@@ -137,54 +169,80 @@ const submit = () => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Duración Estimada -->
                             <div>
-                                <label for="duracion_estimada" class="block text-sm font-medium text-gray-700">
-                                    Duración Estimada (minutos)
+                                <label for="duracion_estimada" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
+                                    Duración Estimada (minutos) *
                                 </label>
                                 <input
                                     type="number"
                                     id="duracion_estimada"
                                     v-model="form.duracion_estimada"
                                     min="1"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.duracion_estimada }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)', 
+                                      color: 'var(--color-text)', 
+                                      borderColor: form.errors.duracion_estimada ? 'var(--color-error)' : 'var(--color-border)',
+                                      '--tw-ring-color': form.errors.duracion_estimada ? 'var(--color-error)' : 'var(--color-primary)'
+                                    }"
+                                    placeholder="60"
                                 />
-                                <p v-if="form.errors.duracion_estimada" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.duracion_estimada" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.duracion_estimada }}
                                 </p>
                             </div>
 
                             <!-- Estado -->
                             <div>
-                                <label for="estado" class="block text-sm font-medium text-gray-700">
+                                <label for="estado" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                                     Estado *
                                 </label>
                                 <select
                                     id="estado"
                                     v-model="form.estado"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
-                                    :class="{ 'border-red-300': form.errors.estado }"
+                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-base)', 
+                                      color: 'var(--color-text)', 
+                                      borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
+                                      '--tw-ring-color': form.errors.estado ? 'var(--color-error)' : 'var(--color-primary)'
+                                    }"
                                 >
                                     <option value="activo">Activo</option>
                                     <option value="inactivo">Inactivo</option>
                                 </select>
-                                <p v-if="form.errors.estado" class="mt-1 text-sm text-red-600">
+                                <p v-if="form.errors.estado" class="mt-1 text-sm" :style="{ color: 'var(--color-error)' }">
                                     {{ form.errors.estado }}
                                 </p>
                             </div>
                         </div>
 
                         <!-- Botones de acción -->
-                        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                        <div class="flex justify-end space-x-3 pt-6"
+                             :style="{ borderTopColor: 'var(--color-border)' }">
                             <Link
                                 :href="route('admin.servicios.index')"
-                                class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-medium transition duration-200"
+                                class="px-6 py-2 rounded-md font-medium transition duration-200"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-secondary)', 
+                                  color: 'var(--color-text)',
+                                  '--tw-ring-color': 'var(--color-secondary)'
+                                }"
+                                onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                                onmouseout="this.style.backgroundColor='var(--color-secondary)'"
                             >
                                 Cancelar
                             </Link>
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="bg-taller-blue-dark hover:bg-taller-blue-light text-white px-6 py-2 rounded-md font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                class="px-6 py-2 rounded-md font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                :style="{ 
+                                  backgroundColor: 'var(--color-primary)', 
+                                  color: 'var(--color-text)',
+                                  '--tw-ring-color': 'var(--color-primary)'
+                                }"
+                                onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                                onmouseout="this.style.backgroundColor='var(--color-primary)'"
                             >
                                 <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

@@ -34,11 +34,28 @@ const submit = () => {
     <AdminLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-semibold text-gray-900">Editar Usuario: {{ cliente.nombre }}</h1>
+                <div>
+                    <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">
+                        Editar Usuario: {{ cliente.nombre }}
+                    </h1>
+                    <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
+                        Modifica la información del usuario
+                    </p>
+                </div>
                 <Link
                     :href="route('admin.clientes.index')"
-                    class="ml-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200"
+                    class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                    :style="{ 
+                      backgroundColor: 'var(--color-secondary)', 
+                      color: 'var(--color-text)',
+                      '--tw-ring-color': 'var(--color-secondary)'
+                    }"
+                    onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                    onmouseout="this.style.backgroundColor='var(--color-secondary)'"
                 >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
                     Volver a la lista
                 </Link>
             </div>
@@ -46,8 +63,13 @@ const submit = () => {
 
         <div class="py-6">
             <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="shadow-sm rounded-lg border"
+                    :style="{ 
+                        backgroundColor: 'var(--color-base)',
+                        borderColor: 'var(--color-border)'
+                    }">
+                    <div class="p-6 border-b"
+                        :style="{ borderColor: 'var(--color-border)' }">
                         <form @submit.prevent="submit" class="space-y-6">
                             <!-- Información Personal -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -95,7 +117,13 @@ const submit = () => {
                                     <select
                                         id="tipo"
                                         v-model="form.tipo"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)', 
+                                          color: 'var(--color-text)', 
+                                          borderColor: form.errors.tipo ? 'var(--color-error)' : 'var(--color-border)',
+                                          '--tw-ring-color': form.errors.tipo ? 'var(--color-error)' : 'var(--color-primary)'
+                                        }"
                                         required
                                     >
                                         <option v-for="(label, value) in tiposUsuario" :key="value" :value="value">
@@ -113,7 +141,13 @@ const submit = () => {
                                     <select
                                         id="estado"
                                         v-model="form.estado"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                        :style="{ 
+                                          backgroundColor: 'var(--color-base)', 
+                                          color: 'var(--color-text)', 
+                                          borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
+                                          '--tw-ring-color': form.errors.estado ? 'var(--color-error)' : 'var(--color-primary)'
+                                        }"
                                         required
                                     >
                                         <option value="activo">Activo</option>
@@ -124,13 +158,13 @@ const submit = () => {
 
                                 <div class="flex items-end">
                                     <div class="w-full">
-                                        <p class="text-sm text-gray-500 mb-2">Usuario Actual</p>
+                                        <p class="text-sm mb-2" :style="{ color: 'var(--color-text-light)' }">Usuario Actual</p>
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-                                            :class="{
-                                                'bg-blue-100 text-blue-800': cliente.tipo === 'cliente',
-                                                'bg-green-100 text-green-800': cliente.tipo === 'mecanico',
-                                                'bg-purple-100 text-purple-800': cliente.tipo === 'secretaria',
-                                                'bg-orange-100 text-orange-800': cliente.tipo === 'propietario'
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-info-light)',
+                                              color: 'var(--color-info)',
+                                              borderColor: 'var(--color-info)',
+                                              borderWidth: '1px'
                                             }">
                                             {{ tiposUsuario[cliente.tipo] }}
                                         </span>
@@ -152,18 +186,26 @@ const submit = () => {
 
                             <!-- Información de Cambio de Tipo -->
                             <div v-if="form.tipo !== cliente.tipo"
-                                 class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+                                 class="rounded-md p-4"
+                                 :style="{ 
+                                   backgroundColor: 'var(--color-warning-light)',
+                                   borderColor: 'var(--color-warning)',
+                                   borderWidth: '1px'
+                                 }">
                                 <div class="flex">
                                     <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"
+                                             :style="{ color: 'var(--color-warning)' }">
                                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-yellow-800">
+                                        <h3 class="text-sm font-medium"
+                                            :style="{ color: 'var(--color-warning-dark)' }">
                                             Cambio de Tipo de Usuario
                                         </h3>
-                                        <div class="mt-2 text-sm text-yellow-700">
+                                        <div class="mt-2 text-sm"
+                                             :style="{ color: 'var(--color-warning-dark)' }">
                                             <p>
                                                 Estás cambiando el tipo de usuario de
                                                 <strong>{{ tiposUsuario[cliente.tipo] }}</strong> a
@@ -178,17 +220,32 @@ const submit = () => {
                             </div>
 
                             <!-- Botones -->
-                            <div class="flex justify-end space-x-4 pt-6">
+                            <div class="flex justify-end space-x-4 pt-6"
+                                 :style="{ borderTopColor: 'var(--color-border)' }">
                                 <Link
                                     :href="route('admin.clientes.index')"
-                                    class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition duration-200"
+                                    class="px-6 py-2 rounded-lg font-semibold transition duration-200"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-secondary)', 
+                                      color: 'var(--color-text)',
+                                      '--tw-ring-color': 'var(--color-secondary)'
+                                    }"
+                                    onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                                    onmouseout="this.style.backgroundColor='var(--color-secondary)'"
                                 >
                                     Cancelar
                                 </Link>
                                 <PrimaryButton
                                     :class="{ 'opacity-25': form.processing }"
                                     :disabled="form.processing"
-                                    class="bg-taller-blue-dark hover:bg-taller-blue-light text-white"
+                                    class="px-6 py-2 rounded-lg font-semibold transition duration-200 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-primary)', 
+                                      color: 'var(--color-text)',
+                                      '--tw-ring-color': 'var(--color-primary)'
+                                    }"
+                                    onmouseover="this.style.backgroundColor='var(--color-accent)'"
+                                    onmouseout="this.style.backgroundColor='var(--color-primary)'"
                                 >
                                     <span v-if="form.processing">Actualizando...</span>
                                     <span v-else>Actualizar Usuario</span>

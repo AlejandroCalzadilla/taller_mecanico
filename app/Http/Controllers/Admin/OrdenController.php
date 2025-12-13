@@ -200,7 +200,7 @@ class OrdenController extends Controller
     {
         $orden->load([
             'diagnostico.cita.cliente',
-            'diagnostico.cita.vehiculo',
+            'diagnostico.cita.vehiculo.cliente',
             'mecanico',
             'servicios.servicio',
             'pagos.detalles'

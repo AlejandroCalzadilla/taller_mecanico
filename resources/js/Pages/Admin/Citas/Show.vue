@@ -41,17 +41,6 @@ const cambiarEstado = (nuevoEstado) => {
     }
 };
 
-const getEstadoBadgeClass = (estado) => {
-    const classes = {
-        pendiente: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-        confirmada: 'bg-blue-100 text-blue-800 border-blue-200',
-        en_proceso: 'bg-purple-100 text-purple-800 border-purple-200',
-        completada: 'bg-green-100 text-green-800 border-green-200',
-        cancelada: 'bg-red-100 text-red-800 border-red-200',
-    };
-    return classes[estado] || 'bg-gray-100 text-gray-800 border-gray-200';
-};
-
 const formatFecha = (fecha) => {
     return new Date(fecha).toLocaleDateString('es-ES', {
         weekday: 'long',
@@ -101,16 +90,22 @@ const puedeEliminar = computed(() => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">
+                    <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">
                         Cita: {{ cita.codigo }}
                     </h1>
-                    <p class="text-sm text-gray-600 mt-1">
+                    <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
                         Detalles completos de la cita programada
                     </p>
                 </div>
                 <div class="flex space-x-2">
                     <Link :href="route('admin.citas.edit', cita.id)"
-                        class="bg-taller-blue-dark hover:bg-taller-blue-light text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                        class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                        :style="{ 
+                          backgroundColor: 'var(--color-primary)',
+                          color: 'var(--color-base)'
+                        }"
+                        onMouseOver="this.style.backgroundColor='var(--color-primary-dark)'"
+                        onMouseOut="this.style.backgroundColor='var(--color-primary)'">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -118,7 +113,13 @@ const puedeEliminar = computed(() => {
                     Editar Cita
                     </Link>
                     <Link :href="route('admin.citas.index')"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                        class="px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                        :style="{ 
+                          backgroundColor: 'var(--color-secondary)',
+                          color: 'var(--color-base)'
+                        }"
+                        onMouseOver="this.style.backgroundColor='var(--color-secondary-dark)'"
+                        onMouseOut="this.style.backgroundColor='var(--color-secondary)'">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -133,11 +134,23 @@ const puedeEliminar = computed(() => {
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <!-- Alertas -->
                 <div v-if="flash.success"
-                    class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    class="mb-6 px-4 py-3 rounded"
+                    :style="{ 
+                      backgroundColor: 'var(--color-success-light)',
+                      borderColor: 'var(--color-success)',
+                      color: 'var(--color-success)',
+                      border: '1px solid'
+                    }">
                     {{ flash.success }}
                 </div>
 
-                <div v-if="flash.error" class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <div v-if="flash.error" class="mb-6 px-4 py-3 rounded"
+                     :style="{ 
+                       backgroundColor: 'var(--color-danger-light)',
+                       borderColor: 'var(--color-danger)',
+                       color: 'var(--color-danger)',
+                       border: '1px solid'
+                     }">
                     {{ flash.error }}
                 </div>
 
@@ -145,12 +158,33 @@ const puedeEliminar = computed(() => {
                     <!-- Columna izquierda - Información principal -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Tarjeta de información general -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                                <h2 class="text-lg font-semibold text-gray-900">Información General</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b flex justify-between items-center"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información General</h2>
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border-2"
-                                    :class="getEstadoBadgeClass(cita.estado)">
+                                    :style="{
+                                        backgroundColor: cita.estado === 'pendiente' ? 'var(--color-warning-light)' :
+                                                       cita.estado === 'confirmada' ? 'var(--color-info-light)' :
+                                                       cita.estado === 'en_proceso' ? 'var(--color-secondary-light)' :
+                                                       cita.estado === 'completada' ? 'var(--color-success-light)' :
+                                                       'var(--color-danger-light)',
+                                        color: cita.estado === 'pendiente' ? 'var(--color-warning)' :
+                                              cita.estado === 'confirmada' ? 'var(--color-info)' :
+                                              cita.estado === 'en_proceso' ? 'var(--color-secondary)' :
+                                              cita.estado === 'completada' ? 'var(--color-success)' :
+                                              'var(--color-danger)',
+                                        borderColor: cita.estado === 'pendiente' ? 'var(--color-warning)' :
+                                                    cita.estado === 'confirmada' ? 'var(--color-info)' :
+                                                    cita.estado === 'en_proceso' ? 'var(--color-secondary)' :
+                                                    cita.estado === 'completada' ? 'var(--color-success)' :
+                                                    'var(--color-danger)'
+                                    }">
                                     {{ estados[cita.estado] }}
                                 </span>
                             </div>
@@ -158,31 +192,37 @@ const puedeEliminar = computed(() => {
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <!-- Código y Fecha -->
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Código de Cita</label>
-                                        <p class="mt-1 text-lg font-mono text-gray-900">{{ cita.codigo }}</p>
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Código de Cita</label>
+                                        <p class="mt-1 text-lg font-mono" :style="{ color: 'var(--color-text)' }">{{ cita.codigo }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Fecha y Hora</label>
-                                        <p class="mt-1 text-lg text-gray-900">
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Fecha y Hora</label>
+                                        <p class="mt-1 text-lg" :style="{ color: 'var(--color-text)' }">
                                             {{ getNombreDia(cita.fecha) }}, {{ formatFecha(cita.fecha) }}
                                         </p>
-                                        <p class="text-sm text-gray-600">Hora: {{ cita.hora }}</p>
+                                        <p class="text-sm" :style="{ color: 'var(--color-text-light)' }">Hora: {{ cita.hora }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Información del Cliente -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Cliente</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Cliente</h2>
                             </div>
                             <div class="p-6">
                                 <div class="flex items-start space-x-4">
                                     <div class="flex-shrink-0">
                                         <div
-                                            class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            class="w-16 h-16 rounded-full flex items-center justify-center"
+                                            :style="{ backgroundColor: 'var(--color-base-light)' }">
+                                            <svg class="w-8 h-8" :style="{ color: 'var(--color-text-light)' }" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -190,10 +230,10 @@ const puedeEliminar = computed(() => {
                                         </div>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-gray-900">{{ cita.cliente.nombre }}</h3>
-                                        <div class="mt-2 space-y-1 text-sm text-gray-600">
-                                            <div class="flex items-center">
-                                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none"
+                                        <h3 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">{{ cita.cliente.nombre }}</h3>
+                                        <div class="mt-2 space-y-1 text-sm">
+                                            <div class="flex items-center" :style="{ color: 'var(--color-text-light)' }">
+                                                <svg class="w-4 h-4 mr-2" :style="{ color: 'var(--color-text-light)' }" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2"
@@ -201,8 +241,8 @@ const puedeEliminar = computed(() => {
                                                 </svg>
                                                 {{ cita.cliente.email }}
                                             </div>
-                                            <div v-if="cita.cliente.telefono" class="flex items-center">
-                                                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none"
+                                            <div v-if="cita.cliente.telefono" class="flex items-center" :style="{ color: 'var(--color-text-light)' }">
+                                                <svg class="w-4 h-4 mr-2" :style="{ color: 'var(--color-text-light)' }" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2"
@@ -211,7 +251,7 @@ const puedeEliminar = computed(() => {
                                                 {{ cita.cliente.telefono }}
                                             </div>
                                             <div v-if="cita.cliente.direccion" class="flex items-start">
-                                                <svg class="w-4 h-4 mr-2 text-gray-400 mt-0.5 flex-shrink-0" fill="none"
+                                                <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" :style="{ color: 'var(--color-text-light)' }" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2"
@@ -219,7 +259,7 @@ const puedeEliminar = computed(() => {
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
-                                                <span class="break-words">{{ cita.cliente.direccion }}</span>
+                                                <span class="break-words" :style="{ color: 'var(--color-text-light)' }">{{ cita.cliente.direccion }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -228,22 +268,29 @@ const puedeEliminar = computed(() => {
                         </div>
 
                         <!-- Información del Vehículo -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Vehículo</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Vehículo</h2>
                             </div>
                             <div class="p-6">
                                 <div class="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6">
                                     <!-- Imagen del Vehículo -->
                                     <div class="flex-shrink-0">
                                         <div
-                                            class="w-48 h-32 bg-gray-200 rounded-lg overflow-hidden border border-gray-300">
+                                            class="w-48 h-32 rounded-lg overflow-hidden border"
+                                            :style="{ borderColor: 'var(--color-border)' }">
                                                 <img v-if="cita.vehiculo.foto_url" :src="cita.vehiculo.foto_url"
                                                     :alt="`${cita.vehiculo.marca} ${cita.vehiculo.modelo}`"
                                                     class="w-full h-full object-cover" />
                                                 <div v-else
-                                                    class="w-full h-full flex items-center justify-center bg-gray-100">
-                                                    <svg class="w-12 h-12 text-gray-400" fill="none"
+                                                    class="w-full h-full flex items-center justify-center"
+                                                    :style="{ backgroundColor: 'var(--color-base-light)' }">
+                                                    <svg class="w-12 h-12" :style="{ color: 'var(--color-text-light)' }" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2"
@@ -255,47 +302,57 @@ const puedeEliminar = computed(() => {
                                                 </div>
                                         </div>
                                         <p v-if="!cita.vehiculo.foto_url"
-                                            class="mt-2 text-xs text-center text-gray-500">
+                                            class="mt-2 text-xs text-center" :style="{ color: 'var(--color-text-light)' }">
                                             Sin imagen del vehículo
                                         </p>
                                     </div>
 
                                     <!-- Información del Vehículo -->
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-gray-900">
+                                        <h3 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">
                                             {{ cita.vehiculo.marca }} {{ cita.vehiculo.modelo }}
                                         </h3>
-                                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div class="space-y-2">
                                                 <div>
-                                                    <span class="font-medium text-gray-700">Placa:</span>
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Placa:</span>
                                                     <span
-                                                        class="ml-2 font-mono bg-gray-100 px-2 py-1 rounded text-sm">{{
+                                                        class="ml-2 font-mono px-2 py-1 rounded text-sm"
+                                                        :style="{ 
+                                                          backgroundColor: 'var(--color-base-light)',
+                                                          color: 'var(--color-text)'
+                                                        }">{{
                                                             cita.vehiculo.placa }}</span>
                                                 </div>
                                                 <div>
-                                                    <span class="font-medium text-gray-700">Año:</span>
-                                                    {{ cita.vehiculo.anio }}
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Año:</span>
+                                                    <span :style="{ color: 'var(--color-text)' }">{{ cita.vehiculo.anio }}</span>
                                                 </div>
                                                 <div>
-                                                    <span class="font-medium text-gray-700">Color:</span>
-                                                    <span class="inline-flex items-center">
-                                                        <span class="w-3 h-3 rounded-full border border-gray-300 mr-1"
-                                                            :style="{ backgroundColor: cita.vehiculo.color?.toLowerCase() }"></span>
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Color:</span>
+                                                    <span class="inline-flex items-center" :style="{ color: 'var(--color-text)' }">
+                                                        <span class="w-3 h-3 rounded-full border mr-1"
+                                                            :style="{ 
+                                                              backgroundColor: cita.vehiculo.color?.toLowerCase(),
+                                                              borderColor: 'var(--color-border)'
+                                                            }"></span>
                                                         {{ cita.vehiculo.color }}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="space-y-2">
                                                 <div>
-                                                    <span class="font-medium text-gray-700">Kilometraje:</span>
-                                                    {{ cita.vehiculo.kilometraje?.toLocaleString() || '0' }} km
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Kilometraje:</span>
+                                                    <span :style="{ color: 'var(--color-text)' }">{{ cita.vehiculo.kilometraje?.toLocaleString() || '0' }} km</span>
                                                 </div>
                                                 <div>
-                                                    <span class="font-medium text-gray-700">Estado:</span>
+                                                    <span class="font-medium" :style="{ color: 'var(--color-text-light)' }">Estado:</span>
                                                     <span
-                                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                                                        :class="cita.vehiculo.estado === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2"
+                                                        :style="{
+                                                            backgroundColor: cita.vehiculo.estado === 'activo' ? 'var(--color-success-light)' : 'var(--color-danger-light)',
+                                                            color: cita.vehiculo.estado === 'activo' ? 'var(--color-success)' : 'var(--color-danger)'
+                                                        }">
                                                         {{ cita.vehiculo.estado === 'activo' ? 'Activo' : 'Inactivo' }}
                                                     </span>
                                                 </div>
@@ -303,10 +360,11 @@ const puedeEliminar = computed(() => {
                                         </div>
 
                                         <!-- Observaciones del Vehículo -->
-                                        <div v-if="cita.vehiculo.observaciones" class="mt-4 p-3 bg-gray-50 rounded-lg">
-                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Observaciones del
+                                        <div v-if="cita.vehiculo.observaciones" class="mt-4 p-3 rounded-lg"
+                                             :style="{ backgroundColor: 'var(--color-base-light)' }">
+                                            <h4 class="text-sm font-medium mb-1" :style="{ color: 'var(--color-text-light)' }">Observaciones del
                                                 Vehículo</h4>
-                                            <p class="text-sm text-gray-600 whitespace-pre-wrap">{{
+                                            <p class="text-sm whitespace-pre-wrap" :style="{ color: 'var(--color-text)' }">{{
                                                 cita.vehiculo.observaciones
                                             }}</p>
                                         </div>
@@ -314,7 +372,10 @@ const puedeEliminar = computed(() => {
                                         <!-- Enlace para ver más detalles del vehículo -->
                                         <div class="mt-4">
                                             <Link :href="route('admin.vehiculos.show', cita.vehiculo.id)"
-                                                class="text-taller-blue-dark hover:text-taller-blue-light text-sm font-medium transition duration-200 flex items-center">
+                                                class="text-sm font-medium transition duration-200 flex items-center"
+                                                :style="{ color: 'var(--color-primary)' }"
+                                                onMouseOver="this.style.color='var(--color-primary-dark)'"
+                                                onMouseOut="this.style.color='var(--color-primary)'">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -331,19 +392,30 @@ const puedeEliminar = computed(() => {
                         </div>
 
                         <!-- Detalles de la Cita -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Detalles de la Cita</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Detalles de la Cita</h2>
                             </div>
                             <div class="p-6 space-y-4">
                                 <div>
-                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Motivo Principal</h4>
-                                    <p class="text-gray-900 bg-gray-50 p-3 rounded-lg">{{ cita.motivo }}</p>
+                                    <h4 class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Motivo Principal</h4>
+                                    <p class="p-3 rounded-lg" :style="{ 
+                                      color: 'var(--color-text)',
+                                      backgroundColor: 'var(--color-base-light)'
+                                    }">{{ cita.motivo }}</p>
                                 </div>
 
                                 <div v-if="cita.observaciones">
-                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Observaciones Adicionales</h4>
-                                    <p class="text-gray-600 bg-blue-50 p-3 rounded-lg whitespace-pre-wrap">{{
+                                    <h4 class="text-sm font-medium mb-2" :style="{ color: 'var(--color-text-light)' }">Observaciones Adicionales</h4>
+                                    <p class="p-3 rounded-lg whitespace-pre-wrap" :style="{ 
+                                      color: 'var(--color-text)',
+                                      backgroundColor: 'var(--color-info-light)'
+                                    }">{{
                                         cita.observaciones
                                     }}</p>
                                 </div>
@@ -351,23 +423,40 @@ const puedeEliminar = computed(() => {
                         </div>
 
                         <!-- Diagnóstico (si existe) -->
-                        <div v-if="cita.diagnostico" class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Diagnóstico Asociado</h2>
+                        <div v-if="cita.diagnostico" class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Diagnóstico Asociado</h2>
                             </div>
                             <div class="p-6">
-                                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="border rounded-lg p-4"
+                                     :style="{ 
+                                       backgroundColor: 'var(--color-success-light)',
+                                       borderColor: 'var(--color-success)'
+                                     }">
                                     <div class="flex items-center justify-between">
                                         <div>
-                                            <h3 class="text-sm font-medium text-green-800">
+                                            <h3 class="text-sm font-medium"
+                                                :style="{ color: 'var(--color-success)' }">
                                                 Diagnóstico: {{ cita.diagnostico.codigo }}
                                             </h3>
-                                            <p class="text-sm text-green-700 mt-1">
-                                                Realizado por: {{ cita.diagnostico.mecanico?.nombre || 'Mecániconoasignado' }}
+                                            <p class="text-sm mt-1"
+                                               :style="{ color: 'var(--color-success-dark)' }">
+                                                Realizado por: {{ cita.diagnostico.mecanico?.nombre || 'Mecánico no asignado' }}
                                             </p>
                                         </div>
                                         <Link :href="route('admin.diagnosticos.show', cita.diagnostico.id)"
-                                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium transition duration-200">
+                                            class="px-3 py-1 rounded text-sm font-medium transition duration-200"
+                                            :style="{ 
+                                              backgroundColor: 'var(--color-success)',
+                                              color: 'var(--color-base)'
+                                            }"
+                                            onMouseOver="this.style.backgroundColor='var(--color-success-dark)'"
+                                            onMouseOut="this.style.backgroundColor='var(--color-success)'">
                                         Ver Diagnóstico
                                         </Link>
                                     </div>
@@ -379,15 +468,26 @@ const puedeEliminar = computed(() => {
                     <!-- Columna derecha - Acciones e Información -->
                     <div class="space-y-6">
                         <!-- Acciones Rápidas -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Acciones</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Acciones</h2>
                             </div>
                             <div class="p-6 space-y-3">
                                 <!-- Cambiar Estado -->
                                 <button v-if="puedeCambiarEstado && getProximoEstado"
                                     @click="cambiarEstado(getProximoEstado)"
-                                    class="w-full bg-taller-blue-dark hover:bg-taller-blue-light text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center">
+                                    class="w-full px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-primary)',
+                                      color: 'var(--color-base)'
+                                    }"
+                                    onMouseOver="this.style.backgroundColor='var(--color-primary-dark)'"
+                                    onMouseOut="this.style.backgroundColor='var(--color-primary)'">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -397,7 +497,13 @@ const puedeEliminar = computed(() => {
 
                                 <!-- Cancelar Cita -->
                                 <button v-if="puedeCambiarEstado" @click="cambiarEstado('cancelada')"
-                                    class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center">
+                                    class="w-full px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-danger)',
+                                      color: 'var(--color-base)'
+                                    }"
+                                    onMouseOver="this.style.backgroundColor='var(--color-danger-dark)'"
+                                    onMouseOut="this.style.backgroundColor='var(--color-danger)'">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M6 18L18 6M6 6l12 12" />
@@ -408,7 +514,13 @@ const puedeEliminar = computed(() => {
                                 <!-- Crear Diagnóstico -->
                                 <Link v-if="!cita.diagnostico && ['confirmada', 'en_proceso'].includes(cita.estado)"
                                     :href="route('admin.diagnosticos.create', { cita_id: cita.id })"
-                                    class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center">
+                                    class="w-full px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-success)',
+                                      color: 'var(--color-base)'
+                                    }"
+                                    onMouseOver="this.style.backgroundColor='var(--color-success-dark)'"
+                                    onMouseOut="this.style.backgroundColor='var(--color-success)'">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -418,7 +530,13 @@ const puedeEliminar = computed(() => {
 
                                 <!-- Eliminar Cita -->
                                 <button v-if="puedeEliminar" @click="eliminarCita"
-                                    class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center">
+                                    class="w-full px-4 py-2 rounded-md font-medium transition duration-200 flex items-center justify-center"
+                                    :style="{ 
+                                      backgroundColor: 'var(--color-secondary)',
+                                      color: 'var(--color-base)'
+                                    }"
+                                    onMouseOver="this.style.backgroundColor='var(--color-secondary-dark)'"
+                                    onMouseOut="this.style.backgroundColor='var(--color-secondary)'">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -429,47 +547,60 @@ const puedeEliminar = computed(() => {
                         </div>
 
                         <!-- Información del Sistema -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Sistema</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Sistema</h2>
                             </div>
                             <div class="p-6 space-y-3 text-sm">
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Creado el:</span>
-                                    <span class="text-gray-900">{{ new Date(cita.created_at).toLocaleDateString()
+                                    <span :style="{ color: 'var(--color-text-light)' }">Creado el:</span>
+                                    <span :style="{ color: 'var(--color-text)' }">{{ new Date(cita.created_at).toLocaleDateString()
                                     }}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Actualizado el:</span>
-                                    <span class="text-gray-900">{{ new Date(cita.updated_at).toLocaleDateString()
+                                    <span :style="{ color: 'var(--color-text-light)' }">Actualizado el:</span>
+                                    <span :style="{ color: 'var(--color-text)' }">{{ new Date(cita.updated_at).toLocaleDateString()
                                     }}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">ID:</span>
-                                    <span class="text-gray-900 font-mono">{{ cita.id }}</span>
+                                    <span :style="{ color: 'var(--color-text-light)' }">ID:</span>
+                                    <span class="font-mono" :style="{ color: 'var(--color-text)' }">{{ cita.id }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Flujo de Estados -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Flujo de la Cita</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ 
+                               backgroundColor: 'var(--color-base)',
+                               borderColor: 'var(--color-border)'
+                             }">
+                            <div class="px-6 py-4 border-b"
+                                 :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Flujo de la Cita</h2>
                             </div>
                             <div class="p-6">
                                 <div class="space-y-3">
                                     <div v-for="(label, value) in estados" :key="value" class="flex items-center">
-                                        <div class="flex-shrink-0 w-3 h-3 rounded-full border-2" :class="{
-                                            'bg-green-500 border-green-500': cita.estado === value,
-                                            'border-gray-300': cita.estado !== value
-                                        }"></div>
-                                        <span class="ml-3 text-sm" :class="{
-                                            'font-medium text-gray-900': cita.estado === value,
-                                            'text-gray-500': cita.estado !== value
-                                        }">
+                                        <div class="flex-shrink-0 w-3 h-3 rounded-full border-2"
+                                             :style="{
+                                                 backgroundColor: cita.estado === value ? 'var(--color-success)' : 'transparent',
+                                                 borderColor: cita.estado === value ? 'var(--color-success)' : 'var(--color-border)'
+                                             }"></div>
+                                        <span class="ml-3 text-sm"
+                                              :style="{
+                                                  color: cita.estado === value ? 'var(--color-text)' : 'var(--color-text-light)',
+                                                  fontWeight: cita.estado === value ? '500' : 'normal'
+                                              }">
                                             {{ label }}
                                         </span>
-                                        <svg v-if="cita.estado === value" class="ml-2 w-4 h-4 text-green-500"
+                                        <svg v-if="cita.estado === value" class="ml-2 w-4 h-4"
+                                             :style="{ color: 'var(--color-success)' }"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M5 13l4 4L19 7" />
