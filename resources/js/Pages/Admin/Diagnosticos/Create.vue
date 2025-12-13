@@ -55,39 +55,37 @@ const submit = () => {
 
 <template>
   <AdminLayout>
-    <div class="px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
-
-      <div class="md:flex md:items-center md:justify-between mb-8">
-        <div class="min-w-0 flex-1">
-          <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3">
-            <div class="p-2 bg-taller-blue-dark rounded-lg shadow-sm">
-              <WrenchScrewdriverIcon class="h-6 w-6 text-white" />
-            </div>
-            Crear Diagnóstico
-          </h2>
-          <p class="mt-2 text-sm text-gray-500 ml-12">
-            Complete el formulario técnico para registrar un nuevo diagnóstico vehicular.
-          </p>
+    <template #header>
+      <div class="flex justify-between items-center" :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)' }">
+        <div class="flex items-center space-x-3">
+          <svg class="w-8 h-8 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" :style="{ color: 'var(--color-primary)' }">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"></path>
+          </svg>
+          <h1 class="text-2xl font-semibold">Crear Diagnóstico</h1>
         </div>
-        <div class="mt-4 flex md:mt-0 md:ml-4">
-          <Link
-            :href="route('admin.diagnosticos.index')"
-            class="group inline-flex items-center gap-2 rounded-lg bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 hover:text-red-600 transition-colors"
-          >
-            <XMarkIcon class="h-4 w-4 text-gray-500 group-hover:text-red-600 transition-colors" />
-            Cancelar
-          </Link>
-        </div>
+        <Link
+          :href="route('admin.diagnosticos.index')"
+          class="px-4 py-2 rounded-lg font-semibold transition duration-200 hover:scale-105 transform"
+          :style="{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }"
+        >
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Volver a la lista
+        </Link>
       </div>
+    </template>
+
+    <div class="py-6" :style="{ backgroundColor: 'var(--color-base)' }">
 
       <div class="max-w-4xl mx-auto">
         <form @submit.prevent="submit" class="space-y-6">
 
-          <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
-            <div class="px-4 py-5 sm:p-6">
-              <div class="flex items-center gap-2 mb-4 border-b border-gray-100 pb-2">
-                <CalendarDaysIcon class="h-5 w-5 text-taller-blue-dark" />
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Origen del Servicio</h3>
+          <div class="overflow-hidden shadow-sm sm:rounded-lg" :style="{ backgroundColor: 'var(--color-base)', border: '1px solid var(--color-border)' }">
+            <div class="p-6 border-b" :style="{ borderColor: 'var(--color-border)' }">
+              <div class="flex items-center gap-2 mb-4">
+                <CalendarDaysIcon class="h-5 w-5" :style="{ color: 'var(--color-primary)' }" />
+                <h3 class="text-base font-semibold" :style="{ color: 'var(--color-text)' }">Origen del Servicio</h3>
               </div>
 
               <div class="grid grid-cols-1 gap-6">
@@ -101,8 +99,13 @@ const submit = () => {
                       id="cita_id"
                       v-model="form.cita_id"
                       @change="onCitaChange"
-                      :class="{'ring-red-300 focus:ring-red-500': form.errors.cita_id}"
-                      class="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-2.5 pl-10 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: form.errors.cita_id ? 'var(--color-error)' : 'var(--color-border)',
+                        '--tw-ring-color': form.errors.cita_id ? 'var(--color-error)' : 'var(--color-primary)'
+                      }"
                     >
                       <option value="">-- Buscar cita por código o cliente --</option>
                       <option
@@ -168,11 +171,11 @@ const submit = () => {
             </div>
           </div>
 
-          <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
-            <div class="px-4 py-5 sm:p-6">
-              <div class="flex items-center gap-2 mb-6 border-b border-gray-100 pb-2">
-                <ClipboardDocumentCheckIcon class="h-5 w-5 text-taller-blue-dark" />
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Evaluación Técnica</h3>
+          <div class="overflow-hidden shadow-sm sm:rounded-lg" :style="{ backgroundColor: 'var(--color-base)', border: '1px solid var(--color-border)' }">
+            <div class="p-6 border-b" :style="{ borderColor: 'var(--color-border)' }">
+              <div class="flex items-center gap-2 mb-6">
+                <ClipboardDocumentCheckIcon class="h-5 w-5" :style="{ color: 'var(--color-primary)' }" />
+                <h3 class="text-base font-semibold" :style="{ color: 'var(--color-text)' }">Evaluación Técnica</h3>
               </div>
 
               <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -186,7 +189,13 @@ const submit = () => {
                     <select
                       id="mecanico_id"
                       v-model="form.mecanico_id"
-                      class="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-2.5 pl-10 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                     >
                       <option value="">Asignar técnico...</option>
                       <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">
@@ -207,7 +216,13 @@ const submit = () => {
                       type="date"
                       id="fecha_diagnostico"
                       v-model="form.fecha_diagnostico"
-                      class="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-2.5 pl-10 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                     />
                   </div>
                   <p v-if="form.errors.fecha_diagnostico" class="mt-2 text-sm text-red-600">{{ form.errors.fecha_diagnostico }}</p>
@@ -219,7 +234,13 @@ const submit = () => {
                     <select
                       id="estado"
                       v-model="form.estado"
-                      class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-2.5 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                     >
                       <option v-for="(label, value) in estados" :key="value" :value="value">{{ label }}</option>
                     </select>
@@ -237,7 +258,13 @@ const submit = () => {
                       id="descripcion_problema"
                       v-model="form.descripcion_problema"
                       rows="3"
-                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6 bg-orange-50/30"
+                      class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-warning-light)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                       placeholder="Detalles sobre ruidos, fallas o síntomas reportados..."
                     />
                   </div>
@@ -254,7 +281,13 @@ const submit = () => {
                       id="diagnostico"
                       v-model="form.diagnostico"
                       rows="4"
-                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                       placeholder="Describa el origen de la falla y los sistemas afectados..."
                     />
                   </div>
@@ -271,7 +304,13 @@ const submit = () => {
                       id="recomendaciones"
                       v-model="form.recomendaciones"
                       rows="3"
-                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6"
+                      class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 focus:ring-2 sm:text-sm sm:leading-6"
+                      :style="{ 
+                        backgroundColor: 'var(--color-base)', 
+                        color: 'var(--color-text)', 
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }"
                       placeholder="Lista de repuestos sugeridos o pasos a seguir..."
                     />
                   </div>
@@ -280,17 +319,23 @@ const submit = () => {
               </div>
             </div>
 
-            <div class="bg-gray-50 px-4 py-4 sm:px-6 flex items-center justify-end gap-x-4 border-t border-gray-100">
+            <div class="px-4 py-4 flex items-center justify-end gap-x-4 border-t" :style="{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-neutral)' }">
               <Link
                 :href="route('admin.diagnosticos.index')"
-                class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700"
+                class="text-sm font-semibold leading-6 hover:scale-105 transform transition duration-200"
+                :style="{ color: 'var(--color-text)' }"
               >
                 Cancelar
               </Link>
               <button
                 type="submit"
                 :disabled="form.processing"
-                class="inline-flex justify-center rounded-md bg-taller-blue-dark px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-taller-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-taller-blue-dark disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                class="inline-flex justify-center rounded-md px-6 py-2.5 text-sm font-semibold shadow-sm hover:scale-105 transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                :style="{ 
+                  backgroundColor: 'var(--color-primary)', 
+                  color: 'var(--color-base)',
+                  '--tw-outline-color': 'var(--color-primary)'
+                }"
               >
                 <div v-if="form.processing" class="flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>

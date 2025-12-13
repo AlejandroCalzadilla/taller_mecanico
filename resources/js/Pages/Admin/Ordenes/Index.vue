@@ -82,24 +82,34 @@ const getEstadoBadgeClass = (estado) => {
 
 <template>
   <AdminLayout>
-    <div class="px-4 sm:px-6 lg:px-8 py-8 bg-gray-50/50 min-h-screen">
+    <div class="px-4 sm:px-6 lg:px-8 py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-background)' }">
 
       <div class="sm:flex sm:items-center sm:justify-between mb-8">
         <div>
-          <h1 class="text-2xl font-bold leading-7 text-gray-900 flex items-center gap-3">
-            <div class="p-2 bg-white rounded-lg shadow-sm border border-gray-200">
-                <ClipboardDocumentListIcon class="h-6 w-6 text-taller-blue-dark" />
+          <h1 class="text-2xl font-bold leading-7 flex items-center gap-3 animate-fade-in-down"
+            :style="{ color: 'var(--color-text)' }">
+            <div class="p-2 rounded-lg shadow-sm border transition-all duration-300"
+              :style="{
+                backgroundColor: 'var(--color-base)',
+                borderColor: 'var(--color-border)'
+              }">
+                <ClipboardDocumentListIcon class="h-6 w-6" :style="{ color: 'var(--color-primary)' }" />
             </div>
             Órdenes de Trabajo
           </h1>
-          <p class="mt-1 text-sm text-gray-500 ml-12">
+          <p class="mt-1 text-sm ml-12" :style="{ color: 'var(--color-text-light)' }">
             Control de flujo de reparaciones y facturación.
           </p>
         </div>
         <div class="mt-4 sm:mt-0">
           <Link
             :href="route('admin.ordenes.create')"
-            class="inline-flex items-center justify-center rounded-lg bg-taller-blue-dark px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-taller-blue-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-taller-blue-dark transition-all"
+            class="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 transform hover:-translate-y-0.5"
+            :style="{
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-base)',
+              '--tw-ring-color': 'var(--color-primary)'
+            }"
           >
             <PlusIcon class="-ml-1 mr-2 h-5 w-5" />
             Nueva Orden
@@ -109,86 +119,154 @@ const getEstadoBadgeClass = (estado) => {
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <div v-for="(count, key) in estadisticas" :key="key"
-               class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:border-gray-300 transition-colors group">
-              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+               class="p-4 rounded-2xl shadow-sm border flex flex-col items-center justify-center hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+               :style="{
+                 backgroundColor: 'var(--color-base)',
+                 borderColor: 'var(--color-border)'
+               }">
+              <span class="text-xs font-semibold uppercase tracking-wider mb-1"
+                :style="{ color: 'var(--color-text-light)' }">
                   {{ key.replace('_', ' ') }}
               </span>
               <div class="flex items-center gap-2">
-                  <span class="text-2xl font-bold text-gray-900">{{ count }}</span>
-                  <InboxArrowDownIcon v-if="key === 'total'" class="h-4 w-4 text-gray-400" />
-                  <ClockIcon v-if="key === 'presupuestadas'" class="h-4 w-4 text-yellow-500" />
-                  <CheckCircleIcon v-if="key === 'aprobadas'" class="h-4 w-4 text-blue-500" />
-                  <WrenchScrewdriverIcon v-if="key === 'en_proceso'" class="h-4 w-4 text-purple-500" />
-                  <CurrencyDollarIcon v-if="key === 'completada' || key === 'entregada'" class="h-4 w-4 text-green-500" />
+                  <span class="text-2xl font-bold" :style="{ color: 'var(--color-text)' }">{{ count }}</span>
+                  <InboxArrowDownIcon v-if="key === 'total'" class="h-4 w-4 transition-all duration-300 group-hover:scale-110"
+                    :style="{ color: 'var(--color-primary)' }" />
+                  <ClockIcon v-if="key === 'presupuestadas'" class="h-4 w-4 transition-all duration-300 group-hover:scale-110"
+                    :style="{ color: 'var(--color-warning)' }" />
+                  <CheckCircleIcon v-if="key === 'aprobadas'" class="h-4 w-4 transition-all duration-300 group-hover:scale-110"
+                    :style="{ color: 'var(--color-info)' }" />
+                  <WrenchScrewdriverIcon v-if="key === 'en_proceso'" class="h-4 w-4 transition-all duration-300 group-hover:scale-110"
+                    :style="{ color: 'var(--color-secondary)' }" />
+                  <CurrencyDollarIcon v-if="key === 'completada' || key === 'entregada'" class="h-4 w-4 transition-all duration-300 group-hover:scale-110"
+                    :style="{ color: 'var(--color-success)' }" />
               </div>
           </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="rounded-2xl shadow-sm border overflow-hidden transition-all duration-300"
+        :style="{
+          backgroundColor: 'var(--color-base)',
+          borderColor: 'var(--color-border)'
+        }">
 
-        <div class="p-5 border-b border-gray-100 bg-white flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+        <div class="p-5 border-b bg-gray-50 flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center"
+          :style="{
+            backgroundColor: 'var(--color-background)',
+            borderColor: 'var(--color-border)'
+          }">
 
             <div class="relative w-full lg:max-w-md group">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <MagnifyingGlassIcon class="h-5 w-5 text-gray-400 group-focus-within:text-taller-blue-dark transition-colors" />
+                    <MagnifyingGlassIcon class="h-5 w-5 transition-colors"
+                      :style="{ color: 'var(--color-text-light)' }" />
                 </div>
                 <input
                     type="text"
                     v-model="filters.search"
                     @input="handleFilter"
                     placeholder="Buscar por código, cliente, placa..."
-                    class="block w-full rounded-lg border-0 py-2.5 pl-10 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-taller-blue-dark sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors"
+                    class="block w-full rounded-lg py-2.5 pl-10 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:outline-none transition-all duration-300"
+                    :style="{
+                      backgroundColor: 'var(--color-background)',
+                      color: 'var(--color-text)',
+                      borderColor: 'var(--color-border)',
+                      '--tw-ring-color': 'var(--color-primary)'
+                    }"
                 />
             </div>
 
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <FunnelIcon class="h-4 w-4 text-gray-400 hidden sm:block" />
+                    <FunnelIcon class="h-4 w-4 hidden sm:block" :style="{ color: 'var(--color-primary)' }" />
 
-                    <select v-model="filters.estado" @change="handleFilter" class="w-full sm:w-40 rounded-lg border-0 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-taller-blue-dark sm:text-sm">
+                    <select v-model="filters.estado" @change="handleFilter"
+                      class="w-full sm:w-40 rounded-lg py-2 ring-1 ring-inset focus:ring-2 focus:outline-none transition-all duration-300"
+                      :style="{
+                        backgroundColor: 'var(--color-background)',
+                        color: 'var(--color-text)',
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }">
                         <option value="">Estado: Todos</option>
                         <option v-for="(label, value) in estados" :key="value" :value="value">{{ label }}</option>
                     </select>
 
-                    <select v-model="filters.mecanico_id" @change="handleFilter" class="w-full sm:w-40 rounded-lg border-0 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-taller-blue-dark sm:text-sm">
+                    <select v-model="filters.mecanico_id" @change="handleFilter"
+                      class="w-full sm:w-40 rounded-lg py-2 ring-1 ring-inset focus:ring-2 focus:outline-none transition-all duration-300"
+                      :style="{
+                        backgroundColor: 'var(--color-background)',
+                        color: 'var(--color-text)',
+                        borderColor: 'var(--color-border)',
+                        '--tw-ring-color': 'var(--color-primary)'
+                      }">
                         <option value="">Técnico: Todos</option>
                         <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">{{ mecanico.nombre }}</option>
                     </select>
                 </div>
 
-                <div class="flex items-center gap-2 w-full sm:w-auto bg-gray-50 rounded-lg p-1 ring-1 ring-inset ring-gray-300">
-                    <input type="date" v-model="filters.fecha_inicio" @change="handleFilter" class="border-none bg-transparent py-1 text-xs text-gray-600 focus:ring-0 p-0" />
-                    <span class="text-gray-400 text-xs">a</span>
-                    <input type="date" v-model="filters.fecha_fin" @change="handleFilter" class="border-none bg-transparent py-1 text-xs text-gray-600 focus:ring-0 p-0" />
+                <div class="flex items-center gap-2 w-full sm:w-auto rounded-lg p-1 ring-1 ring-inset"
+                  :style="{
+                    backgroundColor: 'var(--color-background)',
+                    borderColor: 'var(--color-border)'
+                  }">
+                    <input type="date" v-model="filters.fecha_inicio" @change="handleFilter"
+                      class="border-none bg-transparent py-1 text-xs focus:ring-0 p-0 transition-all duration-300"
+                      :style="{
+                        color: 'var(--color-text)',
+                        backgroundColor: 'var(--color-background)'
+                      }" />
+                    <span class="text-xs" :style="{ color: 'var(--color-text-light)' }">a</span>
+                    <input type="date" v-model="filters.fecha_fin" @change="handleFilter"
+                      class="border-none bg-transparent py-1 text-xs focus:ring-0 p-0 transition-all duration-300"
+                      :style="{
+                        color: 'var(--color-text)',
+                        backgroundColor: 'var(--color-background)'
+                      }" />
                 </div>
 
                 <button v-if="filters.search || filters.estado || filters.mecanico_id || filters.fecha_inicio"
                         @click="clearFilters"
-                        class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Limpiar Filtros">
+                        class="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                        :style="{ color: 'var(--color-danger)' }"
+                        title="Limpiar Filtros">
                     <XMarkIcon class="h-5 w-5" />
                 </button>
             </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-100">
-                <thead class="bg-gray-50/50">
+            <table class="min-w-full divide-y" :style="{ borderColor: 'var(--color-border)' }">
+                <thead :style="{ backgroundColor: 'var(--color-background)' }">
                     <tr>
-                        <th scope="col" class="py-4 pl-6 pr-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Orden #</th>
-                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cliente / Vehículo</th>
-                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Responsable</th>
-                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cronograma</th>
-                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Importe</th>
-                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th scope="col" class="py-4 pl-6 pr-3 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Orden #</th>
+                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Cliente / Vehículo</th>
+                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Responsable</th>
+                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Cronograma</th>
+                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Importe</th>
+                        <th scope="col" class="px-3 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                          :style="{ color: 'var(--color-text-light)' }">Estado</th>
                         <th scope="col" class="relative py-4 pl-3 pr-6"><span class="sr-only">Acciones</span></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 bg-white">
-                    <tr v-for="orden in ordenes.data" :key="orden.id" class="hover:bg-gray-50/80 transition-colors group">
+                <tbody class="divide-y" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                    <tr v-for="orden in ordenes.data" :key="orden.id"
+                      class="transition-all duration-200 hover:shadow-sm group"
+                      :style="{ ':hover': { backgroundColor: 'var(--color-background)' } }">
 
                         <td class="whitespace-nowrap py-4 pl-6 pr-3">
                             <div class="flex items-center">
-                                <span class="font-mono text-sm font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                                <span class="font-mono text-sm font-semibold px-2 py-1 rounded border"
+                                  :style="{
+                                    color: 'var(--color-text)',
+                                    backgroundColor: 'var(--color-secondary)',
+                                    borderColor: 'var(--color-border)'
+                                  }">
                                     {{ orden.codigo }}
                                 </span>
                             </div>
@@ -196,15 +274,20 @@ const getEstadoBadgeClass = (estado) => {
 
                         <td class="px-3 py-4">
                             <div class="flex items-start gap-3">
-                                <div class="mt-1 h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs border border-blue-100">
+                                <div class="mt-1 h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs border"
+                                  :style="{
+                                    backgroundColor: 'var(--color-info)',
+                                    color: 'var(--color-base)',
+                                    borderColor: 'var(--color-border)'
+                                  }">
                                     {{ orden.diagnostico.cita.cliente.nombre.charAt(0) }}
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium text-gray-900">{{ orden.diagnostico.cita.cliente.nombre }}</div>
-                                    <div class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                                        <TruckIcon class="h-3 w-3" />
+                                    <div class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">{{ orden.diagnostico.cita.cliente.nombre }}</div>
+                                    <div class="text-xs flex items-center gap-1 mt-0.5" :style="{ color: 'var(--color-text-light)' }">
+                                        <TruckIcon class="h-3 w-3" :style="{ color: 'var(--color-primary)' }" />
                                         {{ orden.diagnostico.cita.vehiculo.marca }} {{ orden.diagnostico.cita.vehiculo.modelo }}
-                                        <span class="text-gray-300">|</span>
+                                        <span :style="{ color: 'var(--color-text-light)' }">|</span>
                                         {{ orden.diagnostico.cita.vehiculo.placa }}
                                     </div>
                                 </div>
@@ -213,20 +296,28 @@ const getEstadoBadgeClass = (estado) => {
 
                         <td class="whitespace-nowrap px-3 py-4">
                             <div class="flex items-center gap-2">
-                                <div class="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xs">
+                                <div class="h-6 w-6 rounded-full flex items-center justify-center text-xs"
+                                  :style="{
+                                    backgroundColor: 'var(--color-secondary)',
+                                    color: 'var(--color-text-light)'
+                                  }">
                                     <UserIcon class="h-3 w-3" />
                                 </div>
-                                <span class="text-sm text-gray-700">{{ orden.mecanico.nombre }}</span>
+                                <span class="text-sm" :style="{ color: 'var(--color-text)' }">{{ orden.mecanico.nombre }}</span>
                             </div>
                         </td>
 
                         <td class="whitespace-nowrap px-3 py-4">
                             <div class="flex flex-col gap-1 text-xs">
-                                <div class="flex items-center gap-1.5 text-gray-600">
-                                    <CalendarDaysIcon class="h-3.5 w-3.5 text-gray-400" />
+                                <div class="flex items-center gap-1.5" :style="{ color: 'var(--color-text-light)' }">
+                                    <CalendarDaysIcon class="h-3.5 w-3.5" :style="{ color: 'var(--color-primary)' }" />
                                     <span>In: {{ formatDate(orden.fecha_creacion) }}</span>
                                 </div>
-                                <div v-if="orden.fecha_fin_estimada" class="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded w-fit">
+                                <div v-if="orden.fecha_fin_estimada" class="flex items-center gap-1.5 px-1.5 py-0.5 rounded w-fit"
+                                  :style="{
+                                    color: 'var(--color-warning)',
+                                    backgroundColor: 'var(--color-warning-light)'
+                                  }">
                                     <ClockIcon class="h-3.5 w-3.5" />
                                     <span>Est: {{ formatDate(orden.fecha_fin_estimada) }}</span>
                                 </div>
@@ -235,12 +326,17 @@ const getEstadoBadgeClass = (estado) => {
 
                         <td class="whitespace-nowrap px-3 py-4">
                              <div class="flex items-center gap-1">
-                                <span class="text-sm font-bold text-gray-900">{{ formatCurrency(orden.subtotal) }}</span>
+                                <span class="text-sm font-bold" :style="{ color: 'var(--color-text)' }">{{ formatCurrency(orden.subtotal) }}</span>
                             </div>
                         </td>
 
                         <td class="whitespace-nowrap px-3 py-4">
-                            <span :class="getEstadoBadgeClass(orden.estado)">
+                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset"
+                              :style="{
+                                backgroundColor: 'var(--color-info)',
+                                color: 'var(--color-base)',
+                                '--tw-ring-color': 'var(--color-primary)'
+                              }">
                                 {{ estados[orden.estado] }}
                             </span>
                         </td>
@@ -249,14 +345,24 @@ const getEstadoBadgeClass = (estado) => {
                             <div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                 <Link
                                     :href="route('admin.ordenes.show', orden.id)"
-                                    class="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-taller-blue-dark hover:border-taller-blue-dark hover:shadow-sm transition-all"
+                                    class="p-2 rounded-lg border transition-all duration-200 hover:scale-110 hover:shadow-sm"
+                                    :style="{
+                                      backgroundColor: 'var(--color-base)',
+                                      borderColor: 'var(--color-border)',
+                                      color: 'var(--color-text-light)'
+                                    }"
                                     title="Ver Detalles"
                                 >
                                     <EyeIcon class="h-4 w-4" />
                                 </Link>
                                 <Link
                                     :href="route('admin.ordenes.edit', orden.id)"
-                                    class="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-green-600 hover:border-green-600 hover:shadow-sm transition-all"
+                                    class="p-2 rounded-lg border transition-all duration-200 hover:scale-110 hover:shadow-sm"
+                                    :style="{
+                                      backgroundColor: 'var(--color-base)',
+                                      borderColor: 'var(--color-border)',
+                                      color: 'var(--color-success)'
+                                    }"
                                     title="Editar"
                                 >
                                     <PencilSquareIcon class="h-4 w-4" />
@@ -268,11 +374,15 @@ const getEstadoBadgeClass = (estado) => {
                     <tr v-if="ordenes.data.length === 0">
                         <td colspan="7" class="px-6 py-12">
                             <div class="flex flex-col items-center justify-center text-center">
-                                <div class="h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                    <BriefcaseIcon class="h-8 w-8 text-gray-300" />
+                                <div class="h-16 w-16 rounded-full flex items-center justify-center mb-4"
+                                  :style="{
+                                    backgroundColor: 'var(--color-secondary)',
+                                    color: 'var(--color-text-light)'
+                                  }">
+                                    <BriefcaseIcon class="h-8 w-8" />
                                 </div>
-                                <h3 class="text-sm font-semibold text-gray-900">No se encontraron órdenes</h3>
-                                <p class="mt-1 text-sm text-gray-500 max-w-sm">
+                                <h3 class="text-sm font-semibold" :style="{ color: 'var(--color-text)' }">No se encontraron órdenes</h3>
+                                <p class="mt-1 text-sm max-w-sm" :style="{ color: 'var(--color-text-light)' }">
                                     No hay registros que coincidan con tu búsqueda. Intenta ajustar los filtros.
                                 </p>
                             </div>
@@ -282,8 +392,12 @@ const getEstadoBadgeClass = (estado) => {
             </table>
         </div>
 
-        <div class="border-t border-gray-100 bg-gray-50/50">
-            <Pagination :links="ordenes.links" class="py-4 px-6" />
+        <div class="border-t py-4 px-6"
+          :style="{
+            backgroundColor: 'var(--color-background)',
+            borderColor: 'var(--color-border)'
+          }">
+            <Pagination :links="ordenes.links" />
         </div>
 
       </div>

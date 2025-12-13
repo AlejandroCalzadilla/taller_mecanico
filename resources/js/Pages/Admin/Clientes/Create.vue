@@ -35,21 +35,30 @@ const submit = () => {
 
     <AdminLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-semibold text-gray-900">Crear Nuevo Usuario</h1>
+            <div class="flex justify-between items-center" :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)' }">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" :style="{ color: 'var(--color-primary)' }">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <h1 class="text-2xl font-semibold">Crear Nuevo Usuario</h1>
+                </div>
                 <Link
                     :href="route('admin.clientes.index')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200"
+                    class="px-4 py-2 rounded-lg font-semibold transition duration-200 hover:scale-105 transform"
+                    :style="{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }"
                 >
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
                     Volver a la lista
                 </Link>
             </div>
         </template>
 
-        <div class="py-6">
+        <div class="py-6" :style="{ backgroundColor: 'var(--color-base)' }">
             <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="overflow-hidden shadow-sm sm:rounded-lg" :style="{ backgroundColor: 'var(--color-base)', border: '1px solid var(--color-border)' }">
+                    <div class="p-6 border-b" :style="{ borderColor: 'var(--color-border)' }">
                         <form @submit.prevent="submit" class="space-y-6">
                             <!-- Información Personal -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,7 +106,13 @@ const submit = () => {
                                     <select
                                         id="tipo"
                                         v-model="form.tipo"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 transition duration-200"
+                                        :style="{ 
+                                            backgroundColor: 'var(--color-base)', 
+                                            color: 'var(--color-text)', 
+                                            border: '1px solid var(--color-border)',
+                                            '--tw-ring-color': 'var(--color-primary)'
+                                        }"
                                         required
                                     >
                                         <option v-for="(label, value) in tiposUsuario" :key="value" :value="value">
@@ -115,7 +130,13 @@ const submit = () => {
                                     <select
                                         id="estado"
                                         v-model="form.estado"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 transition duration-200"
+                                        :style="{ 
+                                            backgroundColor: 'var(--color-base)', 
+                                            color: 'var(--color-text)', 
+                                            border: '1px solid var(--color-border)',
+                                            '--tw-ring-color': 'var(--color-primary)'
+                                        }"
                                         required
                                     >
                                         <option value="activo">Activo</option>
@@ -168,14 +189,16 @@ const submit = () => {
                             <div class="flex justify-end space-x-4 pt-6">
                                 <Link
                                     :href="route('admin.clientes.index')"
-                                    class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition duration-200"
+                                    class="px-6 py-2 rounded-lg font-semibold transition duration-200 hover:scale-105 transform"
+                                    :style="{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }"
                                 >
                                     Cancelar
                                 </Link>
                                 <PrimaryButton
                                     :class="{ 'opacity-25': form.processing }"
                                     :disabled="form.processing"
-                                    class="bg-taller-blue-dark hover:bg-taller-blue-light text-white"
+                                    class="px-6 py-2 rounded-lg font-semibold transition duration-200 hover:scale-105 transform"
+                                    :style="{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }"
                                 >
                                     <span v-if="form.processing">Creando...</span>
                                     <span v-else>Crear Usuario</span>

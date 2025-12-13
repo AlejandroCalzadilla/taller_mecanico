@@ -4,7 +4,6 @@ import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import ThemeSwitcher from '@/Components/ThemeSwitcher.vue';
 import GlobalSearch from '@/Components/GlobalSearch.vue';
-import PageViewsCounter from '@/Components/PageViewsCounter.vue';
 import { useTheme } from '@/Composables/useTheme';
 
 // Inicializar el tema
@@ -220,8 +219,5 @@ const logout = () => {
                 <slot />
             </main>
         </div>
-
-        <!-- Page Views Counter -->
-        <PageViewsCounter />
     </div>
 </template>
