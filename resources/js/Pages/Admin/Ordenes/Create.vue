@@ -143,6 +143,7 @@ const submit = () => {
           </div>
         </div>
 
+        <form @submit.prevent="submit">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <div class="lg:col-span-2 space-y-6">
@@ -418,8 +419,45 @@ const submit = () => {
                     </div>
                 </section>
 
+                <!-- Botón de Crear Orden -->
+                <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 p-4 -mx-5 -mb-5 rounded-b-lg shadow-lg" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                    <div class="flex justify-end gap-3">
+                        <Link
+                            :href="route('admin.ordenes.index')"
+                            class="px-6 py-2.5 border border-gray-300 rounded-lg text-sm font-medium transition-all hover:scale-105 transform"
+                            :style="{ 
+                              color: 'var(--color-text)',
+                              backgroundColor: 'var(--color-base)',
+                              borderColor: 'var(--color-border)',
+                              '--tw-hover:bg-color': 'var(--color-neutral)'
+                            }"
+                        >
+                            Cancelar
+                        </Link>
+                        <button
+                            type="submit"
+                            :disabled="form.processing"
+                            class="px-6 py-2.5 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 transform flex items-center gap-2"
+                            :style="{ 
+                              backgroundColor: 'var(--color-primary)',
+                              '--tw-ring-color': 'var(--color-primary)',
+                              '--tw-hover:bg-color': 'var(--color-primary-light)'
+                            }"
+                        >
+                            <CheckCircleIcon v-if="!form.processing" class="h-4 w-4" />
+                            <svg v-if="form.processing" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span v-if="!form.processing">Crear Orden de Trabajo</span>
+                            <span v-else>Creando Orden...</span>
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
+        </form>
       </div>
     </div>
   </AdminLayout>
