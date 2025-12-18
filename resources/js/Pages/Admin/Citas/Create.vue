@@ -184,15 +184,12 @@ const getEstadoRingColor = (estado) => {
                                 <select
                                     id="cliente_id"
                                     v-model="form.cliente_id"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.cliente_id ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     required
                                 >
@@ -225,15 +222,12 @@ const getEstadoRingColor = (estado) => {
                                     id="vehiculo_id"
                                     v-model="form.vehiculo_id"
                                     :disabled="!form.cliente_id || vehiculosCliente.length === 0"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
                                     :style="{ 
-                                        backgroundColor: (!form.cliente_id || vehiculosCliente.length === 0) ? 'var(--color-neutral)' : 'var(--color-base)',
+                                        backgroundColor: (!form.cliente_id || vehiculosCliente.length === 0) ? 'var(--color-neutral)' : 'var(--color-background)',
                                         color: (!form.cliente_id || vehiculosCliente.length === 0) ? 'var(--color-text-light)' : 'var(--color-text)',
                                         borderColor: form.errors.vehiculo_id ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     required
                                 >
@@ -270,15 +264,12 @@ const getEstadoRingColor = (estado) => {
                                     id="fecha"
                                     v-model="form.fecha"
                                     :min="fechaMinima"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.fecha ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     required
                                 />
@@ -302,15 +293,12 @@ const getEstadoRingColor = (estado) => {
                                     id="hora"
                                     v-model="form.hora"
                                     :disabled="!form.fecha"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
                                     :style="{ 
-                                        backgroundColor: !form.fecha ? 'var(--color-neutral)' : 'var(--color-base)',
+                                        backgroundColor: !form.fecha ? 'var(--color-neutral)' : 'var(--color-background)',
                                         color: !form.fecha ? 'var(--color-text-light)' : 'var(--color-text)',
                                         borderColor: form.errors.hora ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     required
                                 >
@@ -378,15 +366,12 @@ const getEstadoRingColor = (estado) => {
                                     id="motivo"
                                     v-model="form.motivo"
                                     rows="3"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent resize-none"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent resize-none"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.motivo ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     placeholder="Describa el motivo de la cita (ej: Cambio de aceite, Revisión de frenos, etc.)"
                                     required
@@ -407,15 +392,12 @@ const getEstadoRingColor = (estado) => {
                                     id="observaciones"
                                     v-model="form.observaciones"
                                     rows="2"
-                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent resize-none"
+                                    class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent resize-none"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.observaciones ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }"
                                     placeholder="Observaciones adicionales o información relevante..."
                                 />
@@ -435,15 +417,12 @@ const getEstadoRingColor = (estado) => {
     <select
         id="estado"
         v-model="form.estado"
-        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:border-transparent"
+        class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 focus:border-transparent"
         :style="{ 
-            backgroundColor: 'var(--color-base)',
+            backgroundColor: 'var(--color-background)',
             color: 'var(--color-text)',
             borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
-            ':focus': { 
-                ringColor: 'var(--color-primary)',
-                borderColor: 'var(--color-primary)'
-            }
+            '--tw-ring-color': 'var(--color-primary)'
         }"
         required
     >

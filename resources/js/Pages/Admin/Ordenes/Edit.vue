@@ -1,25 +1,26 @@
 <template>
   <AdminLayout>
-    <div class="px-4 sm:px-6 lg:px-8 py-8">
+    <div class="px-4 sm:px-6 lg:px-8 py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
       <!-- Header -->
       <div class="md:flex md:items-center md:justify-between">
         <div class="min-w-0 flex-1">
           <div class="flex items-center">
-            <h2 class="text-2xl font-bold leading-7 text-taller-black sm:truncate sm:text-3xl sm:tracking-tight">
+            <h2 class="text-2xl font-bold leading-7 sm:truncate sm:text-3xl sm:tracking-tight" :style="{ color: 'var(--color-text)' }">
               Editar Orden: {{ orden.codigo }}
             </h2>
             <span :class="getEstadoBadgeClass(orden.estado)" class="ml-4">
               {{ estados[orden.estado] }}
             </span>
           </div>
-          <p class="mt-1 text-sm text-gray-600">
+          <p class="mt-1 text-sm" :style="{ color: 'var(--color-text-light)' }">
             Actualice la información de la orden de trabajo
           </p>
         </div>
         <div class="mt-4 flex md:mt-0 md:ml-4 space-x-3">
           <Link
             :href="route('admin.ordenes.show', orden.id)"
-            class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            class="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset hover:bg-gray-50"
+            :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
           >
             <ArrowLeftIcon class="h-4 w-4 mr-2" />
             Volver
@@ -49,13 +50,13 @@
       <!-- Form -->
       <div class="mt-8">
         <form @submit.prevent="submit">
-          <div class="space-y-8 divide-y divide-gray-200">
+          <div class="space-y-8 divide-y" :style="{ borderColor: 'var(--color-border)' }">
             <div class="space-y-6">
               <!-- Información de la Orden -->
-              <div class="bg-taller-cream rounded-lg p-6">
+              <div class="rounded-lg p-6" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)', borderWidth: '1px' }">
                 <div class="flex items-center mb-4">
-                  <WrenchScrewdriverIcon class="h-6 w-6 text-taller-blue-dark mr-2" />
-                  <h3 class="text-lg font-medium leading-6 text-taller-black">
+                  <WrenchScrewdriverIcon class="h-6 w-6 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                  <h3 class="text-lg font-medium leading-6" :style="{ color: 'var(--color-text)' }">
                     Información de la Orden
                   </h3>
                 </div>
@@ -63,16 +64,17 @@
                 <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   <!-- Mecánico -->
                   <div>
-                    <label for="mecanico_id" class="block text-sm font-medium text-taller-black">
+                    <label for="mecanico_id" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Mecánico Asignado *
                     </label>
                     <div class="mt-1 relative">
-                      <UserIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <UserIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <select
                         id="mecanico_id"
                         v-model="form.mecanico_id"
                         :class="{'border-red-300': form.errors.mecanico_id}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       >
                         <option value="">Seleccione un mecánico</option>
                         <option
@@ -91,16 +93,17 @@
 
                   <!-- Estado -->
                   <div>
-                    <label for="estado" class="block text-sm font-medium text-taller-black">
+                    <label for="estado" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Estado *
                     </label>
                     <div class="mt-1 relative">
-                      <Cog6ToothIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Cog6ToothIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <select
                         id="estado"
                         v-model="form.estado"
                         :class="{'border-red-300': form.errors.estado}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       >
                         <option value="">Seleccione un estado</option>
                         <option
@@ -119,17 +122,18 @@
 
                   <!-- Fecha Creación -->
                   <div>
-                    <label for="fecha_creacion" class="block text-sm font-medium text-taller-black">
+                    <label for="fecha_creacion" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Fecha de Creación *
                     </label>
                     <div class="mt-1 relative">
-                      <CalendarIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <CalendarIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <input
                         type="date"
                         id="fecha_creacion"
                         v-model="form.fecha_creacion"
                         :class="{'border-red-300': form.errors.fecha_creacion}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       />
                     </div>
                     <p v-if="form.errors.fecha_creacion" class="mt-1 text-sm text-red-600">
@@ -137,39 +141,20 @@
                     </p>
                   </div>
 
-                  <!-- Fecha Inicio -->
-                  <!-- <div>
-                    <label for="fecha_inicio" class="block text-sm font-medium text-taller-black">
-                      Fecha de Inicio
-                    </label>
-                    <div class="mt-1 relative">
-                      <PlayIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="date"
-                        id="fecha_inicio"
-                        v-model="form.fecha_inicio"
-                        :class="{'border-red-300': form.errors.fecha_inicio}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
-                      />
-                    </div>
-                    <p v-if="form.errors.fecha_inicio" class="mt-1 text-sm text-red-600">
-                      {{ form.errors.fecha_inicio }}
-                    </p>
-                  </div> -->
-
                   <!-- Fecha Fin Estimada -->
                   <div>
-                    <label for="fecha_fin_estimada" class="block text-sm font-medium text-taller-black">
+                    <label for="fecha_fin_estimada" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Fecha Fin Estimada *
                     </label>
                     <div class="mt-1 relative">
-                      <ClockIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <ClockIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <input
                         type="date"
                         id="fecha_fin_estimada"
                         v-model="form.fecha_fin_estimada"
                         :class="{'border-red-300': form.errors.fecha_fin_estimada}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       />
                     </div>
                     <p v-if="form.errors.fecha_fin_estimada" class="mt-1 text-sm text-red-600">
@@ -177,33 +162,13 @@
                     </p>
                   </div>
 
-                  <!-- Fecha Fin Real -->
-                  <!-- <div>
-                    <label for="fecha_fin_real" class="block text-sm font-medium text-taller-black">
-                      Fecha Fin Real
-                    </label>
-                    <div class="mt-1 relative">
-                      <CheckCircleIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="date"
-                        id="fecha_fin_real"
-                        v-model="form.fecha_fin_real"
-                        :class="{'border-red-300': form.errors.fecha_fin_real}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
-                      />
-                    </div>
-                    <p v-if="form.errors.fecha_fin_real" class="mt-1 text-sm text-red-600">
-                      {{ form.errors.fecha_fin_real }}
-                    </p>
-                  </div> -->
-
                   <!-- Costo Mano de Obra -->
                   <div>
-                    <label for="costo_mano_obra" class="block text-sm font-medium text-taller-black">
+                    <label for="costo_mano_obra" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Costo Mano de Obra *
                     </label>
                     <div class="mt-1 relative">
-                      <CurrencyDollarIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <CurrencyDollarIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <input
                         type="number"
                         id="costo_mano_obra"
@@ -211,7 +176,8 @@
                         step="0.01"
                         min="0"
                         :class="{'border-red-300': form.errors.costo_mano_obra}"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                        :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       />
                     </div>
                     <p v-if="form.errors.costo_mano_obra" class="mt-1 text-sm text-red-600">
@@ -221,11 +187,11 @@
 
                   <!-- Costo Repuestos -->
                   <div>
-                    <label for="costo_repuestos" class="block text-sm font-medium text-taller-black">
+                    <label for="costo_repuestos" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Costo Repuestos
                     </label>
                     <div class="mt-1 relative">
-                      <ShoppingBagIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <ShoppingBagIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <input
                         type="number"
                         id="costo_repuestos"
@@ -233,31 +199,33 @@
                         step="0.01"
                         min="0"
                         readonly
-                        class="pl-10 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm sm:text-sm"
+                        class="pl-10 block w-full rounded-md shadow-sm sm:text-sm bg-gray-100"
+                        :style="{ backgroundColor: 'var(--color-background-muted)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       />
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">
+                    <p class="mt-1 text-xs" :style="{ color: 'var(--color-text-light)' }">
                       Calculado automáticamente de los servicios
                     </p>
                   </div>
 
                   <!-- Subtotal -->
                   <div>
-                    <label for="subtotal" class="block text-sm font-medium text-taller-black">
+                    <label for="subtotal" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                       Total Orden
                     </label>
                     <div class="mt-1 relative">
-                      <BanknotesIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <BanknotesIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                       <input
                         type="number"
                         id="subtotal"
                         :value="calcularTotal"
                         step="0.01"
                         readonly
-                        class="pl-10 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm sm:text-sm font-bold"
+                        class="pl-10 block w-full rounded-md shadow-sm sm:text-sm font-bold bg-gray-100"
+                        :style="{ backgroundColor: 'var(--color-background-muted)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       />
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">
+                    <p class="mt-1 text-xs" :style="{ color: 'var(--color-text-light)' }">
                       Mano de obra + Repuestos
                     </p>
                   </div>
@@ -265,17 +233,18 @@
 
                 <!-- Observaciones -->
                 <div class="mt-6">
-                  <label for="observaciones" class="block text-sm font-medium text-taller-black">
+                  <label for="observaciones" class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                     Observaciones
                   </label>
                   <div class="mt-1 relative">
-                    <ChatBubbleLeftRightIcon class="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <ChatBubbleLeftRightIcon class="absolute left-3 top-3 h-4 w-4" :style="{ color: 'var(--color-text-light)' }" />
                     <textarea
                       id="observaciones"
                       v-model="form.observaciones"
                       rows="4"
                       :class="{'border-red-300': form.errors.observaciones}"
-                      class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      class="pl-10 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       placeholder="Observaciones adicionales sobre la orden..."
                     />
                   </div>
@@ -286,37 +255,37 @@
               </div>
 
               <!-- Información del Cliente y Vehículo -->
-              <div class="bg-taller-cream rounded-lg p-6">
+              <div class="rounded-lg p-6" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)', borderWidth: '1px' }">
                 <div class="flex items-center mb-4">
-                  <UserGroupIcon class="h-6 w-6 text-taller-blue-dark mr-2" />
-                  <h3 class="text-lg font-medium leading-6 text-taller-black">
+                  <UserGroupIcon class="h-6 w-6 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                  <h3 class="text-lg font-medium leading-6" :style="{ color: 'var(--color-text)' }">
                     Información del Cliente y Vehículo
                   </h3>
                 </div>
 
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <!-- Información del Cliente -->
-                  <div class="bg-white rounded-lg p-4 border">
+                  <div class="rounded-lg p-4 border" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
                     <div class="flex items-center mb-3">
-                      <UserIcon class="h-5 w-5 text-taller-blue-dark mr-2" />
-                      <h4 class="text-sm font-medium text-taller-black">Cliente</h4>
+                      <UserIcon class="h-5 w-5 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                      <h4 class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">Cliente</h4>
                     </div>
                     <div class="space-y-2">
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Nombre:</span>
-                        <span class="text-sm font-medium text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Nombre:</span>
+                        <span class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.cliente.nombre }}
                         </span>
                       </div>
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Email:</span>
-                        <span class="text-sm text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Email:</span>
+                        <span class="text-sm" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.cliente.email }}
                         </span>
                       </div>
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Teléfono:</span>
-                        <span class="text-sm text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Teléfono:</span>
+                        <span class="text-sm" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.cliente.telefono || 'No especificado' }}
                         </span>
                       </div>
@@ -324,33 +293,33 @@
                   </div>
 
                   <!-- Información del Vehículo -->
-                  <div class="bg-white rounded-lg p-4 border">
+                  <div class="rounded-lg p-4 border" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
                     <div class="flex items-center mb-3">
-                      <TruckIcon class="h-5 w-5 text-taller-blue-dark mr-2" />
-                      <h4 class="text-sm font-medium text-taller-black">Vehículo</h4>
+                      <TruckIcon class="h-5 w-5 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                      <h4 class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">Vehículo</h4>
                     </div>
                     <div class="space-y-2">
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Placa:</span>
-                        <span class="text-sm font-medium text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Placa:</span>
+                        <span class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.vehiculo.placa }}
                         </span>
                       </div>
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Marca/Modelo:</span>
-                        <span class="text-sm text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Marca/Modelo:</span>
+                        <span class="text-sm" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.vehiculo.marca }} {{ orden.diagnostico.cita.vehiculo.modelo }}
                         </span>
                       </div>
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Año:</span>
-                        <span class="text-sm text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Año:</span>
+                        <span class="text-sm" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.vehiculo.anio || 'No especificado' }}
                         </span>
                       </div>
                       <div class="flex justify-between">
-                        <span class="text-sm text-gray-500">Color:</span>
-                        <span class="text-sm text-taller-black">
+                        <span class="text-sm" :style="{ color: 'var(--color-text-light)' }">Color:</span>
+                        <span class="text-sm" :style="{ color: 'var(--color-text)' }">
                           {{ orden.diagnostico.cita.vehiculo.color || 'No especificado' }}
                         </span>
                       </div>
@@ -360,11 +329,11 @@
               </div>
 
               <!-- Servicios y Repuestos -->
-              <div class="bg-taller-cream rounded-lg p-6">
+              <div class="rounded-lg p-6" :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)', borderWidth: '1px' }">
                 <div class="flex justify-between items-center mb-4">
                   <div class="flex items-center">
-                    <WrenchIcon class="h-6 w-6 text-taller-blue-dark mr-2" />
-                    <h3 class="text-lg font-medium leading-6 text-taller-black">
+                    <WrenchIcon class="h-6 w-6 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                    <h3 class="text-lg font-medium leading-6" :style="{ color: 'var(--color-text)' }">
                       Servicios y Repuestos
                     </h3>
                   </div>
@@ -385,12 +354,13 @@
                   <div
                     v-for="(servicio, index) in orden.servicios"
                     :key="servicio.id"
-                    class="bg-white rounded-lg p-4 border"
+                    class="rounded-lg p-4 border"
+                    :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }"
                   >
                     <div class="flex justify-between items-start mb-3">
                       <div class="flex items-center">
-                        <WrenchIcon class="h-5 w-5 text-taller-blue-dark mr-2" />
-                        <h4 class="text-sm font-medium text-taller-black">Servicio {{ index + 1 }}</h4>
+                        <WrenchIcon class="h-5 w-5 mr-2" :style="{ color: 'var(--color-primary)' }" />
+                        <h4 class="text-sm font-medium" :style="{ color: 'var(--color-text)' }">Servicio {{ index + 1 }}</h4>
                       </div>
                       <button
                         type="button"
@@ -403,22 +373,22 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label class="block text-xs font-medium text-gray-500">Descripción</label>
-                        <p class="text-sm text-taller-black mt-1">{{ servicio.descripcion }}</p>
+                        <label class="block text-xs font-medium" :style="{ color: 'var(--color-text-light)' }">Descripción</label>
+                        <p class="text-sm mt-1" :style="{ color: 'var(--color-text)' }">{{ servicio.descripcion }}</p>
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-500">Cantidad</label>
-                        <p class="text-sm text-taller-black mt-1">{{ servicio.cantidad }}</p>
+                        <label class="block text-xs font-medium" :style="{ color: 'var(--color-text-light)' }">Cantidad</label>
+                        <p class="text-sm mt-1" :style="{ color: 'var(--color-text)' }">{{ servicio.cantidad }}</p>
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-500">Precio Unitario</label>
-                        <p class="text-sm text-taller-black mt-1">${{ Number(servicio.precio_unitario).toLocaleString('es-ES') }}</p>
+                        <label class="block text-xs font-medium" :style="{ color: 'var(--color-text-light)' }">Precio Unitario</label>
+                        <p class="text-sm mt-1" :style="{ color: 'var(--color-text)' }">${{ Number(servicio.precio_unitario).toLocaleString('es-ES') }}</p>
                       </div>
                     </div>
-                    <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="mt-3 pt-3 border-t" :style="{ borderColor: 'var(--color-border)' }">
                       <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-500">Subtotal:</span>
-                        <span class="text-sm font-bold text-taller-black">
+                        <span class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Subtotal:</span>
+                        <span class="text-sm font-bold" :style="{ color: 'var(--color-text)' }">
                           ${{ Number(servicio.subtotal).toLocaleString('es-ES') }}
                         </span>
                       </div>
@@ -426,9 +396,10 @@
                   </div>
 
                   <!-- Estado vacío -->
-                  <div v-if="orden.servicios.length === 0" class="text-center py-8 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                  <div v-if="orden.servicios.length === 0" class="text-center py-8 rounded-lg border-2 border-dashed"
+                       :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
                     <WrenchIcon class="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No hay servicios</h3>
+                    <h3 class="mt-2 text-sm font-medium" :style="{ color: 'var(--color-text)' }">No hay servicios</h3>
                     <p class="mt-1 text-sm text-gray-500">
                       Comienza agregando servicios a esta orden.
                     </p>
@@ -436,7 +407,7 @@
                 </div>
 
                 <!-- Resumen de Costos -->
-                <div class="mt-6 p-4 bg-taller-blue-dark text-white rounded-lg">
+                <div class="mt-6 p-4 rounded-lg" :style="{ backgroundColor: 'var(--color-primary)', color: '#ffffff' }">
                   <div class="flex justify-between items-center mb-2">
                     <span class="text-lg font-semibold">Resumen de Costos</span>
                     <DocumentChartBarIcon class="h-5 w-5" />
@@ -476,7 +447,8 @@
               <div class="flex gap-3">
                 <Link
                   :href="route('admin.ordenes.show', orden.id)"
-                  class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-taller-blue-dark focus:ring-offset-2"
+                  class="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-taller-blue-dark focus:ring-offset-2"
+                  :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                 >
                   <ArrowLeftIcon class="h-4 w-4 mr-2" />
                   Cancelar
@@ -503,21 +475,24 @@
 
           <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
-          <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+          <div class="inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+               :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                <PlusIcon class="h-6 w-6 text-green-600" />
+              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                   :style="{ backgroundColor: 'var(--color-success-light)' }">
+                <PlusIcon class="h-6 w-6" :style="{ color: 'var(--color-success)' }" />
               </div>
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                <h3 class="text-lg leading-6 font-medium" :style="{ color: 'var(--color-text)' }">
                   Agregar Servicio
                 </h3>
                 <div class="mt-4 space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Servicio</label>
+                    <label class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Servicio</label>
                     <select
                       v-model="nuevoServicio.servicio_id"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                     >
                       <option value="">Seleccione un servicio</option>
                       <option
@@ -530,30 +505,33 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Cantidad</label>
+                    <label class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Cantidad</label>
                     <input
                       type="number"
                       v-model="nuevoServicio.cantidad"
                       min="1"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                     />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Precio Unitario</label>
+                    <label class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Precio Unitario</label>
                     <input
                       type="number"
                       v-model="nuevoServicio.precio_unitario"
                       step="0.01"
                       min="0"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                     />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Descripción</label>
+                    <label class="block text-sm font-medium" :style="{ color: 'var(--color-text)' }">Descripción</label>
                     <input
                       type="text"
                       v-model="nuevoServicio.descripcion"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark sm:text-sm"
+                      :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
                       placeholder="Descripción del servicio..."
                     />
                   </div>
@@ -571,8 +549,9 @@
               </button>
               <button
                 type="button"
-                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-taller-blue-dark sm:mt-0 sm:w-auto sm:text-sm"
+                class="mt-3 w-full inline-flex justify-center rounded-md border shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-taller-blue-dark sm:mt-0 sm:w-auto sm:text-sm"
                 @click="mostrarAgregarServicio = false"
+                :style="{ backgroundColor: 'var(--color-base)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }"
               >
                 <XMarkIcon class="h-4 w-4 mr-2" />
                 Cancelar

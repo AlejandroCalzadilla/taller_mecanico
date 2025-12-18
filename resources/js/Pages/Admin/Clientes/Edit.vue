@@ -117,9 +117,9 @@ const submit = () => {
                                     <select
                                         id="tipo"
                                         v-model="form.tipo"
-                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                        class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2"
                                         :style="{ 
-                                          backgroundColor: 'var(--color-base)', 
+                                          backgroundColor: 'var(--color-background)', 
                                           color: 'var(--color-text)', 
                                           borderColor: form.errors.tipo ? 'var(--color-error)' : 'var(--color-border)',
                                           '--tw-ring-color': form.errors.tipo ? 'var(--color-error)' : 'var(--color-primary)'
@@ -141,9 +141,9 @@ const submit = () => {
                                     <select
                                         id="estado"
                                         v-model="form.estado"
-                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2"
+                                        class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2"
                                         :style="{ 
-                                          backgroundColor: 'var(--color-base)', 
+                                          backgroundColor: 'var(--color-background)', 
                                           color: 'var(--color-text)', 
                                           borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
                                           '--tw-ring-color': form.errors.estado ? 'var(--color-error)' : 'var(--color-primary)'

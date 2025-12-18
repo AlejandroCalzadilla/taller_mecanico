@@ -130,31 +130,34 @@ const submit = () => {
     <Head title="Registrar Nuevo Vehículo" />
 
     <AdminLayout>
-        <template #header>
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Registrar Nuevo Vehículo</h1>
-                    <p class="text-sm text-gray-600 mt-1">Agrega un nuevo vehículo al sistema</p>
+        <div class="px-4 sm:px-6 lg:px-8 py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
+            <template v-if="$slots.header">
+                 <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">Registrar Nuevo Vehículo</h1>
+                        <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">Agrega un nuevo vehículo al sistema</p>
+                    </div>
+                    <Link
+                        :href="route('admin.vehiculos.index')"
+                        class="ml-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
+                    >
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Volver
+                    </Link>
                 </div>
-                <Link
-                    :href="route('admin.vehiculos.index')"
-                    class="ml-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center"
-                >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                </Link>
-            </div>
-        </template>
+            </template>
 
-        <div class="py-6">
-            <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+            <div class="max-w-4xl mx-auto">
+                <div class="overflow-hidden shadow-sm sm:rounded-lg"
+                     :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)', borderWidth: '1px' }">
+                    <div class="p-6 border-b"
+                         :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
                         <form @submit.prevent="submit" class="space-y-8">
                             <!-- Sección: Información del Propietario -->
-                            <div class="border-b border-gray-200 pb-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <div class="border-b pb-6" :style="{ borderColor: 'var(--color-border)' }">
+                                <h3 class="text-lg font-semibold mb-4 flex items-center" :style="{ color: 'var(--color-text)' }">
                                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
@@ -163,11 +166,16 @@ const submit = () => {
 
                                 <div class="grid grid-cols-1 gap-6">
                                     <div>
-                                        <InputLabel for="cliente_id" value="Cliente Propietario *" />
+                                        <InputLabel for="cliente_id" value="Cliente Propietario *" :style="{ color: 'var(--color-text)' }" />
                                         <select
                                             id="cliente_id"
                                             v-model="form.cliente_id"
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                            class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                            :style="{ 
+                                                backgroundColor: 'var(--color-base)', 
+                                                color: 'var(--color-text)', 
+                                                borderColor: 'var(--color-border)' 
+                                            }"
                                             required
                                             :class="{ 'border-red-300': form.errors.cliente_id }"
                                         >
@@ -177,7 +185,7 @@ const submit = () => {
                                             </option>
                                         </select>
                                         <InputError class="mt-2" :message="form.errors.cliente_id" />
-                                        <p class="mt-1 text-sm text-gray-500">
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text-light)' }">
                                             Selecciona el cliente dueño del vehículo
                                         </p>
                                     </div>
@@ -185,8 +193,8 @@ const submit = () => {
                             </div>
 
                             <!-- Sección: Información del Vehículo -->
-                            <div class="border-b border-gray-200 pb-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <div class="border-b pb-6" :style="{ borderColor: 'var(--color-border)' }">
+                                <h3 class="text-lg font-semibold mb-4 flex items-center" :style="{ color: 'var(--color-text)' }">
                                     <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-1h4.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-4a1 1 0 00-.293-.707l-4-4A1 1 0 0015 4H3z"/>
@@ -197,7 +205,7 @@ const submit = () => {
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <!-- Placa -->
                                     <div>
-                                        <InputLabel for="placa" value="Placa *" />
+                                        <InputLabel for="placa" value="Placa *" :style="{ color: 'var(--color-text)' }" />
                                         <TextInput
                                             id="placa"
                                             type="text"
@@ -205,6 +213,11 @@ const submit = () => {
                                             v-model="form.placa"
                                             required
                                             placeholder="ABC123"
+                                            :style="{ 
+                                                backgroundColor: 'var(--color-base)', 
+                                                color: 'var(--color-text)', 
+                                                borderColor: 'var(--color-border)' 
+                                            }"
                                             :class="{ 'border-red-300': form.errors.placa }"
                                         />
                                         <InputError class="mt-2" :message="form.errors.placa" />
@@ -212,13 +225,18 @@ const submit = () => {
 
                                     <!-- Marca -->
                                     <div>
-                                        <InputLabel for="marca" value="Marca *" />
+                                        <InputLabel for="marca" value="Marca *" :style="{ color: 'var(--color-text)' }" />
                                         <div class="mt-1">
                                             <input
                                                 id="marca"
                                                 list="marcas-list"
                                                 v-model="form.marca"
-                                                class="block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                                class="block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                                :style="{ 
+                                                    backgroundColor: 'var(--color-base)', 
+                                                    color: 'var(--color-text)', 
+                                                    borderColor: 'var(--color-border)' 
+                                                }"
                                                 required
                                                 placeholder="Ej: Toyota, Honda, etc."
                                                 :class="{ 'border-red-300': form.errors.marca }"
@@ -232,7 +250,7 @@ const submit = () => {
 
                                     <!-- Modelo -->
                                     <div>
-                                        <InputLabel for="modelo" value="Modelo *" />
+                                        <InputLabel for="modelo" value="Modelo *" :style="{ color: 'var(--color-text)' }" />
                                         <TextInput
                                             id="modelo"
                                             type="text"
@@ -240,6 +258,11 @@ const submit = () => {
                                             v-model="form.modelo"
                                             required
                                             placeholder="Ej: Corolla, Civic, etc."
+                                            :style="{ 
+                                                backgroundColor: 'var(--color-base)', 
+                                                color: 'var(--color-text)', 
+                                                borderColor: 'var(--color-border)' 
+                                            }"
                                             :class="{ 'border-red-300': form.errors.modelo }"
                                         />
                                         <InputError class="mt-2" :message="form.errors.modelo" />
@@ -247,11 +270,16 @@ const submit = () => {
 
                                     <!-- Año -->
                                     <div>
-                                        <InputLabel for="anio" value="Año *" />
+                                        <InputLabel for="anio" value="Año *" :style="{ color: 'var(--color-text)' }" />
                                         <select
                                             id="anio"
                                             v-model="form.anio"
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                            class="mt-1 block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                            :style="{ 
+                                                backgroundColor: 'var(--color-base)', 
+                                                color: 'var(--color-text)', 
+                                                borderColor: 'var(--color-border)' 
+                                            }"
                                             required
                                             :class="{ 'border-red-300': form.errors.anio }"
                                         >
@@ -264,13 +292,18 @@ const submit = () => {
 
                                     <!-- Color -->
                                     <div>
-                                        <InputLabel for="color" value="Color *" />
+                                        <InputLabel for="color" value="Color *" :style="{ color: 'var(--color-text)' }" />
                                         <div class="mt-1">
                                             <input
                                                 id="color"
                                                 list="colores-list"
                                                 v-model="form.color"
-                                                class="block w-full border-gray-300 rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                                class="block w-full rounded-md shadow-sm focus:border-taller-blue-dark focus:ring-taller-blue-dark"
+                                                :style="{ 
+                                                    backgroundColor: 'var(--color-base)', 
+                                                    color: 'var(--color-text)', 
+                                                    borderColor: 'var(--color-border)' 
+                                                }"
                                                 required
                                                 placeholder="Ej: Rojo, Azul, etc."
                                                 :class="{ 'border-red-300': form.errors.color }"
@@ -284,7 +317,7 @@ const submit = () => {
 
                                     <!-- Kilometraje -->
                                     <div>
-                                        <InputLabel for="kilometraje" value="Kilometraje" />
+                                        <InputLabel for="kilometraje" value="Kilometraje" :style="{ color: 'var(--color-text)' }" />
                                         <div class="mt-1 relative rounded-md shadow-sm">
                                             <TextInput
                                                 id="kilometraje"
@@ -293,6 +326,11 @@ const submit = () => {
                                                 v-model="form.kilometraje"
                                                 placeholder="0"
                                                 min="0"
+                                                :style="{ 
+                                                    backgroundColor: 'var(--color-base)', 
+                                                    color: 'var(--color-text)', 
+                                                    borderColor: 'var(--color-border)' 
+                                                }"
                                                 :class="{ 'border-red-300': form.errors.kilometraje }"
                                             />
                                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -300,7 +338,7 @@ const submit = () => {
                                             </div>
                                         </div>
                                         <InputError class="mt-2" :message="form.errors.kilometraje" />
-                                        <p class="mt-1 text-sm text-gray-500">
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text-light)' }">
                                             Dejar en 0 si es nuevo o no se conoce
                                         </p>
                                     </div>
@@ -308,8 +346,8 @@ const submit = () => {
                             </div>
 
                             <!-- Sección: Foto del Vehículo -->
-                            <div class="border-b border-gray-200 pb-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <div class="border-b pb-6" :style="{ borderColor: 'var(--color-border)' }">
+                                <h3 class="text-lg font-semibold mb-4 flex items-center" :style="{ color: 'var(--color-text)' }">
                                     <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
@@ -319,17 +357,18 @@ const submit = () => {
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     <!-- Upload Area -->
                                     <div>
-                                        <InputLabel value="Subir Foto" />
+                                        <InputLabel value="Subir Foto" :style="{ color: 'var(--color-text)' }" />
 
                                         <div
                                             @dragover="handleDragOver"
                                             @dragleave="handleDragLeave"
                                             @drop="handleDrop"
                                             :class="{
-                                                'border-2 border-dashed border-gray-300': !isDragging,
+                                                'border-2 border-dashed': !isDragging,
                                                 'border-2 border-dashed border-blue-400 bg-blue-50': isDragging
                                             }"
                                             class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md transition duration-200"
+                                            :style="{ borderColor: isDragging ? false : 'var(--color-border)' }"
                                         >
                                             <div class="space-y-1 text-center">
                                                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -337,7 +376,8 @@ const submit = () => {
                                                 </svg>
 
                                                 <div class="flex text-sm text-gray-600">
-                                                    <label for="foto" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                                    <label for="foto" class="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                                                           :style="{ backgroundColor: 'var(--color-base)' }">
                                                         <span>Subir un archivo</span>
                                                         <input
                                                             id="foto"
@@ -362,13 +402,14 @@ const submit = () => {
 
                                     <!-- Preview Area -->
                                     <div>
-                                        <InputLabel value="Vista Previa" />
+                                        <InputLabel value="Vista Previa" :style="{ color: 'var(--color-text)' }" />
                                         <div class="mt-1">
                                             <div v-if="fotoPreview" class="relative">
                                                 <img
                                                     :src="fotoPreview"
                                                     :alt="nombreVehiculo"
-                                                    class="w-full h-48 object-cover rounded-lg border border-gray-200"
+                                                    class="w-full h-48 object-cover rounded-lg border"
+                                                    :style="{ borderColor: 'var(--color-border)' }"
                                                 />
                                                 <button
                                                     type="button"
@@ -380,7 +421,8 @@ const submit = () => {
                                                     </svg>
                                                 </button>
                                             </div>
-                                            <div v-else class="h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                                            <div v-else class="h-48 rounded-lg border-2 border-dashed flex items-center justify-center"
+                                                 :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
                                                 <div class="text-center">
                                                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
@@ -397,8 +439,8 @@ const submit = () => {
                             </div>
 
                             <!-- Sección: Información Adicional -->
-                            <div class="border-b border-gray-200 pb-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <div class="border-b pb-6" :style="{ borderColor: 'var(--color-border)' }">
+                                <h3 class="text-lg font-semibold mb-4 flex items-center" :style="{ color: 'var(--color-text)' }">
                                     <svg class="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
@@ -408,24 +450,29 @@ const submit = () => {
                                 <div class="grid grid-cols-1 gap-6">
                                     <!-- Observaciones -->
                                     <div>
-                                        <InputLabel for="observaciones" value="Observaciones" />
+                                        <InputLabel for="observaciones" value="Observaciones" :style="{ color: 'var(--color-text)' }" />
                                         <Textarea
                                             id="observaciones"
                                             class="mt-1 block w-full"
                                             v-model="form.observaciones"
                                             rows="4"
                                             placeholder="Notas adicionales sobre el vehículo, características especiales, daños previos, etc."
+                                            :style="{ 
+                                                backgroundColor: 'var(--color-base)', 
+                                                color: 'var(--color-text)', 
+                                                borderColor: 'var(--color-border)' 
+                                            }"
                                             :class="{ 'border-red-300': form.errors.observaciones }"
                                         />
                                         <InputError class="mt-2" :message="form.errors.observaciones" />
-                                        <p class="mt-1 text-sm text-gray-500">
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text-light)' }">
                                             {{ form.observaciones.length }}/500 caracteres
                                         </p>
                                     </div>
 
                                     <!-- Estado -->
                                     <div>
-                                        <InputLabel for="estado" value="Estado *" />
+                                        <InputLabel for="estado" value="Estado *" :style="{ color: 'var(--color-text)' }" />
                                         <div class="mt-1 flex space-x-4">
                                             <label class="inline-flex items-center">
                                                 <input
@@ -434,7 +481,7 @@ const submit = () => {
                                                     value="activo"
                                                     class="text-blue-600 focus:ring-blue-500"
                                                 />
-                                                <span class="ml-2 text-sm text-gray-700">Activo</span>
+                                                <span class="ml-2 text-sm" :style="{ color: 'var(--color-text)' }">Activo</span>
                                             </label>
                                             <label class="inline-flex items-center">
                                                 <input
@@ -443,7 +490,7 @@ const submit = () => {
                                                     value="inactivo"
                                                     class="text-red-600 focus:ring-red-500"
                                                 />
-                                                <span class="ml-2 text-sm text-gray-700">Inactivo</span>
+                                                <span class="ml-2 text-sm" :style="{ color: 'var(--color-text)' }">Inactivo</span>
                                             </label>
                                         </div>
                                         <InputError class="mt-2" :message="form.errors.estado" />

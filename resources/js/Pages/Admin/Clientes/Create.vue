@@ -106,11 +106,11 @@ const submit = () => {
                                     <select
                                         id="tipo"
                                         v-model="form.tipo"
-                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 transition duration-200"
+                                        class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 transition duration-200"
                                         :style="{ 
-                                            backgroundColor: 'var(--color-base)', 
+                                            backgroundColor: 'var(--color-background)', 
                                             color: 'var(--color-text)', 
-                                            border: '1px solid var(--color-border)',
+                                            borderColor: 'var(--color-border)',
                                             '--tw-ring-color': 'var(--color-primary)'
                                         }"
                                         required
@@ -130,11 +130,11 @@ const submit = () => {
                                     <select
                                         id="estado"
                                         v-model="form.estado"
-                                        class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 transition duration-200"
+                                        class="mt-1 block w-full rounded-md shadow-sm ring-1 ring-inset focus:ring-2 transition duration-200"
                                         :style="{ 
-                                            backgroundColor: 'var(--color-base)', 
+                                            backgroundColor: 'var(--color-background)', 
                                             color: 'var(--color-text)', 
-                                            border: '1px solid var(--color-border)',
+                                            borderColor: 'var(--color-border)',
                                             '--tw-ring-color': 'var(--color-primary)'
                                         }"
                                         required

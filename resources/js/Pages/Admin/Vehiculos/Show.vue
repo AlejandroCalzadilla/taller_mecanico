@@ -46,36 +46,36 @@ const cambiarEstado = (nuevoEstado) => {
     <Head :title="`${vehiculo.marca} ${vehiculo.modelo} - Detalles`" />
 
     <AdminLayout>
-        <template #header>
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">
-                        {{ vehiculo.marca }} {{ vehiculo.modelo }}
-                    </h1>
-                    <p class="text-sm text-gray-600 mt-1">
-                        Detalles completos del vehículo - {{ vehiculo.placa }}
-                    </p>
+        <div class="px-4 sm:px-6 lg:px-8 py-8 min-h-screen" :style="{ backgroundColor: 'var(--color-base)' }">
+            <template v-if="$slots.header">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-2xl font-semibold" :style="{ color: 'var(--color-text)' }">
+                            {{ vehiculo.marca }} {{ vehiculo.modelo }}
+                        </h1>
+                        <p class="text-sm mt-1" :style="{ color: 'var(--color-text-light)' }">
+                            Detalles completos del vehículo - {{ vehiculo.placa }}
+                        </p>
+                    </div>
+                    <div class="flex ml-4 space-x-2">
+                        <Link :href="route('admin.vehiculos.edit', vehiculo.id)"
+                            class="bg-taller-blue-dark hover:bg-taller-blue-light text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </Link>
+                        <Link :href="route('admin.vehiculos.index')"
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                            Volver
+                        </Link>
+                    </div>
                 </div>
-                <div class="flex ml-4 space-x-2">
-                    <Link :href="route('admin.vehiculos.edit', vehiculo.id)"
-                        class="bg-taller-blue-dark hover:bg-taller-blue-light text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                    </Link>
-                    <Link :href="route('admin.vehiculos.index')"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Volver
-                    </Link>
-                </div>
-            </div>
-        </template>
+            </template>
 
-        <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
                 <!-- Alertas - Versión corregida -->
                 <div v-if="flash.success" class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                     {{ flash.success }}
@@ -89,9 +89,10 @@ const cambiarEstado = (nuevoEstado) => {
                     <!-- Columna izquierda - Información principal -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Tarjeta de información del vehículo -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Vehículo</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Vehículo</h2>
                             </div>
                             <div class="p-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -99,14 +100,15 @@ const cambiarEstado = (nuevoEstado) => {
                                     <div class="md:col-span-2">
                                         <div class="flex flex-col md:flex-row gap-6">
                                             <div class="flex-shrink-0">
-                                                <div class="w-64 h-48 bg-gray-200 rounded-lg overflow-hidden">
+                                                <div class="w-64 h-48 rounded-lg overflow-hidden" :style="{ backgroundColor: 'var(--color-base)' }">
                                                     <img
                                                         v-if="vehiculo.foto_url"
                                                         :src="vehiculo.foto_url"
                                                         :alt="`${vehiculo.marca} ${vehiculo.modelo}`"
                                                         class="w-full h-full object-cover"
                                                     />
-                                                    <div v-else class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                    <div v-else class="w-full h-full flex items-center justify-center border-2 border-dashed"
+                                                         :style="{ borderColor: 'var(--color-border)' }">
                                                         <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                 d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
@@ -119,31 +121,31 @@ const cambiarEstado = (nuevoEstado) => {
                                             <div class="flex-1">
                                                 <div class="grid grid-cols-2 gap-4">
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Marca</label>
-                                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.marca }}</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Marca</label>
+                                                        <p class="mt-1 text-sm video-highlight" :style="{ color: 'var(--color-text)' }">{{ vehiculo.marca }}</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Modelo</label>
-                                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.modelo }}</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Modelo</label>
+                                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.modelo }}</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Año</label>
-                                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.anio }}</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Año</label>
+                                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.anio }}</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Color</label>
-                                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.color }}</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Color</label>
+                                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.color }}</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Placa</label>
-                                                        <p class="mt-1 text-sm font-mono bg-gray-100 px-2 py-1 rounded">{{ vehiculo.placa }}</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Placa</label>
+                                                        <p class="mt-1 text-sm font-mono px-2 py-1 rounded" :style="{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }">{{ vehiculo.placa }}</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Kilometraje</label>
-                                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.kilometraje?.toLocaleString() || '0' }} km</p>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Kilometraje</label>
+                                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.kilometraje?.toLocaleString() || '0' }} km</p>
                                                     </div>
                                                     <div>
-                                                        <label class="text-sm font-medium text-gray-500">Estado</label>
+                                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Estado</label>
                                                         <div class="mt-1">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                                                                 :class="{
@@ -163,39 +165,41 @@ const cambiarEstado = (nuevoEstado) => {
                         </div>
 
                         <!-- Información del cliente -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Cliente</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Cliente</h2>
                             </div>
                             <div class="p-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Nombre</label>
-                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.cliente.nombre }}</p>
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Nombre</label>
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.cliente.nombre }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Email</label>
-                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.cliente.email }}</p>
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Email</label>
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.cliente.email }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Teléfono</label>
-                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.cliente.telefono || 'No especificado' }}</p>
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Teléfono</label>
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.cliente.telefono || 'No especificado' }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-gray-500">Dirección</label>
-                                        <p class="mt-1 text-sm text-gray-900">{{ vehiculo.cliente.direccion || 'No especificada' }}</p>
+                                        <label class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Dirección</label>
+                                        <p class="mt-1 text-sm" :style="{ color: 'var(--color-text)' }">{{ vehiculo.cliente.direccion || 'No especificada' }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Observaciones -->
-                        <div v-if="vehiculo.observaciones" class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Observaciones</h2>
+                        <div v-if="vehiculo.observaciones" class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Observaciones</h2>
                             </div>
                             <div class="p-6">
-                                <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ vehiculo.observaciones }}</p>
+                                <p class="text-sm whitespace-pre-wrap" :style="{ color: 'var(--color-text)' }">{{ vehiculo.observaciones }}</p>
                             </div>
                         </div>
                     </div>
@@ -203,30 +207,32 @@ const cambiarEstado = (nuevoEstado) => {
                     <!-- Columna derecha - Estadísticas y acciones -->
                     <div class="space-y-6">
                         <!-- Estadísticas -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Estadísticas</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Estadísticas</h2>
                             </div>
                             <div class="p-6 space-y-4">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm font-medium text-gray-500">Total de Citas</span>
-                                    <span class="text-sm font-semibold text-gray-900">{{ estadisticas.total_citas }}</span>
+                                    <span class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Total de Citas</span>
+                                    <span class="text-sm font-semibold" :style="{ color: 'var(--color-text)' }">{{ estadisticas.total_citas }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm font-medium text-gray-500">Citas Pendientes</span>
+                                    <span class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Citas Pendientes</span>
                                     <span class="text-sm font-semibold text-red-600">{{ estadisticas.citas_pendientes }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm font-medium text-gray-500">Última Cita</span>
-                                    <span class="text-sm font-semibold text-gray-900">{{ estadisticas.ultima_cita || 'Nunca' }}</span>
+                                    <span class="text-sm font-medium" :style="{ color: 'var(--color-text-light)' }">Última Cita</span>
+                                    <span class="text-sm font-semibold" :style="{ color: 'var(--color-text)' }">{{ estadisticas.ultima_cita || 'Nunca' }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Acciones rápidas -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Acciones</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Acciones</h2>
                             </div>
                             <div class="p-6 space-y-3">
                                 <button
@@ -263,22 +269,23 @@ const cambiarEstado = (nuevoEstado) => {
                         </div>
 
                         <!-- Información del sistema -->
-                        <div class="bg-white shadow-sm rounded-lg border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Información del Sistema</h2>
+                        <div class="shadow-sm rounded-lg border"
+                             :style="{ backgroundColor: 'var(--color-base)', borderColor: 'var(--color-border)' }">
+                            <div class="px-6 py-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+                                <h2 class="text-lg font-semibold" :style="{ color: 'var(--color-text)' }">Información del Sistema</h2>
                             </div>
                             <div class="p-6 space-y-3 text-sm">
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Creado el:</span>
-                                    <span class="text-gray-900">{{ new Date(vehiculo.created_at).toLocaleDateString() }}</span>
+                                    <span :style="{ color: 'var(--color-text-light)' }">Creado el:</span>
+                                    <span :style="{ color: 'var(--color-text)' }">{{ new Date(vehiculo.created_at).toLocaleDateString() }}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Actualizado el:</span>
-                                    <span class="text-gray-900">{{ new Date(vehiculo.updated_at).toLocaleDateString() }}</span>
+                                    <span :style="{ color: 'var(--color-text-light)' }">Actualizado el:</span>
+                                    <span :style="{ color: 'var(--color-text)' }">{{ new Date(vehiculo.updated_at).toLocaleDateString() }}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">ID:</span>
-                                    <span class="text-gray-900 font-mono">{{ vehiculo.id }}</span>
+                                    <span :style="{ color: 'var(--color-text-light)' }">ID:</span>
+                                    <span class="font-mono" :style="{ color: 'var(--color-text)' }">{{ vehiculo.id }}</span>
                                 </div>
                             </div>
                         </div>

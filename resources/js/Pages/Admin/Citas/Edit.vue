@@ -184,11 +184,12 @@ const getEstadoRingColor = (estado) => {
                                 Código de Cita
                             </label>
                             <input type="text" :value="cita.codigo" disabled
-                                class="w-full px-4 py-2 border rounded-lg font-mono cursor-not-allowed"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg font-mono cursor-not-allowed"
                                 :style="{ 
                                     backgroundColor: 'var(--color-neutral)',
                                     color: 'var(--color-text-light)',
-                                    borderColor: 'var(--color-border)'
+                                    borderColor: 'var(--color-border)',
+                                    '--tw-ring-color': 'var(--color-border)'
                                 }" />
                             <p class="mt-1 text-xs"
                                 :style="{ color: 'var(--color-text-light)' }">
@@ -203,15 +204,12 @@ const getEstadoRingColor = (estado) => {
                                 Cliente <span :style="{ color: 'var(--color-error)' }">*</span>
                             </label>
                             <select id="cliente_id" v-model="form.cliente_id" required
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent"
                                 :style="{ 
-                                    backgroundColor: 'var(--color-base)',
+                                    backgroundColor: 'var(--color-background)',
                                     color: 'var(--color-text)',
                                     borderColor: form.errors.cliente_id ? 'var(--color-error)' : 'var(--color-border)',
-                                    ':focus': { 
-                                        ringColor: 'var(--color-primary)',
-                                        borderColor: 'var(--color-primary)'
-                                    }
+                                    '--tw-ring-color': 'var(--color-primary)'
                                 }">
                                 <option value="">Seleccione un cliente</option>
                                 <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
@@ -232,15 +230,12 @@ const getEstadoRingColor = (estado) => {
                             </label>
                             <select id="vehiculo_id" v-model="form.vehiculo_id" required
                                 :disabled="!form.cliente_id || vehiculosDisponibles.length === 0"
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent disabled:cursor-not-allowed"
                                 :style="{ 
-                                    backgroundColor: (!form.cliente_id || vehiculosDisponibles.length === 0) ? 'var(--color-neutral)' : 'var(--color-base)',
+                                    backgroundColor: (!form.cliente_id || vehiculosDisponibles.length === 0) ? 'var(--color-neutral)' : 'var(--color-background)',
                                     color: (!form.cliente_id || vehiculosDisponibles.length === 0) ? 'var(--color-text-light)' : 'var(--color-text)',
                                     borderColor: form.errors.vehiculo_id ? 'var(--color-error)' : 'var(--color-border)',
-                                    ':focus': { 
-                                        ringColor: 'var(--color-primary)',
-                                        borderColor: 'var(--color-primary)'
-                                    }
+                                    '--tw-ring-color': 'var(--color-primary)'
                                 }">
                                 <option value="">
                                     {{ !form.cliente_id ? 'Primero seleccione un cliente' :
@@ -274,15 +269,12 @@ const getEstadoRingColor = (estado) => {
                                     Fecha <span :style="{ color: 'var(--color-error)' }">*</span>
                                 </label>
                                 <input type="date" id="fecha" v-model="form.fecha" :min="fechaMinima" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                    class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.fecha ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }" />
                                 <p v-if="form.errors.fecha" class="mt-1 text-sm"
                                     :style="{ color: 'var(--color-error)' }">
@@ -297,15 +289,12 @@ const getEstadoRingColor = (estado) => {
                                     Hora <span :style="{ color: 'var(--color-error)' }">*</span>
                                 </label>
                                 <select id="hora" v-model="form.hora" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                    class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent"
                                     :style="{ 
-                                        backgroundColor: 'var(--color-base)',
+                                        backgroundColor: 'var(--color-background)',
                                         color: 'var(--color-text)',
                                         borderColor: form.errors.hora ? 'var(--color-error)' : 'var(--color-border)',
-                                        ':focus': { 
-                                            ringColor: 'var(--color-primary)',
-                                            borderColor: 'var(--color-primary)'
-                                        }
+                                        '--tw-ring-color': 'var(--color-primary)'
                                     }">
                                     <option value="">Seleccione una hora</option>
                                     <option v-for="horario in horarios_disponibles" :key="horario" :value="horario">
@@ -330,15 +319,12 @@ const getEstadoRingColor = (estado) => {
                                 Estado <span :style="{ color: 'var(--color-error)' }">*</span>
                             </label>
                             <select id="estado" v-model="form.estado" required
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent"
                                 :style="{ 
-                                    backgroundColor: 'var(--color-base)',
+                                    backgroundColor: 'var(--color-background)',
                                     color: 'var(--color-text)',
                                     borderColor: form.errors.estado ? 'var(--color-error)' : 'var(--color-border)',
-                                    ':focus': { 
-                                        ringColor: 'var(--color-primary)',
-                                        borderColor: 'var(--color-primary)'
-                                    }
+                                    '--tw-ring-color': 'var(--color-primary)'
                                 }">
                                 <option v-for="(label, value) in estadosDisponibles" :key="value" :value="value">
                                     {{ label }}
@@ -362,15 +348,12 @@ const getEstadoRingColor = (estado) => {
                             </label>
                             <textarea id="motivo" v-model="form.motivo" rows="3" required maxlength="500"
                                 placeholder="Ej: Mantenimiento preventivo, revisión de frenos, cambio de aceite..."
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent resize-none"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent resize-none"
                                 :style="{ 
-                                    backgroundColor: 'var(--color-base)',
+                                    backgroundColor: 'var(--color-background)',
                                     color: 'var(--color-text)',
                                     borderColor: form.errors.motivo ? 'var(--color-error)' : 'var(--color-border)',
-                                    ':focus': { 
-                                        ringColor: 'var(--color-primary)',
-                                        borderColor: 'var(--color-primary)'
-                                    }
+                                    '--tw-ring-color': 'var(--color-primary)'
                                 }"></textarea>
                             <div class="flex justify-between items-center mt-1">
                                 <p v-if="form.errors.motivo" class="text-sm"
@@ -392,15 +375,12 @@ const getEstadoRingColor = (estado) => {
                             </label>
                             <textarea id="observaciones" v-model="form.observaciones" rows="4" maxlength="1000"
                                 placeholder="Información adicional sobre el problema, síntomas, o requerimientos especiales..."
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent resize-none"
+                                class="w-full px-4 py-2 border ring-1 ring-inset rounded-lg focus:ring-2 focus:border-transparent resize-none"
                                 :style="{ 
-                                    backgroundColor: 'var(--color-base)',
+                                    backgroundColor: 'var(--color-background)',
                                     color: 'var(--color-text)',
                                     borderColor: form.errors.observaciones ? 'var(--color-error)' : 'var(--color-border)',
-                                    ':focus': { 
-                                        ringColor: 'var(--color-primary)',
-                                        borderColor: 'var(--color-primary)'
-                                    }
+                                    '--tw-ring-color': 'var(--color-primary)'
                                 }"></textarea>
                             <div class="flex justify-between items-center mt-1">
                                 <p v-if="form.errors.observaciones" class="text-sm"

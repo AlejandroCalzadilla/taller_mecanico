@@ -20,9 +20,12 @@ const value = computed({
 <template>
     <textarea
         v-model="value"
-        class="rounded-md shadow-sm transition duration-200"
+        class="rounded-md shadow-sm ring-1 ring-inset transition duration-200 focus:ring-2"
         :style="{ 
-            borderColor: $attrs.error ? 'var(--color-error)' : 'var(--color-border)'
+            borderColor: $attrs.error ? 'var(--color-error)' : 'var(--color-border)',
+            '--tw-ring-color': 'var(--color-primary)',
+            backgroundColor: 'var(--color-background)',
+            color: 'var(--color-text)',
         }"
         :class="{
             'error': $attrs.error,
