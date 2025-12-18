@@ -8,16 +8,12 @@ import {
     CurrencyDollarIcon,
     QrCodeIcon,
     UserIcon,
-    TruckIcon,
-    CalendarDaysIcon,
-    ClockIcon,
     ExclamationTriangleIcon,
-    CheckCircleIcon,
-    BuildingLibraryIcon,
     DocumentTextIcon,
-    ArrowPathIcon
+    ArrowPathIcon,
+    CheckCircleIcon
 } from '@heroicons/vue/24/outline';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     pago: Object,
@@ -35,10 +31,14 @@ const nroPagoQR = ref('');
 const procesandoPago = ref(false);
 const mostrarConfirmacion = ref(false);
 
+// Estados para PagoFácil
+const transactionId = ref(null);
+const estadoPago = ref(null); // 'pendiente', 'pagado', 'error'
+const mensajeEstado = ref('');
+let intervalVerificacion = null;
+
 // Formularios
 const formQR = ref({
-    banco: '',
-    referencia: '',
     numero_comprobante: '',
     observaciones: ''
 });
@@ -105,9 +105,9 @@ const sugerirMonto = (tipo) => {
     }
     montoPago.value = montoSugerido.value;
 
-    // Si está en modo QR, regenerar el QR
-    if (metodoPagoSeleccionado.value === 'qr' && montoPago.value > 0) {
-        generarQR();
+    // Si está en modo QR y ya había uno generado, reiniciarlo porque el monto cambió
+    if (metodoPagoSeleccionado.value === 'qr') {
+        reiniciarQR();
     }
 };
 
@@ -118,6 +118,14 @@ const generarNumeroComprobante = () => {
     return `${prefix}-${fecha}-${random}`;
 };
 
+const reiniciarQR = () => {
+    qrImage.value = null;
+    transactionId.value = null;
+    estadoPago.value = null;
+    errorQR.value = null;
+    detenerVerificacion();
+};
+
 // Función para generar QR desde el backend
 const generarQR = async () => {
     if (!montoPago.value || montoPago.value <= 0) {
@@ -125,6 +133,7 @@ const generarQR = async () => {
         return;
     }
 
+    reiniciarQR();
     generandoQR.value = true;
     errorQR.value = null;
 
@@ -137,22 +146,66 @@ const generarQR = async () => {
         if (response.data.success) {
             qrImage.value = response.data.qr_image;
             nroPagoQR.value = response.data.nro_pago;
+            transactionId.value = response.data.transaction_id;
 
-            // Auto-completar campos del formulario
-            formQR.value.referencia = response.data.transaction_id;
+            // Iniciar verificación automática
+            estadoPago.value = 'pendiente';
+            mensajeEstado.value = 'Esperando confirmación del pago...';
+            iniciarVerificacion();
+
+            // Auto-completar campos visuales
             formQR.value.numero_comprobante = response.data.nro_pago;
-            formQR.value.banco = 'PagoFácil';
 
-            generandoQR.value = false;
-            errorQR.value = null;
         } else {
             errorQR.value = response.data.message || 'Error al generar el QR';
-            generandoQR.value = false;
         }
     } catch (error) {
         console.error('Error al generar QR:', error);
         errorQR.value = error.response?.data?.message || 'Error al generar el código QR. Intenta nuevamente.';
+    } finally {
         generandoQR.value = false;
+    }
+};
+
+const verificarEstadoPago = async () => {
+    if (!transactionId.value) return;
+
+    try {
+        const response = await axios.post(route('cliente.pagofacil.consultar-estado'), {
+            transaction_id: transactionId.value,
+            pago_id: props.pago.id,
+            monto: montoPago.value
+        });
+
+        if (response.data.success) {
+            const data = response.data.data;
+            if (data.paymentStatus === 'COMPLETED') {
+                estadoPago.value = 'pagado';
+                mensajeEstado.value = '¡Pago confirmado exitosamente! ✅';
+                detenerVerificacion();
+                
+                // Redirigir o mostrar confirmación final
+                setTimeout(() => {
+                    mostrarConfirmacion.value = true;
+                    // O recargar la página para ver el pago impactado
+                    // router.visit(route('cliente.pagos.show', props.pago.id));
+                }, 2000);
+            }
+        }
+    } catch (error) {
+        console.error('Error verificando estado:', error);
+    }
+};
+
+const iniciarVerificacion = () => {
+    verificarEstadoPago(); // Primera verificación inmediata
+    intervalVerificacion = setInterval(verificarEstadoPago, 5000); // Cada 5 segundos
+};
+
+const detenerVerificacion = () => {
+    if (intervalVerificacion) {
+        clearInterval(intervalVerificacion);
+        intervalVerificacion = null;
     }
 };
 
@@ -164,17 +217,8 @@ const onMetodoPagoChange = () => {
         formEfectivo.value.numero_comprobante = comprobante;
     }
 
-    // Limpiar campos QR si se cambia a efectivo
     if (metodoPagoSeleccionado.value === 'efectivo') {
-        formQR.value.banco = '';
-        formQR.value.referencia = '';
-        qrImage.value = null;
-        errorQR.value = null;
-    }
-
-    // Si se cambia a QR y hay monto, generar QR automáticamente
-    if (metodoPagoSeleccionado.value === 'qr' && montoPago.value && montoPago.value > 0) {
-        generarQR();
+        reiniciarQR();
     }
 };
 
@@ -189,50 +233,7 @@ const validarFormulario = () => {
         return false;
     }
 
-    if (metodoPagoSeleccionado.value === 'qr') {
-        if (!formQR.value.banco) {
-            errorQR.value = 'Selecciona un banco para el pago QR';
-            return false;
-        }
-        if (!formQR.value.referencia) {
-            errorQR.value = 'Ingresa la referencia del pago QR';
-            return false;
-        }
-        if (!qrImage.value) {
-            errorQR.value = 'Primero genera el código QR';
-            return false;
-        }
-    }
-
     return true;
-};
-
-const procesarPagoQR = async () => {
-    if (!validarFormulario()) return;
-
-    procesandoPago.value = true;
-    errorQR.value = null;
-
-    try {
-        const response = await router.post(route('cliente.pagos.procesar-qr', props.pago.id), {
-            monto: montoPago.value,
-            banco: formQR.value.banco,
-            referencia: formQR.value.referencia,
-            numero_comprobante: formQR.value.numero_comprobante,
-            observaciones: formQR.value.observaciones
-        });
-
-        if (response.data.success) {
-            mostrarConfirmacion.value = true;
-        } else {
-            errorQR.value = response.data.message || 'Error al procesar el pago';
-        }
-    } catch (error) {
-        errorQR.value = 'Error de conexión. Intenta nuevamente.';
-        console.error('Error procesando pago QR:', error);
-    } finally {
-        procesandoPago.value = false;
-    }
 };
 
 const procesarPagoEfectivo = async () => {
@@ -263,29 +264,36 @@ const procesarPagoEfectivo = async () => {
 
 const submitPago = () => {
     if (metodoPagoSeleccionado.value === 'qr') {
-        procesarPagoQR();
+        // En modo QR, el botón puede servir para forzar verificación o reiniciar
+        if (estadoPago.value === 'pagado') {
+             router.visit(route('cliente.pagos.show', props.pago.id));
+        } else if (!qrImage.value) {
+            generarQR();
+        } else {
+            // Si ya está generado y pendiente, el usuario puede querer verificar manualmente
+            verificarEstadoPago();
+        }
     } else {
         procesarPagoEfectivo();
     }
 };
 
-const irADetalles = () => {
-    router.visit(route('cliente.pagos.show', props.pago.id));
-};
-
 // Inicialización
 onMounted(() => {
-    // Sugerir monto de cuota por defecto para créditos
     if (esCredito.value) {
         sugerirMonto('cuota');
     } else {
         sugerirMonto('completo');
     }
-
+    
     // Generar número de comprobante inicial
     const comprobante = generarNumeroComprobante();
     formQR.value.numero_comprobante = comprobante;
     formEfectivo.value.numero_comprobante = comprobante;
+});
+
+onUnmounted(() => {
+    detenerVerificacion();
 });
 </script>
 
@@ -495,139 +503,120 @@ onMounted(() => {
                                 <div v-if="metodoPagoSeleccionado === 'qr'" class="space-y-4">
 
                                     <!-- Sección del Código QR -->
-                                    <div class="p-4 rounded-lg border text-center"
+                                    <div class="p-6 rounded-lg border text-center transition-all duration-300"
                                         :style="{ 
                                           backgroundColor: 'var(--color-primary-light)',
                                           borderColor: 'var(--color-primary)',
                                           color: 'var(--color-primary)'
                                         }">
-                                        <h4 class="text-sm font-semibold flex items-center justify-center gap-2 mb-3">
-                                            <QrCodeIcon class="h-4 w-4" />
+                                        
+                                        <!-- Header -->
+                                        <h4 class="text-sm font-semibold flex items-center justify-center gap-2 mb-4">
+                                            <QrCodeIcon class="h-5 w-5" />
                                             Código QR de Pago
                                         </h4>
 
-                                        <div v-if="generandoQR" class="flex flex-col items-center justify-center py-8">
-                                            <ArrowPathIcon class="h-8 w-8 animate-spin mb-2" :style="{ color: 'var(--color-primary)' }" />
-                                            <p class="text-sm">Generando código QR...</p>
+                                        <!-- Estado 1: Generando -->
+                                        <div v-if="generandoQR" class="flex flex-col items-center justify-center py-10">
+                                            <ArrowPathIcon class="h-10 w-10 animate-spin mb-3" :style="{ color: 'var(--color-primary)' }" />
+                                            <p class="text-base font-medium">Generando código QR...</p>
+                                            <p class="text-xs mt-1 opacity-75">Conectando con PagoFácil</p>
                                         </div>
 
-                                        <div v-else-if="qrImage" class="space-y-3">
-                                            <div class="flex justify-center">
+                                        <!-- Estado 2: QR Generado -->
+                                        <div v-else-if="qrImage" class="space-y-4 animate-fade-in">
+                                            
+                                            <!-- Indicador de Estado -->
+                                            <div class="p-3 rounded-lg font-medium text-sm transition-colors duration-300 flex items-center justify-center gap-2"
+                                                :class="{
+                                                    'bg-yellow-100 text-yellow-800 border border-yellow-200': estadoPago === 'pendiente',
+                                                    'bg-green-100 text-green-800 border border-green-200': estadoPago === 'pagado',
+                                                    'bg-red-100 text-red-800 border border-red-200': estadoPago === 'error'
+                                                }">
+                                                <span v-if="estadoPago === 'pendiente'" class="animate-pulse">⏳</span>
+                                                <span v-if="estadoPago === 'pagado'">✅</span>
+                                                <span v-if="estadoPago === 'error'">❌</span>
+                                                {{ mensajeEstado }}
+                                            </div>
+
+                                            <div class="flex justify-center relative">
                                                 <img
                                                     :src="qrImage"
                                                     alt="Código QR de pago"
-                                                    class="w-48 h-48 border-2 rounded-lg shadow-sm"
-                                                    :style="{ 
-                                                      borderColor: 'var(--color-base)',
-                                                      backgroundColor: 'var(--color-base)'
-                                                    }"
+                                                    class="w-56 h-56 border-4 rounded-xl shadow-md bg-white p-2 transition-all duration-500"
+                                                    :class="{ 'opacity-50 blur-[1px]': estadoPago === 'pagado' }"
+                                                    :style="{ borderColor: 'white' }"
                                                 />
+                                                
+                                                <!-- Overlay cuando pagado -->
+                                                <div v-if="estadoPago === 'pagado'" class="absolute inset-0 flex items-center justify-center z-10">
+                                                    <div class="bg-white rounded-full p-2 shadow-lg">
+                                                        <CheckCircleIcon class="h-16 w-16 text-green-500" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="text-center">
-                                                <p class="text-xs mb-1" :style="{ color: 'var(--color-text-light)' }">Escanea este código con tu app de pagos</p>
-                                                <p class="text-xs font-mono px-2 py-1 rounded border"
-                                                    :style="{ 
-                                                      backgroundColor: 'var(--color-base)',
-                                                      borderColor: 'var(--color-border)',
-                                                      color: 'var(--color-text)'
-                                                    }">
-                                                    Referencia: {{ nroPagoQR }}
+                                            
+                                            <div class="text-center space-y-1">
+                                                <p class="text-sm font-medium">Escanea con tu aplicación bancaria</p>
+                                                <p v-if="estadoPago === 'pendiente'" class="text-xs animate-pulse font-semibold" :style="{ color: 'var(--color-primary)' }">
+                                                    Esperando confirmación automática...
                                                 </p>
-                                                <p class="text-xs mt-1" :style="{ color: 'var(--color-text-light)' }">Monto: ${{ formatPrecio(montoPago) }}</p>
+                                                <p class="text-xs font-mono px-3 py-1.5 rounded bg-white inline-block border mt-2 opacity-80">
+                                                    Ref: {{ nroPagoQR }}
+                                                </p>
                                             </div>
+
                                             <button
+                                                v-if="estadoPago !== 'pagado'"
                                                 type="button"
                                                 @click="generarQR"
-                                                class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded transition-colors"
+                                                class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded transition-colors mt-2 opacity-75 hover:opacity-100"
                                                 :style="{ 
-                                                  backgroundColor: 'var(--color-base)',
                                                   color: 'var(--color-primary)',
-                                                  borderColor: 'var(--color-primary)'
+                                                  borderBottom: '1px border var(--color-primary)'
                                                 }"
-                                                onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
-                                                onMouseOut="this.style.backgroundColor='var(--color-base)'"
                                             >
                                                 <ArrowPathIcon class="h-3 w-3" />
                                                 Regenerar QR
                                             </button>
                                         </div>
 
-                                        <div v-else class="py-6">
-                                            <p class="text-sm mb-3" :style="{ color: 'var(--color-text-light)' }">
-                                                Establece un monto y haz clic para generar el código QR
+                                        <!-- Estado 3: Inicial (No generado) -->
+                                        <div v-else class="py-8 px-4">
+                                            <div class="mb-4 bg-white/50 p-4 rounded-full inline-block">
+                                                <QrCodeIcon class="h-12 w-12 opacity-80" />
+                                            </div>
+                                            <p class="text-base font-medium mb-1">
+                                                Listo para generar QR
                                             </p>
+                                            <p class="text-sm mb-4 opacity-75 max-w-xs mx-auto">
+                                                Monto a pagar: <span class="font-bold">${{ formatPrecio(montoPago) }}</span>
+                                            </p>
+                                            
                                             <button
                                                 type="button"
                                                 @click="generarQR"
                                                 :disabled="!montoPago || montoPago <= 0"
-                                                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                                                class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95"
                                                 :style="{ 
                                                   backgroundColor: 'var(--color-primary)',
                                                   color: 'var(--color-base)'
                                                 }"
-                                                onMouseOver="this.style.backgroundColor='var(--color-primary-light)'"
-                                                onMouseOut="this.style.backgroundColor='var(--color-primary)'"
                                             >
-                                                <QrCodeIcon class="h-4 w-4" />
+                                                <QrCodeIcon class="h-5 w-5" />
                                                 Generar Código QR
                                             </button>
                                         </div>
 
-                                        <div v-if="errorQR" class="mt-3 p-2 rounded text-xs"
-                                            :style="{ 
-                                              backgroundColor: 'var(--color-danger-light)',
-                                              borderColor: 'var(--color-danger)',
-                                              color: 'var(--color-danger)'
-                                            }">
+                                        <!-- Mensaje de Error -->
+                                        <div v-if="errorQR" class="mt-4 p-3 rounded-lg text-sm bg-red-50 border border-red-200 text-red-700 animate-shake">
+                                            <div class="flex items-center gap-2 justify-center font-bold mb-1">
+                                                <ExclamationTriangleIcon class="h-4 w-4" />
+                                                Error
+                                            </div>
                                             {{ errorQR }}
                                         </div>
                                     </div>
-
-                                    <!-- Información de la transacción QR -->
-                                   <!--  <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                        <h4 class="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
-                                            <BuildingLibraryIcon class="h-4 w-4" />
-                                            Información de la Transacción
-                                        </h4>
-
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-700 mb-1">
-                                                    Banco *
-                                                </label>
-                                                <select
-                                                    v-model="formQR.banco"
-                                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                                                    required
-                                                >
-                                                    <option value="">Seleccionar banco</option>
-                                                    <option value="Tigo Money">Tigo Money</option>
-                                                    <option value="BISA">BISA</option>
-                                                    <option value="BNB">BNB</option>
-                                                    <option value="BCP">BCP</option>
-                                                    <option value="Mercantil Santa Cruz">Mercantil Santa Cruz</option>
-                                                    <option value="Económico">Económico</option>
-                                                    <option value="Fassil">Fassil</option>
-                                                    <option value="Ganadero">Ganadero</option>
-                                                    <option value="Unión">Unión</option>
-                                                    <option value="Otro">Otro</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-700 mb-1">
-                                                    Referencia/Código *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    v-model="formQR.referencia"
-                                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-mono text-sm"
-                                                    placeholder="Código de transacción"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
 
                                 <!-- Información para Efectivo -->

@@ -36,14 +36,13 @@ use Illuminate\Support\Facades\Route;
 // ============================================================================
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
-// ⚠️ IMPORTANTE: Rutas del callback y PagoFácil FUERA del middleware auth (deben ser públicas)
-Route::post('/api/pagos/callback', [AdminPagoFacilController::class, 'callback'])->name('api.pagos.callback');
+// ⚠️ IMPORTANTE: Rutas del callback y PagoFácil (return se mantiene aqui, callback en api.php)
 Route::get('/pagos/pagofacil/return', [AdminPagoFacilController::class, 'return'])->name('pagos.return');
 
 // ============================================================================
 // RUTAS DE AUTENTICACIÓN
 // ============================================================================
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // ============================================================================
 // RUTAS PROTEGIDAS POR AUTENTICACIÓN
@@ -95,7 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/ordenes/{orden}/aprobar', [ClienteOrdenController::class, 'aprobar'])->name('ordenes.aprobar');
         Route::post('/ordenes/{orden}/rechazar', [ClienteOrdenController::class, 'rechazar'])->name('ordenes.rechazar');
         Route::get('/ordenes/{orden}/descargar-presupuesto', [ClienteOrdenController::class, 'descargarPresupuesto'])->name('ordenes.descargar-presupuesto');
-        
+
         // Pagos - Cliente
         Route::get('/pagos', [ClientePagoController::class, 'index'])->name('pagos.index');
         Route::get('/pagos/{pago}', [ClientePagoController::class, 'show'])->name('pagos.show');
@@ -105,6 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // PagoFácil - Cliente puede generar QR para sus pagos
         Route::post('/pagofacil/generar-qr', [AdminPagoFacilController::class, 'generarQR'])->name('pagofacil.generar-qr');
+        Route::post('/pagofacil/consultar-estado', [AdminPagoFacilController::class, 'consultarEstado'])->name('pagofacil.consultar-estado');
 
     });
 
@@ -144,7 +144,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/citas/{cita}', [AdminCitaController::class, 'update'])->name('citas.update');
         Route::delete('/citas/{cita}', [AdminCitaController::class, 'destroy'])->name('citas.destroy');
         Route::patch('/citas/{cita}/status', [AdminCitaController::class, 'updateStatus'])->name('citas.update-status');
-Route::get('/citas/por-fecha', [AdminCitaController::class, 'getCitasPorFecha'])->name('citas.por-fecha');
+        Route::get('/citas/por-fecha', [AdminCitaController::class, 'getCitasPorFecha'])->name('citas.por-fecha');
 
         // Gestión de Clientes
         Route::get('/clientes', [AdminClienteController::class, 'index'])->name('clientes.index');
