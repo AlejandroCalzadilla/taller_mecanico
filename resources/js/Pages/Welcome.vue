@@ -120,7 +120,7 @@ const getIconForType = (tipo) => {
                         </Link>
                         <Link
                             v-else
-                            :href="route('cliente.citas')"
+                            :href="route('cliente.citas.index')"
                             class="group relative bg-white text-taller-black px-8 py-4 rounded-xl text-lg font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:-translate-y-1"
                         >
                             <span class="flex items-center gap-2">
@@ -191,7 +191,7 @@ const getIconForType = (tipo) => {
                                 </Link>
                                 <Link
                                     v-else
-                                    :href="route('cliente.citas')"
+                                    :href="route('cliente.citas.index')"
                                     class="text-taller-blue-dark font-bold text-sm hover:text-taller-blue-light transition-colors flex items-center gap-1"
                                 >
                                     Solicitar <span class="text-lg">→</span>

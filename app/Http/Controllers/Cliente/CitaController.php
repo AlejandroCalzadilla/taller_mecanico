@@ -31,7 +31,7 @@ class CitaController extends Controller
                 ->first()
         ];
 
-        return Inertia::render('Cliente/Citas/Index', [
+        return Inertia::render('Cliente.Citas.Index', [
             'citas' => $citas,
             'estadisticas' => $estadisticas
         ]);
@@ -58,7 +58,7 @@ class CitaController extends Controller
         $fechasDisponibles = $this->getFechasDisponibles();
         $horariosDisponibles = $this->getHorariosDisponibles();
 
-        return Inertia::render('Cliente/Citas/Create', [
+        return Inertia::render('Cliente.Citas.Create', [
             'vehiculos' => $vehiculos,
             'vehiculoSeleccionado' => $vehiculoSeleccionado,
             'fechasDisponibles' => $fechasDisponibles,
@@ -117,7 +117,7 @@ class CitaController extends Controller
             'proximo_estado' => $this->getProximoEstado($cita->estado)
         ];
 
-        return Inertia::render('Cliente/Citas/Show', [
+        return Inertia::render('Cliente.Citas.Show', [
             'cita' => $cita,
             'datosAdicionales' => $datosAdicionales
         ]);
@@ -139,7 +139,7 @@ class CitaController extends Controller
         $fechasDisponibles = $this->getFechasDisponibles();
         $horariosDisponibles = $this->getHorariosDisponibles();
 
-        return Inertia::render('Cliente/Citas/Edit', [
+        return Inertia::render('Cliente.Citas.Edit', [
             'cita' => $cita,
             'vehiculos' => $vehiculos,
             'fechasDisponibles' => $fechasDisponibles,
@@ -237,9 +237,21 @@ class CitaController extends Controller
     private function getHorariosDisponibles()
     {
         return [
-            '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
-            '11:00', '11:30', '14:00', '14:30', '15:00', '15:30',
-            '16:00', '16:30', '17:00'
+            '08:00',
+            '08:30',
+            '09:00',
+            '09:30',
+            '10:00',
+            '10:30',
+            '11:00',
+            '11:30',
+            '14:00',
+            '14:30',
+            '15:00',
+            '15:30',
+            '16:00',
+            '16:30',
+            '17:00'
         ];
     }
 

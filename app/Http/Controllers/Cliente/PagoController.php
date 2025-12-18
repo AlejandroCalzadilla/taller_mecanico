@@ -18,11 +18,11 @@ class PagoController extends Controller
         $user = auth()->user();
 
         $query = Pago::with([
-                'ordenTrabajo.diagnostico.cita.vehiculo',
-                'ordenTrabajo.diagnostico.cita.cliente',
-                'detalles.recibidoPor'
-            ])
-            ->whereHas('ordenTrabajo.diagnostico.cita', function($query) use ($user) {
+            'ordenTrabajo.diagnostico.cita.vehiculo',
+            'ordenTrabajo.diagnostico.cita.cliente',
+            'detalles.recibidoPor'
+        ])
+            ->whereHas('ordenTrabajo.diagnostico.cita', function ($query) use ($user) {
                 $query->where('cliente_id', $user->id);
             })
             ->latest();
@@ -38,11 +38,11 @@ class PagoController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhereHas('ordenTrabajo.diagnostico.cita.vehiculo', function($q) use ($search) {
-                      $q->where('placa', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhereHas('ordenTrabajo.diagnostico.cita.vehiculo', function ($q) use ($search) {
+                        $q->where('placa', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -57,7 +57,7 @@ class PagoController extends Controller
             return $pago;
         });
 
-        return Inertia::render('Cliente/Pagos/Index', [
+        return Inertia::render('Cliente.Pagos.Index', [
             'pagos' => $pagos,
             'filters' => $request->only(['search', 'estado', 'tipo_pago']),
             'estados' => Pago::getEstadosDisponibles(),
@@ -82,7 +82,7 @@ class PagoController extends Controller
         // Validar que el usuario autenticado sea el cliente dueño de este pago
         $usuarioAutenticado = auth()->user();
         $clientePago = $pago->ordenTrabajo->diagnostico->cita->cliente;
-        
+
         if ($usuarioAutenticado->id !== $clientePago->id) {
             abort(403, 'No tienes permiso para acceder a este pago');
         }
@@ -93,7 +93,7 @@ class PagoController extends Controller
         $pago->monto_pendiente = (float) $pago->monto_pendiente;
         $pago->porcentaje_pagado = $this->calcularPorcentajePagado($pago);
 
-        return Inertia::render('Cliente/Pagos/Show', [
+        return Inertia::render('Cliente.Pagos.Show', [
             'pago' => $pago,
             'planPagos' => $pago->generarPlanPagos(),
             'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
@@ -113,7 +113,7 @@ class PagoController extends Controller
         // Validar que el usuario autenticado sea el cliente dueño de este pago
         $usuarioAutenticado = auth()->user();
         $clientePago = $pago->ordenTrabajo->diagnostico->cita->cliente;
-        
+
         if ($usuarioAutenticado->id !== $clientePago->id) {
             abort(403, 'No tienes permiso para acceder a este pago');
         }
@@ -123,7 +123,7 @@ class PagoController extends Controller
         $pago->monto_pagado = (float) $pago->monto_pagado;
         $pago->monto_pendiente = (float) $pago->monto_pendiente;
 
-        return Inertia::render('Cliente/Pagos/Pagar', [
+        return Inertia::render('Cliente.Pagos.Pagar', [
             'pago' => $pago,
             'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
         ]);
@@ -145,7 +145,7 @@ class PagoController extends Controller
         try {
             // Usar el controlador de PagoFácil para generar QR
             $pagoFacilController = new \App\Http\Controllers\Admin\PagoFacilController();
-            
+
             // Generar QR
             $response = $pagoFacilController->generarQR(
                 new Request([
@@ -199,7 +199,7 @@ class PagoController extends Controller
                 'error' => $e->getMessage(),
                 'line' => $e->getLine()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al generar el código QR: ' . $e->getMessage()
@@ -243,7 +243,7 @@ class PagoController extends Controller
      */
     private function obtenerEstadisticas($user)
     {
-        $pagosQuery = Pago::whereHas('ordenTrabajo.diagnostico.cita', function($query) use ($user) {
+        $pagosQuery = Pago::whereHas('ordenTrabajo.diagnostico.cita', function ($query) use ($user) {
             $query->where('cliente_id', $user->id);
         });
 
@@ -263,7 +263,8 @@ class PagoController extends Controller
      */
     private function calcularPorcentajePagado($pago)
     {
-        if ($pago->monto_total == 0) return 0;
+        if ($pago->monto_total == 0)
+            return 0;
         return ($pago->monto_pagado / $pago->monto_total) * 100;
     }
 }

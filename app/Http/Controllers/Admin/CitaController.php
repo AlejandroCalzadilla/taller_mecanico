@@ -22,19 +22,19 @@ class CitaController extends Controller
         // Búsqueda
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhere('motivo', 'LIKE', "%{$search}%")
-                  ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                  ->orWhereHas('cliente', function($q) use ($search) {
-                      $q->where('nombre', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('vehiculo', function($q) use ($search) {
-                      $q->where('placa', 'LIKE', "%{$search}%")
-                        ->orWhere('marca', 'LIKE', "%{$search}%")
-                        ->orWhere('modelo', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhere('motivo', 'LIKE', "%{$search}%")
+                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                    ->orWhereHas('cliente', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('vehiculo', function ($q) use ($search) {
+                        $q->where('placa', 'LIKE', "%{$search}%")
+                            ->orWhere('marca', 'LIKE', "%{$search}%")
+                            ->orWhere('modelo', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -58,7 +58,7 @@ class CitaController extends Controller
         $clientes = User::clientes()->activos()->get(['id', 'nombre', 'email']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Citas/Index', [
+        return Inertia::render('Admin.Citas.Index', [
             'citas' => $citas,
             'clientes' => $clientes,
             'filters' => $request->only(['search', 'estado', 'cliente_id', 'fecha']),
@@ -71,11 +71,13 @@ class CitaController extends Controller
      */
     public function create()
     {
-        $clientes = User::clientes()->activos()->with(['vehiculos' => function($query) {
-            $query->activos()->select(['id', 'cliente_id', 'placa', 'marca', 'modelo']);
-        }])->get(['id', 'nombre', 'email']);
+        $clientes = User::clientes()->activos()->with([
+            'vehiculos' => function ($query) {
+                $query->activos()->select(['id', 'cliente_id', 'placa', 'marca', 'modelo']);
+            }
+        ])->get(['id', 'nombre', 'email']);
 
-        return Inertia::render('Admin/Citas/Create', [
+        return Inertia::render('Admin.Citas.Create', [
             'clientes' => $clientes,
             'estados' => $this->getEstados(), // Asegúrate de que esto retorne un array
             'horarios_disponibles' => $this->getHorariosDisponibles(),
@@ -123,62 +125,64 @@ class CitaController extends Controller
             ->with('success', 'Cita creada exitosamente.');
     }
 
-   /**
+    /**
      * Display the specified appointment.
      */
     public function show(Cita $cita)
-{
-    // Cargar relaciones
-    $cita->load(['cliente', 'vehiculo', 'diagnostico']);
+    {
+        // Cargar relaciones
+        $cita->load(['cliente', 'vehiculo', 'diagnostico']);
 
-    // Agregar foto_url al vehículo de la cita
-    if ($cita->vehiculo) {
-        if ($cita->vehiculo->foto && Storage::disk('public')->exists($cita->vehiculo->foto)) {
-            $cita->vehiculo->foto_url = asset('storage/' . $cita->vehiculo->foto);
-        } else {
-            $cita->vehiculo->foto_url = null;
+        // Agregar foto_url al vehículo de la cita
+        if ($cita->vehiculo) {
+            if ($cita->vehiculo->foto && Storage::disk('public')->exists($cita->vehiculo->foto)) {
+                $cita->vehiculo->foto_url = asset('storage/' . $cita->vehiculo->foto);
+            } else {
+                $cita->vehiculo->foto_url = null;
+            }
         }
-    }
 
-    return Inertia::render('Admin/Citas/Show', [
-        'cita' => $cita,
-        'estados' => $this->getEstados(),
-    ]);
-}
+        return Inertia::render('Admin.Citas.Show', [
+            'cita' => $cita,
+            'estados' => $this->getEstados(),
+        ]);
+    }
 
     /**
      * Show the form for editing the specified appointment.
      */
     public function edit(Cita $cita)
-{
-    // Cargar todas las relaciones necesarias
-    $cita->load(['cliente', 'vehiculo', 'diagnostico']);
+    {
+        // Cargar todas las relaciones necesarias
+        $cita->load(['cliente', 'vehiculo', 'diagnostico']);
 
-    $clientes = User::clientes()->activos()->with(['vehiculos' => function($query) {
-        $query->activos()->select(['id', 'cliente_id', 'placa', 'marca', 'modelo']);
-    }])->get(['id', 'nombre', 'email']);
+        $clientes = User::clientes()->activos()->with([
+            'vehiculos' => function ($query) {
+                $query->activos()->select(['id', 'cliente_id', 'placa', 'marca', 'modelo']);
+            }
+        ])->get(['id', 'nombre', 'email']);
 
-    return Inertia::render('Admin/Citas/Edit', [
-        'cita' => [
-            'id' => $cita->id,
-            'codigo' => $cita->codigo,
-            'cliente_id' => $cita->cliente_id,
-            'vehiculo_id' => $cita->vehiculo_id,
-            'fecha' => $cita->fecha,
-            'hora' => $cita->hora,
-            'motivo' => $cita->motivo,
-            'observaciones' => $cita->observaciones,
-            'estado' => $cita->estado,
-            'diagnostico' => $cita->diagnostico ? [
-                'id' => $cita->diagnostico->id,
-                'codigo' => $cita->diagnostico->codigo,
-            ] : null,
-        ],
-        'clientes' => $clientes,
-        'estados' => $this->getEstados(),
-        'horarios_disponibles' => $this->getHorariosDisponibles(),
-    ]);
-}
+        return Inertia::render('Admin.Citas.Edit', [
+            'cita' => [
+                'id' => $cita->id,
+                'codigo' => $cita->codigo,
+                'cliente_id' => $cita->cliente_id,
+                'vehiculo_id' => $cita->vehiculo_id,
+                'fecha' => $cita->fecha,
+                'hora' => $cita->hora,
+                'motivo' => $cita->motivo,
+                'observaciones' => $cita->observaciones,
+                'estado' => $cita->estado,
+                'diagnostico' => $cita->diagnostico ? [
+                    'id' => $cita->diagnostico->id,
+                    'codigo' => $cita->diagnostico->codigo,
+                ] : null,
+            ],
+            'clientes' => $clientes,
+            'estados' => $this->getEstados(),
+            'horarios_disponibles' => $this->getHorariosDisponibles(),
+        ]);
+    }
 
     /**
      * Update the specified appointment in storage.

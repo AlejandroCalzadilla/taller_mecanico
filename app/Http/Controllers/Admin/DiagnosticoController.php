@@ -22,18 +22,18 @@ class DiagnosticoController extends Controller
         // Búsqueda
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhere('descripcion_problema', 'LIKE', "%{$search}%")
-                  ->orWhere('diagnostico', 'LIKE', "%{$search}%")
-                  ->orWhereHas('cita.cliente', function($q) use ($search) {
-                      $q->where('nombre', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('cita.vehiculo', function($q) use ($search) {
-                      $q->where('placa', 'LIKE', "%{$search}%")
-                        ->orWhere('marca', 'LIKE', "%{$search}%")
-                        ->orWhere('modelo', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhere('descripcion_problema', 'LIKE', "%{$search}%")
+                    ->orWhere('diagnostico', 'LIKE', "%{$search}%")
+                    ->orWhereHas('cita.cliente', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('cita.vehiculo', function ($q) use ($search) {
+                        $q->where('placa', 'LIKE', "%{$search}%")
+                            ->orWhere('marca', 'LIKE', "%{$search}%")
+                            ->orWhere('modelo', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -57,7 +57,7 @@ class DiagnosticoController extends Controller
         $mecanicos = User::mecanicos()->activos()->get(['id', 'nombre']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Diagnosticos/Index', [
+        return Inertia::render('Admin.Diagnosticos.Index', [
             'diagnosticos' => $diagnosticos,
             'mecanicos' => $mecanicos,
             'estados' => $estados,
@@ -91,16 +91,16 @@ class DiagnosticoController extends Controller
         }
 
         $citas = Cita::whereDoesntHave('diagnostico')
-        // Agregamos 'pendiente' solo para probar si aparecen
-        ->whereIn('estado', ['confirmada', 'en_proceso', 'Confirmada', 'En_proceso', 'pendiente'])
-        ->with(['cliente', 'vehiculo'])
-        ->orderBy('fecha', 'desc')
-        ->get();
+            // Agregamos 'pendiente' solo para probar si aparecen
+            ->whereIn('estado', ['confirmada', 'en_proceso', 'Confirmada', 'En_proceso', 'pendiente'])
+            ->with(['cliente', 'vehiculo'])
+            ->orderBy('fecha', 'desc')
+            ->get();
 
         $mecanicos = User::mecanicos()->activos()->get(['id', 'nombre']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Diagnosticos/Create', [
+        return Inertia::render('Admin.Diagnosticos.Create', [
             'citas' => $citas,
             'mecanicos' => $mecanicos,
             'estados' => $estados, // Esta línea es crucial
@@ -165,7 +165,7 @@ class DiagnosticoController extends Controller
         $mecanicos = User::mecanicos()->activos()->get(['id', 'nombre']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Diagnosticos/Edit', [
+        return Inertia::render('Admin.Diagnosticos.Edit', [
             'diagnostico' => $diagnostico,
             'mecanicos' => $mecanicos,
             'estados' => $estados,
@@ -199,7 +199,7 @@ class DiagnosticoController extends Controller
             'ordenTrabajo'    // Para saber si mostramos el botón "Crear Orden" o no
         ]);
 
-        return Inertia::render('Admin/Diagnosticos/Show', [
+        return Inertia::render('Admin.Diagnosticos.Show', [
             'diagnostico' => $diagnostico,
             'estados' => $this->getEstados(), // Pasamos los estados para el dropdown lateral
         ]);

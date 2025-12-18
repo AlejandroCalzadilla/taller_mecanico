@@ -15,13 +15,15 @@ class VehiculoController extends Controller
     public function index()
     {
         $vehiculos = Auth::user()->vehiculos()
-            ->withCount(['citas' => function($query) {
-                $query->where('estado', 'completada');
-            }])
+            ->withCount([
+                'citas' => function ($query) {
+                    $query->where('estado', 'completada');
+                }
+            ])
             ->latest()
             ->get();
 
-        return Inertia::render('Cliente/Vehiculos/Index', [
+        return Inertia::render('Cliente.Vehiculos.Index', [
             'vehiculos' => $vehiculos,
             'estadisticas' => [
                 'total' => $vehiculos->count(),
@@ -33,7 +35,7 @@ class VehiculoController extends Controller
 
     public function create()
     {
-        return Inertia::render('Cliente/Vehiculos/Create');
+        return Inertia::render('Cliente.Vehiculos.Create');
     }
 
     public function store(Request $request)
@@ -50,8 +52,13 @@ class VehiculoController extends Controller
         ]);
 
         $vehiculoData = $request->only([
-            'placa', 'marca', 'modelo', 'anio', 'color',
-            'kilometraje', 'observaciones'
+            'placa',
+            'marca',
+            'modelo',
+            'anio',
+            'color',
+            'kilometraje',
+            'observaciones'
         ]);
 
         $vehiculoData['cliente_id'] = Auth::id();
@@ -71,7 +78,7 @@ class VehiculoController extends Controller
     {
 
         $vehiculo->load([
-            'citas' => function($query) {
+            'citas' => function ($query) {
                 $query->latest()->limit(5);
             },
             'citas.diagnostico',
@@ -88,7 +95,7 @@ class VehiculoController extends Controller
                 ->first()?->created_at?->format('d/m/Y'),
         ];
 
-        return Inertia::render('Cliente/Vehiculos/Show', [
+        return Inertia::render('Cliente.Vehiculos.Show', [
             'vehiculo' => $vehiculo,
             'estadisticas' => $estadisticas
         ]);
@@ -99,7 +106,7 @@ class VehiculoController extends Controller
         // Asegurarse de cargar todos los datos necesarios
         $vehiculo->load(['citas']);
 
-        return Inertia::render('Cliente/Vehiculos/Edit', [
+        return Inertia::render('Cliente.Vehiculos.Edit', [
             'vehiculo' => $vehiculo
         ]);
     }
@@ -118,8 +125,13 @@ class VehiculoController extends Controller
         ]);
 
         $vehiculoData = $request->only([
-            'placa', 'marca', 'modelo', 'anio', 'color',
-            'kilometraje', 'observaciones'
+            'placa',
+            'marca',
+            'modelo',
+            'anio',
+            'color',
+            'kilometraje',
+            'observaciones'
         ]);
 
         // Solo procesar la foto si se envió una nueva

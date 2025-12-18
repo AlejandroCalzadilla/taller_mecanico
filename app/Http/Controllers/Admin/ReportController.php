@@ -50,7 +50,7 @@ class ReportController extends Controller
             $datos['tasa_conversion_periodo'] = [];
         }
 
-        return Inertia::render('Admin/Reportes/Index', [
+        return Inertia::render('Admin.Reportes.Index', [
             'kpis' => $kpis,
             'datos' => $datos,
             'filtros' => [

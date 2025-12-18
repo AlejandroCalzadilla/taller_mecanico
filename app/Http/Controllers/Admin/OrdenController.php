@@ -24,16 +24,16 @@ class OrdenController extends Controller
         // Búsqueda
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhereHas('diagnostico.cita.cliente', function($q) use ($search) {
-                      $q->where('nombre', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('diagnostico.cita.vehiculo', function($q) use ($search) {
-                      $q->where('placa', 'LIKE', "%{$search}%")
-                        ->orWhere('marca', 'LIKE', "%{$search}%")
-                        ->orWhere('modelo', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhereHas('diagnostico.cita.cliente', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('diagnostico.cita.vehiculo', function ($q) use ($search) {
+                        $q->where('placa', 'LIKE', "%{$search}%")
+                            ->orWhere('marca', 'LIKE', "%{$search}%")
+                            ->orWhere('modelo', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -61,7 +61,7 @@ class OrdenController extends Controller
         $mecanicos = User::mecanicos()->activos()->get(['id', 'nombre']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Ordenes/Index', [
+        return Inertia::render('Admin.Ordenes.Index', [
             'ordenes' => $ordenes,
             'mecanicos' => $mecanicos,
             'estados' => $estados,
@@ -99,7 +99,7 @@ class OrdenController extends Controller
         $servicios = Servicio::activos()->get(['id', 'nombre', 'precio_base', 'duracion_estimada']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Ordenes/Create', [
+        return Inertia::render('Admin.Ordenes.Create', [
             'diagnosticos' => $diagnosticos,
             'mecanicos' => $mecanicos,
             'servicios' => $servicios,
@@ -206,7 +206,7 @@ class OrdenController extends Controller
             'pagos.detalles'
         ]);
 
-        return Inertia::render('Admin/Ordenes/Show', [
+        return Inertia::render('Admin.Ordenes.Show', [
             'orden' => $orden,
             'estados' => $this->getEstados(),
         ]);
@@ -228,7 +228,7 @@ class OrdenController extends Controller
         $servicios = Servicio::activos()->get(['id', 'nombre', 'precio_base', 'duracion_estimada']);
         $estados = $this->getEstados();
 
-        return Inertia::render('Admin/Ordenes/Edit', [
+        return Inertia::render('Admin.Ordenes.Edit', [
             'orden' => $orden,
             'mecanicos' => $mecanicos,
             'servicios' => $servicios,

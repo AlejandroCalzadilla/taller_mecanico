@@ -19,10 +19,10 @@ class ServicioController extends Controller
         // Búsqueda
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nombre', 'LIKE', "%{$search}%")
-                ->orWhere('descripcion', 'LIKE', "%{$search}%")
-                ->orWhere('tipo', 'LIKE', "%{$search}%");
+                    ->orWhere('descripcion', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo', 'LIKE', "%{$search}%");
             });
         }
 
@@ -38,7 +38,7 @@ class ServicioController extends Controller
 
         $servicios = $query->latest()->paginate(12);
 
-        return Inertia::render('Admin/Servicios/Index', [
+        return Inertia::render('Admin.Servicios.Index', [
             'servicios' => $servicios,
             'filters' => $request->only(['search', 'tipo', 'estado']),
             'tipos' => [
@@ -58,7 +58,7 @@ class ServicioController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Servicios/Create', [
+        return Inertia::render('Admin.Servicios.Create', [
             'tipos' => [
                 'diagnostico' => 'Diagnóstico',
                 'mantenimiento' => 'Mantenimiento',
@@ -92,7 +92,7 @@ class ServicioController extends Controller
      */
     public function edit(Servicio $servicio)
     {
-        return Inertia::render('Admin/Servicios/Edit', [
+        return Inertia::render('Admin.Servicios.Edit', [
             'servicio' => $servicio,
             'tipos' => [
                 'diagnostico' => 'Diagnóstico',

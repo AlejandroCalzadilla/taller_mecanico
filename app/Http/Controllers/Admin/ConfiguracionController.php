@@ -10,6 +10,6 @@ class ConfiguracionController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Configuracion/Index');
+        return Inertia::render('Admin.Configuracion.Index');
     }
 }

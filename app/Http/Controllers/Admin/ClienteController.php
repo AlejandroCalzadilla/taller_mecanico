@@ -22,10 +22,10 @@ class ClienteController extends Controller
         // Búsqueda
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nombre', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('telefono', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('telefono', 'LIKE', "%{$search}%");
             });
         }
 
@@ -41,7 +41,7 @@ class ClienteController extends Controller
 
         $clientes = $query->latest()->paginate(10);
 
-        return Inertia::render('Admin/Clientes/Index', [
+        return Inertia::render('Admin.Clientes.Index', [
             'clientes' => $clientes,
             'filters' => $request->only(['search', 'estado', 'tipo']),
             'estados' => [
@@ -62,7 +62,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Clientes/Create', [
+        return Inertia::render('Admin.Clientes.Create', [
             'tipos' => [
                 'cliente' => 'Cliente',
                 'mecanico' => 'Mecánico',
@@ -107,11 +107,14 @@ class ClienteController extends Controller
     public function show(User $cliente)
     {
         // Cambiar: ya no verificamos que sea cliente, puede ser cualquier tipo de usuario
-        $cliente->load(['vehiculos' => function($query) {
-            $query->latest();
-        }, 'citas' => function($query) {
-            $query->with('vehiculo')->latest()->take(5);
-        }]);
+        $cliente->load([
+            'vehiculos' => function ($query) {
+                $query->latest();
+            },
+            'citas' => function ($query) {
+                $query->with('vehiculo')->latest()->take(5);
+            }
+        ]);
 
         $estadisticas = [
             'total_vehiculos' => $cliente->vehiculos()->count(),
@@ -120,7 +123,7 @@ class ClienteController extends Controller
             'ultima_cita' => $cliente->citas()->latest()->first()?->created_at->format('d/m/Y'),
         ];
 
-        return Inertia::render('Admin/Clientes/Show', [
+        return Inertia::render('Admin.Clientes.Show', [
             'cliente' => $cliente,
             'estadisticas' => $estadisticas,
             'tipos' => [

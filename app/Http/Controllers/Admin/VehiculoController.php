@@ -15,64 +15,64 @@ class VehiculoController extends Controller
      * Display a listing of the vehicles.
      */
     public function index(Request $request)
-{
-    $query = Vehiculo::with(['cliente']);
+    {
+        $query = Vehiculo::with(['cliente']);
 
-    // Búsqueda
-    if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('placa', 'LIKE', "%{$search}%")
-            ->orWhere('marca', 'LIKE', "%{$search}%")
-            ->orWhere('modelo', 'LIKE', "%{$search}%")
-            ->orWhere('color', 'LIKE', "%{$search}%")
-            ->orWhereHas('cliente', function($q) use ($search) {
-                $q->where('nombre', 'LIKE', "%{$search}%");
+        // Búsqueda
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('placa', 'LIKE', "%{$search}%")
+                    ->orWhere('marca', 'LIKE', "%{$search}%")
+                    ->orWhere('modelo', 'LIKE', "%{$search}%")
+                    ->orWhere('color', 'LIKE', "%{$search}%")
+                    ->orWhereHas('cliente', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%");
+                    });
             });
-        });
-    }
+        }
 
-    // Filtro por estado
-    if ($request->has('estado') && $request->estado != '') {
-        $query->where('estado', $request->estado);
-    }
+        // Filtro por estado
+        if ($request->has('estado') && $request->estado != '') {
+            $query->where('estado', $request->estado);
+        }
 
-    // Filtro por cliente
-    if ($request->has('cliente_id') && $request->cliente_id != '') {
-        $query->where('cliente_id', $request->cliente_id);
-    }
+        // Filtro por cliente
+        if ($request->has('cliente_id') && $request->cliente_id != '') {
+            $query->where('cliente_id', $request->cliente_id);
+        }
 
-    $vehiculos = $query->latest()->paginate(12);
+        $vehiculos = $query->latest()->paginate(12);
 
-    // Transformar cada vehículo para agregar la URL de la foto
-    $vehiculos->getCollection()->transform(function ($vehiculo) {
-        // Construir la URL directamente
-        if ($vehiculo->foto) {
-            // Verificar si el archivo existe
-            if (Storage::disk('public')->exists($vehiculo->foto)) {
-                $vehiculo->foto_url = asset('storage/' . $vehiculo->foto);
+        // Transformar cada vehículo para agregar la URL de la foto
+        $vehiculos->getCollection()->transform(function ($vehiculo) {
+            // Construir la URL directamente
+            if ($vehiculo->foto) {
+                // Verificar si el archivo existe
+                if (Storage::disk('public')->exists($vehiculo->foto)) {
+                    $vehiculo->foto_url = asset('storage/' . $vehiculo->foto);
+                } else {
+                    $vehiculo->foto_url = null;
+                }
             } else {
                 $vehiculo->foto_url = null;
             }
-        } else {
-            $vehiculo->foto_url = null;
-        }
 
-        return $vehiculo;
-    });
+            return $vehiculo;
+        });
 
-    $clientes = User::clientes()->activos()->get(['id', 'nombre']);
+        $clientes = User::clientes()->activos()->get(['id', 'nombre']);
 
-    return Inertia::render('Admin/Vehiculos/Index', [
-        'vehiculos' => $vehiculos,
-        'clientes' => $clientes,
-        'filters' => $request->only(['search', 'estado', 'cliente_id']),
-        'estados' => [
-            'activo' => 'Activo',
-            'inactivo' => 'Inactivo'
-        ]
-    ]);
-}
+        return Inertia::render('Admin.Vehiculos.Index', [
+            'vehiculos' => $vehiculos,
+            'clientes' => $clientes,
+            'filters' => $request->only(['search', 'estado', 'cliente_id']),
+            'estados' => [
+                'activo' => 'Activo',
+                'inactivo' => 'Inactivo'
+            ]
+        ]);
+    }
     /**
      * Show the form for creating a new vehicle.
      */
@@ -80,12 +80,27 @@ class VehiculoController extends Controller
     {
         $clientes = User::clientes()->activos()->get(['id', 'nombre']);
 
-        return Inertia::render('Admin/Vehiculos/Create', [
+        return Inertia::render('Admin.Vehiculos.Create', [
             'clientes' => $clientes,
             'marcas_populares' => [
-                'Toyota', 'Honda', 'Nissan', 'Ford', 'Chevrolet', 'Hyundai',
-                'Kia', 'Volkswagen', 'Mazda', 'Mitsubishi', 'Subaru', 'BMW',
-                'Mercedes-Benz', 'Audi', 'Volvo', 'Renault', 'Peugeot', 'Citroën'
+                'Toyota',
+                'Honda',
+                'Nissan',
+                'Ford',
+                'Chevrolet',
+                'Hyundai',
+                'Kia',
+                'Volkswagen',
+                'Mazda',
+                'Mitsubishi',
+                'Subaru',
+                'BMW',
+                'Mercedes-Benz',
+                'Audi',
+                'Volvo',
+                'Renault',
+                'Peugeot',
+                'Citroën'
             ]
         ]);
     }
@@ -127,9 +142,12 @@ class VehiculoController extends Controller
      */
     public function show(Vehiculo $vehiculo)
     {
-        $vehiculo->load(['cliente', 'citas' => function($query) {
-            $query->with(['diagnostico', 'diagnostico.ordenTrabajo'])->latest();
-        }]);
+        $vehiculo->load([
+            'cliente',
+            'citas' => function ($query) {
+                $query->with(['diagnostico', 'diagnostico.ordenTrabajo'])->latest();
+            }
+        ]);
 
         // Agregar foto_url al vehículo individual
         if ($vehiculo->foto) {
@@ -144,7 +162,7 @@ class VehiculoController extends Controller
 
         $estadisticas = $vehiculo->estadisticas;
 
-        return Inertia::render('Admin/Vehiculos/Show', [
+        return Inertia::render('Admin.Vehiculos.Show', [
             'vehiculo' => $vehiculo,
             'estadisticas' => $estadisticas,
         ]);
@@ -168,13 +186,28 @@ class VehiculoController extends Controller
             $vehiculo->foto_url = null;
         }
 
-        return Inertia::render('Admin/Vehiculos/Edit', [
+        return Inertia::render('Admin.Vehiculos.Edit', [
             'vehiculo' => $vehiculo,
             'clientes' => $clientes,
             'marcas_populares' => [
-                'Toyota', 'Honda', 'Nissan', 'Ford', 'Chevrolet', 'Hyundai',
-                'Kia', 'Volkswagen', 'Mazda', 'Mitsubishi', 'Subaru', 'BMW',
-                'Mercedes-Benz', 'Audi', 'Volvo', 'Renault', 'Peugeot', 'Citroën'
+                'Toyota',
+                'Honda',
+                'Nissan',
+                'Ford',
+                'Chevrolet',
+                'Hyundai',
+                'Kia',
+                'Volkswagen',
+                'Mazda',
+                'Mitsubishi',
+                'Subaru',
+                'BMW',
+                'Mercedes-Benz',
+                'Audi',
+                'Volvo',
+                'Renault',
+                'Peugeot',
+                'Citroën'
             ]
         ]);
     }

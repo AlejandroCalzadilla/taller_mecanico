@@ -19,7 +19,7 @@ class PagoController extends Controller
     public function index(Request $request)
     {
         $query = Pago::with(['ordenTrabajo.diagnostico.cita.cliente', 'ordenTrabajo.diagnostico.cita.vehiculo'])
-                    ->latest();
+            ->latest();
 
         // Filtros
         if ($request->has('estado') && $request->estado !== 'todos') {
@@ -32,20 +32,20 @@ class PagoController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhereHas('ordenTrabajo.diagnostico.cita.cliente', function($q) use ($search) {
-                      $q->where('nombre', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('ordenTrabajo.diagnostico.cita.vehiculo', function($q) use ($search) {
-                      $q->where('placa', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhereHas('ordenTrabajo.diagnostico.cita.cliente', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('ordenTrabajo.diagnostico.cita.vehiculo', function ($q) use ($search) {
+                        $q->where('placa', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
         $pagos = $query->paginate(15);
 
-        return Inertia::render('Admin/Pagos/Index', [
+        return Inertia::render('Admin.Pagos.Index', [
             'pagos' => $pagos,
             'filters' => $request->only(['search', 'estado', 'tipo_pago']),
             'estados' => Pago::getEstadosDisponibles(),
@@ -59,28 +59,28 @@ class PagoController extends Controller
      */
     public function create()
     {
-        
+
         // Mostrar solo órdenes completadas que no tienen pagos activos
         $ordenes = OrdenTrabajo::where('estado', 'completada')
-                            ->whereDoesntHave('pagos', function($query) {
-                                $query->where('estado', '!=', 'cancelada');
-                            })
-                            ->with([
-                                'diagnostico.cita.cliente',
-                                'diagnostico.cita.vehiculo',
-                                'servicios.servicio',
-                            ])
-                            ->orderBy('fecha_creacion', 'desc')
-                            ->get();
-        
-        return Inertia::render('Admin/Pagos/Create', [
+            ->whereDoesntHave('pagos', function ($query) {
+                $query->where('estado', '!=', 'cancelada');
+            })
+            ->with([
+                'diagnostico.cita.cliente',
+                'diagnostico.cita.vehiculo',
+                'servicios.servicio',
+            ])
+            ->orderBy('fecha_creacion', 'desc')
+            ->get();
+
+        return Inertia::render('Admin.Pagos.Create', [
             'ordenes' => $ordenes,
             'tiposPago' => Pago::getTiposPagoDisponibles(),
             'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
         ]);
     }    /**
-     * Store a newly created resource in storage.
-     */
+         * Store a newly created resource in storage.
+         */
     public function store(Request $request)
     {
         \Log::info('=== INICIANDO CREACIÓN DE PAGO ===');
@@ -88,7 +88,7 @@ class PagoController extends Controller
 
         try {
             \Log::info('Iniciando validación...');
-            
+
             $rules = [
                 'orden_trabajo_id' => 'required|exists:ordenes_trabajo,id',
                 'tipo_pago' => 'required|in:contado,credito',
@@ -160,7 +160,7 @@ class PagoController extends Controller
             \Log::info('Transacción completada');
 
             return redirect()->route('admin.pagos.show', $pago->id)
-                           ->with('success', 'Pago creado exitosamente.');
+                ->with('success', 'Pago creado exitosamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('ERROR al crear pago:', [
@@ -181,7 +181,7 @@ class PagoController extends Controller
             'detalles.recibidoPor'
         ]);
 
-        return Inertia::render('Admin/Pagos/Cobrar', [
+        return Inertia::render('Admin.Pagos.Cobrar', [
             'pago' => $pago,
             'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
             'usuarios' => User::whereIn('tipo', ['secretaria', 'propietario'])->get(),
@@ -200,7 +200,7 @@ class PagoController extends Controller
             'detalles.recibidoPor'
         ]);
 
-        return Inertia::render('Admin/Pagos/Show', [
+        return Inertia::render('Admin.Pagos.Show', [
             'pago' => $pago,
             'planPagos' => $pago->generarPlanPagos(),
             'metodosPago' => PagoDetalle::getMetodosPagoDisponibles(),
@@ -215,7 +215,7 @@ class PagoController extends Controller
     {
         $pago->load(['ordenTrabajo.diagnostico.cita.cliente', 'ordenTrabajo.diagnostico.cita.vehiculo']);
 
-        return Inertia::render('Admin/Pagos/Edit', [
+        return Inertia::render('Admin.Pagos.Edit', [
             'pago' => $pago,
             'tiposPago' => Pago::getTiposPagoDisponibles(),
         ]);
@@ -246,7 +246,7 @@ class PagoController extends Controller
             DB::commit();
 
             return redirect()->route('admin.pagos.show', $pago->id)
-                           ->with('success', 'Pago actualizado exitosamente.');
+                ->with('success', 'Pago actualizado exitosamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Error al actualizar el pago: ' . $e->getMessage());
@@ -278,8 +278,8 @@ class PagoController extends Controller
                 $prefix = $request->metodo_pago === 'efectivo' ? 'EF' : 'QR';
                 $fecha = now()->format('Ymd');
                 $secuencia = PagoDetalle::where('metodo_pago', $request->metodo_pago)
-                                ->whereDate('created_at', now())
-                                ->count() + 1;
+                    ->whereDate('created_at', now())
+                    ->count() + 1;
                 $numeroComprobante = $prefix . '-' . $fecha . '-' . str_pad($secuencia, 4, '0', STR_PAD_LEFT);
             }
 
@@ -333,8 +333,8 @@ class PagoController extends Controller
             ]);
             DB::commit();
             return redirect()->route('admin.pagos.show', $pago->id)
-                        ->with('success', 'Pago registrado exitosamente. Se ha abonado ' .
-                                number_format($request->monto, 2) . ' Bs. al pago.');
+                ->with('success', 'Pago registrado exitosamente. Se ha abonado ' .
+                    number_format($request->monto, 2) . ' Bs. al pago.');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -344,7 +344,7 @@ class PagoController extends Controller
             \Log::error('Line: ' . $e->getLine());
 
             return back()->with('error', 'Error al registrar el pago: ' . $e->getMessage())
-                        ->withInput();
+                ->withInput();
         }
     }
 
@@ -370,10 +370,10 @@ class PagoController extends Controller
     public function vencidos()
     {
         $pagos = Pago::vencidos()
-                    ->with(['ordenTrabajo.diagnostico.cita.cliente', 'ordenTrabajo.diagnostico.cita.vehiculo'])
-                    ->paginate(15);
+            ->with(['ordenTrabajo.diagnostico.cita.cliente', 'ordenTrabajo.diagnostico.cita.vehiculo'])
+            ->paginate(15);
 
-        return Inertia::render('Admin/Pagos/Vencidos', [
+        return Inertia::render('Admin.Pagos.Vencidos', [
             'pagos' => $pagos,
             'estadisticas' => $this->obtenerEstadisticas(),
         ]);
@@ -391,14 +391,14 @@ class PagoController extends Controller
         ]);
 
         $pagos = Pago::with(['ordenTrabajo.diagnostico.cita.cliente', 'detalles'])
-                    ->whereBetween('created_at', [$request->fecha_inicio, $request->fecha_fin])
-                    ->get();
+            ->whereBetween('created_at', [$request->fecha_inicio, $request->fecha_fin])
+            ->get();
 
         $detallesPagos = PagoDetalle::with(['pago.ordenTrabajo.diagnostico.cita.cliente', 'recibidoPor'])
-                                ->whereBetween('fecha_pago', [$request->fecha_inicio, $request->fecha_fin])
-                                ->get();
+            ->whereBetween('fecha_pago', [$request->fecha_inicio, $request->fecha_fin])
+            ->get();
 
-        return Inertia::render('Admin/Pagos/Reporte', [
+        return Inertia::render('Admin.Pagos.Reporte', [
             'pagos' => $pagos,
             'detallesPagos' => $detallesPagos,
             'filtros' => $request->only(['fecha_inicio', 'fecha_fin', 'tipo_reporte']),

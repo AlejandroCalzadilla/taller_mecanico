@@ -17,12 +17,12 @@ class OrdenController extends Controller
         $user = auth()->user();
 
         $ordenes = OrdenTrabajo::with([
-                'diagnostico.cita.vehiculo',
-                'mecanico',
-                'servicios.servicio',
-                'pagos'
-            ])
-            ->whereHas('diagnostico.cita', function($query) use ($user) {
+            'diagnostico.cita.vehiculo',
+            'mecanico',
+            'servicios.servicio',
+            'pagos'
+        ])
+            ->whereHas('diagnostico.cita', function ($query) use ($user) {
                 $query->where('cliente_id', $user->id);
             })
             ->orderBy('created_at', 'desc')
@@ -38,7 +38,7 @@ class OrdenController extends Controller
         });
 
         // Calcular estadísticas
-        $ordenesQuery = OrdenTrabajo::whereHas('diagnostico.cita', function($query) use ($user) {
+        $ordenesQuery = OrdenTrabajo::whereHas('diagnostico.cita', function ($query) use ($user) {
             $query->where('cliente_id', $user->id);
         });
 
@@ -52,10 +52,10 @@ class OrdenController extends Controller
 
         // Obtener orden activa (en proceso o aprobada más reciente)
         $ordenActiva = OrdenTrabajo::with([
-                'diagnostico.cita.vehiculo',
-                'mecanico'
-            ])
-            ->whereHas('diagnostico.cita', function($query) use ($user) {
+            'diagnostico.cita.vehiculo',
+            'mecanico'
+        ])
+            ->whereHas('diagnostico.cita', function ($query) use ($user) {
                 $query->where('cliente_id', $user->id);
             })
             ->whereIn('estado', ['aprobada', 'en_proceso'])
@@ -78,7 +78,7 @@ class OrdenController extends Controller
             ];
         }
 
-        return Inertia::render('Cliente/Ordenes/Index', [
+        return Inertia::render('Cliente.Ordenes.Index', [
             'ordenes' => $ordenes,
             'filters' => $request->only(['search', 'estado']),
             'estados' => OrdenTrabajo::getEstadosDisponibles(),
@@ -110,7 +110,7 @@ class OrdenController extends Controller
         $orden->costo_mano_obra = (float) $orden->costo_mano_obra;
         $orden->costo_repuestos = (float) $orden->costo_repuestos;
 
-        return Inertia::render('Cliente/Ordenes/Show', [
+        return Inertia::render('Cliente.Ordenes.Show', [
             'orden' => $orden,
             'progreso' => $orden->progreso,
         ]);
@@ -171,7 +171,7 @@ class OrdenController extends Controller
 
         // Aquí iría la generación del PDF
         // Por ahora retornamos una vista simple
-        return Inertia::render('Cliente/Ordenes/PresupuestoPDF', [
+        return Inertia::render('Cliente.Ordenes.PresupuestoPDF', [
             'orden' => $orden,
         ]);
     }

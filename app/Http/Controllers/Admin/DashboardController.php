@@ -20,7 +20,7 @@ class DashboardController extends Controller
     {
         $stats = $this->getAdminStats();
 
-        return Inertia::render('Admin/Dashboard', [
+        return Inertia::render('Admin.Dashboard', [
             'stats' => $stats,
         ]);
     }

@@ -28,7 +28,7 @@ class DashboardController extends Controller
                 ->count(),
         ];
 
-        return Inertia::render('Mecanico/Dashboard', [
+        return Inertia::render('Mecanico.Dashboard', [
             'stats' => $stats,
         ]);
     }

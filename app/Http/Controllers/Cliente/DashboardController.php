@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ];
         }
 
-        return Inertia::render('Cliente/Dashboard', [
+        return Inertia::render('Cliente.Dashboard', [
             'userType' => $user->tipo,
             'stats' => $data,
         ]);

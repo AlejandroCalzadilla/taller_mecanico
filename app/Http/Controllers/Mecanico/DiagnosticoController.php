@@ -10,17 +10,17 @@ class DiagnosticoController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Mecanico/Diagnosticos/Index');
+        return Inertia::render('Mecanico.Diagnosticos.Index');
     }
 
     public function show($id)
     {
-        return Inertia::render('Mecanico/Diagnosticos/Show');
+        return Inertia::render('Mecanico.Diagnosticos.Show');
     }
 
     public function edit($id)
     {
-        return Inertia::render('Mecanico/Diagnosticos/Edit');
+        return Inertia::render('Mecanico.Diagnosticos.Edit');
     }
 
     public function update(Request $request, $id)
