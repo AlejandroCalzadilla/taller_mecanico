@@ -24,7 +24,7 @@ const fetchPageViews = async () => {
     currentPageName.value = pageName
 
     // Obtener las vistas de esta página específica
-    const response = await fetch(`/api/page-views/page/${encodeURIComponent(pageName)}`)
+    const response = await fetch(route('api.page-views.page', pageName))
     
     if (!response.ok) {
       console.error('Error response:', response.status)
